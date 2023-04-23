@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:path/path.dart';
-
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
-const debug = true;
+const debug = true && kDebugMode;
 
 Map<int, String> databaseMigrations = {
   int.parse('2023_0423_2000_001'.replaceAll('_', '')): '''
