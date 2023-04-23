@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import './db/db_migration.dart';
 import './providers/screen_provider.dart';
-
-import '../screens/dungeon_screen.dart';
-import '../screens/party_screen.dart';
-import '../screens/settings_screen.dart';
+import './screens/dungeon_screen.dart';
+import './screens/party_screen.dart';
+import './screens/settings_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,6 +29,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    migrateDatabase();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(

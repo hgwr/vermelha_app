@@ -8,6 +8,8 @@ class Character {
   int? id;
   String name;
   int level;
+  int maxHp;
+  int maxMp;
   int hp;
   int mp;
   int attack;
@@ -21,6 +23,8 @@ class Character {
     this.id,
     required this.name,
     required this.level,
+    required this.maxHp,
+    required this.maxMp,
     required this.hp,
     required this.mp,
     required this.attack,
