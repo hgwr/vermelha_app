@@ -1,23 +1,21 @@
-import 'package:flutter/foundation.dart';
-
-import './action.dart';
-import './target.dart';
-import './condition.dart';
+import 'package:vermelha_app/models/action.dart';
+import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/condition.dart';
 
 class BattleRule {
   final int id;
-  final String name;
-  final Action action;
+  final Character owner;
   final int priority;
-  final Target target;
+  final String name;
   final Condition condition;
+  final Action action;
 
   const BattleRule({
     required this.id,
-    required this.name,
-    required this.action,
+    required this.owner,
     required this.priority,
-    required this.target,
+    required this.name,
     required this.condition,
+    required this.action,
   });
 }

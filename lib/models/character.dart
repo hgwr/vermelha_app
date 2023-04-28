@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
+import 'package:vermelha_app/models/battle_rule.dart';
+import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
-
-import './battle_rule.dart';
-import './status_parameter.dart';
 
 class Character {
   int? id;
@@ -16,6 +14,7 @@ class Character {
   int defense;
   int magicPower;
   int speed;
+  Job? job;
   List<StatusParameter> priorityParameters;
   List<BattleRule> battleRules;
 
@@ -31,6 +30,7 @@ class Character {
     required this.defense,
     required this.magicPower,
     required this.speed,
+    this.job,
     required this.priorityParameters,
     required this.battleRules,
   });
