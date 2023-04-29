@@ -18,4 +18,44 @@ class BattleRule {
     required this.condition,
     required this.action,
   });
+
+  static BattleRule fromJson(Map<String, dynamic> json) {
+    return BattleRule(
+      id: json['id'],
+      owner: json['owner'],
+      priority: json['priority'],
+      name: json['name'],
+      condition: json['condition'],
+      action: json['action'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'owner': owner,
+      'priority': priority,
+      'name': name,
+      'condition': condition,
+      'action': action,
+    };
+  }
+
+  BattleRule copyWith({
+    int? id,
+    Character? owner,
+    int? priority,
+    String? name,
+    Condition? condition,
+    Action? action,
+  }) {
+    return BattleRule(
+      id: id ?? this.id,
+      owner: owner ?? this.owner,
+      priority: priority ?? this.priority,
+      name: name ?? this.name,
+      condition: condition ?? this.condition,
+      action: action ?? this.action,
+    );
+  }
 }

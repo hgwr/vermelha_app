@@ -2,6 +2,8 @@ import 'package:path/path.dart' as p;
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'package:vermelha_app/db/db_connection.dart';
+
 const debug = true && kDebugMode;
 
 const String dbMigrationTableCreate = '''
@@ -53,11 +55,6 @@ CREATE TABLE IF NOT EXISTS battle_rule (
     ''',
 };
 
-Future<Database> openVermelhaDatabase() async {
-  final String path = p.join(await getDatabasesPath(), 'vermelha_database.db');
-  return openDatabase(path);
-}
-
 Future<void> migrateDatabase() async {
   debugPrint("Database migration started");
 
@@ -81,16 +78,18 @@ Future<void> migrateDatabase() async {
 
   var migrationNumbers = databaseMigrations.keys.toList();
   migrationNumbers.sort();
-  migrationNumbers
-      .where((version) => version > databaseVersion)
-      .forEach((version) async {
+  final versions =
+      migrationNumbers.where((version) => version > databaseVersion);
+  for (var version in versions) {
     if (debug) {
       debugPrint("Migrating to version $version");
       debugPrint(databaseMigrations[version]!);
     }
     await db.execute(databaseMigrations[version]!);
     await db.execute("UPDATE db_migration SET version = $version");
-  });
+  }
 
   debugPrint("Database migration finished");
+
+  db.close();
 }

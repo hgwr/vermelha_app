@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vermelha_app/screens/character_screen.dart';
 
 import './db/db_migration.dart';
 import './providers/screen_provider.dart';
+import './providers/characters_provider.dart';
 import './screens/dungeon_screen.dart';
 import './screens/party_screen.dart';
 import './screens/settings_screen.dart';
@@ -31,10 +33,13 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  final CharactersProvider charactersProvider = CharactersProvider();
+
   @override
   void initState() {
     super.initState();
     migrateDatabase();
+    charactersProvider.loadCharacters();
   }
 
   // This widget is the root of your application.
@@ -44,6 +49,9 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider.value(
           value: ScreenProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: charactersProvider,
         ),
       ],
       child: Consumer<ScreenProvider>(
@@ -57,6 +65,7 @@ class _MyAppState extends State<MyApp> {
             DungeonScreen.routeName: (ctx) => const DungeonScreen(),
             PartyScreen.routeName: (ctx) => const PartyScreen(),
             SettingsScreen.routeName: (ctx) => const SettingsScreen(),
+            CharacterScreen.routeName: (ctx) => CharacterScreen(),
           },
         ),
       ),
