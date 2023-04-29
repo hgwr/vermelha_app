@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vermelha_app/models/character.dart';
 
 enum Job {
   fighter(id: 1, name: '戦士'),
@@ -32,4 +33,99 @@ Image getImageByJob(Job job) {
     case Job.priest:
       return Image.asset('assets/images/6_priest.png');
   }
+}
+
+Character getInitializedCharacterByJob(Job job) {
+  return {
+    Job.fighter: Character(
+      job: Job.fighter,
+      name: '戦士',
+      level: 1,
+      maxHp: 100,
+      hp: 100,
+      maxMp: 100,
+      mp: 100,
+      attack: 10,
+      defense: 10,
+      magicPower: 10,
+      speed: 10,
+      priorityParameters: [],
+      battleRules: [],
+    ),
+    Job.paladin: Character(
+      job: Job.paladin,
+      name: '神殿騎士',
+      level: 1,
+      maxHp: 100,
+      hp: 100,
+      maxMp: 100,
+      mp: 100,
+      attack: 10,
+      defense: 10,
+      magicPower: 10,
+      speed: 10,
+      priorityParameters: [],
+      battleRules: [],
+    ),
+    Job.ranger: Character(
+      job: Job.ranger,
+      name: 'レンジャー',
+      level: 1,
+      maxHp: 100,
+      hp: 100,
+      maxMp: 100,
+      mp: 100,
+      attack: 10,
+      defense: 10,
+      magicPower: 10,
+      speed: 10,
+      priorityParameters: [],
+      battleRules: [],
+    ),
+    Job.wizard: Character(
+      job: Job.wizard,
+      name: '魔法使い',
+      level: 1,
+      maxHp: 100,
+      hp: 100,
+      maxMp: 100,
+      mp: 100,
+      attack: 10,
+      defense: 10,
+      magicPower: 10,
+      speed: 10,
+      priorityParameters: [],
+      battleRules: [],
+    ),
+    Job.shaman: Character(
+      job: Job.shaman,
+      name: 'シャーマン',
+      level: 1,
+      maxHp: 100,
+      hp: 100,
+      maxMp: 100,
+      mp: 100,
+      attack: 10,
+      defense: 10,
+      magicPower: 10,
+      speed: 10,
+      priorityParameters: [],
+      battleRules: [],
+    ),
+    Job.priest: Character(
+      job: Job.priest,
+      name: '僧侶',
+      level: 1,
+      maxHp: 100,
+      hp: 100,
+      maxMp: 100,
+      mp: 100,
+      attack: 10,
+      defense: 10,
+      magicPower: 10,
+      speed: 10,
+      priorityParameters: [],
+      battleRules: [],
+    ),
+  }[job]!;
 }
