@@ -1,26 +1,16 @@
-class Job {
+enum Job {
+  fighter(id: 1, name: '戦士'),
+  paladin(id: 2, name: '神殿騎士'),
+  ranger(id: 3, name: 'レンジャー'),
+  wizard(id: 4, name: '魔法使い'),
+  shaman(id: 5, name: 'シャーマン'),
+  priest(id: 6, name: '僧侶');
+
   final int id;
   final String name;
-  final String description;
 
   const Job({
     required this.id,
     required this.name,
-    required this.description,
   });
-}
-
-List<Job> getJobList() {
-  return const [
-    Job(id: 1, name: 'Warrior', description: 'A warrior.'),
-    Job(id: 2, name: 'Paladin', description: 'A paladin.'),
-    Job(id: 3, name: 'Ranger', description: 'A ranger.'),
-    Job(id: 4, name: 'Mage', description: 'A mage.'),
-    Job(id: 5, name: 'Shaman', description: 'A shaman.'),
-    Job(id: 6, name: 'Priest', description: 'A priest.'),
-  ];
-}
-
-Job getJob(int id) {
-  return getJobList().firstWhere((job) => job.id == id);
 }

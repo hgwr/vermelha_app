@@ -35,10 +35,12 @@ CREATE TABLE IF NOT EXISTS status_parameter (
   int.parse('2023_0423_2000_105'.replaceAll('_', '')): '''
 CREATE TABLE IF NOT EXISTS battle_rule (
     id INTEGER PRIMARY KEY,
+    owner_id INTEGER NOT NULL,
+    priority INTEGER NOT NULL,
     name TEXT NOT NULL,
-    description TEXT NOT NULL,
-    character_id INTEGER NOT NULL,
-    FOREIGN KEY(character_id) REFERENCES character(id))
+    condition_uuid TEXT NOT NULL,
+    action_uuid TEXT NOT NULL,
+    FOREIGN KEY(owner_id) REFERENCES character(id))
     ''',
 };
 
