@@ -9,8 +9,17 @@ CREATE TABLE IF NOT EXISTS db_migration (id INTEGER PRIMARY KEY, version INTEGER
 ''';
 
 Map<int, String> databaseMigrations = {
-  int.parse('2023_0423_2000_001'.replaceAll('_', '')): dbMigrationTableCreate,
-  int.parse('2023_0423_2000_002'.replaceAll('_', '')): '''
+  23042300001: dbMigrationTableCreate,
+  23042300110: '''
+drop table if exists character
+''',
+  23042300120: '''
+drop table if exists status_parameter
+''',
+  23042300130: '''
+drop table if exists battle_rule
+''',
+  23042300210: '''
 CREATE TABLE IF NOT EXISTS character (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
@@ -22,17 +31,17 @@ CREATE TABLE IF NOT EXISTS character (
     attack INTEGER NOT NULL,
     defense INTEGER NOT NULL,
     magic_power INTEGER NOT NULL,
-    speed INTEGER NOT NULL)
-    job_id INTEGER,
+    speed INTEGER NOT NULL,
+    job_id INTEGER)
     ''',
-  int.parse('2023_0423_2000_003'.replaceAll('_', '')): '''
+  23042300220: '''
 CREATE TABLE IF NOT EXISTS status_parameter (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     character_id INTEGER NOT NULL,
     FOREIGN KEY(character_id) REFERENCES character(id))
     ''',
-  int.parse('2023_0423_2000_105'.replaceAll('_', '')): '''
+  23042300230: '''
 CREATE TABLE IF NOT EXISTS battle_rule (
     id INTEGER PRIMARY KEY,
     owner_id INTEGER NOT NULL,
@@ -50,12 +59,14 @@ Future<Database> openVermelhaDatabase() async {
 }
 
 Future<void> migrateDatabase() async {
+  debugPrint("Database migration started");
+
   var db = await openVermelhaDatabase();
   await db.execute(dbMigrationTableCreate);
 
-  if (debug) {
-    await db.execute('UPDATE db_migration SET version = 0');
-  }
+  // if (debug) {
+  //   await db.execute('UPDATE db_migration SET version = 0');
+  // }
 
   var rows = await db.query('db_migration');
   int databaseVersion = 0;
@@ -78,8 +89,8 @@ Future<void> migrateDatabase() async {
       debugPrint(databaseMigrations[version]!);
     }
     await db.execute(databaseMigrations[version]!);
-    await db.execute('UPDATE db_migration SET version = $version');
+    await db.execute("UPDATE db_migration SET version = $version");
   });
 
-  db.close();
+  debugPrint("Database migration finished");
 }

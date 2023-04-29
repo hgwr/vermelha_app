@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../providers/screen_provider.dart';
 import '../widgets/bottom_bar_widget.dart';
