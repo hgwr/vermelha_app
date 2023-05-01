@@ -58,7 +58,11 @@ class _MyAppState extends State<MyApp> {
         builder: (ctx, screenProvider, _) => MaterialApp(
           title: 'Vermelha',
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              iconTheme: IconThemeData(color: Colors.black),
+            ),
           ),
           home: getHome(screenProvider.currentScreenIndex),
           routes: {

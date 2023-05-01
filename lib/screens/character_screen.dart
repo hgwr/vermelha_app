@@ -32,12 +32,14 @@ class _CharacterScreenState extends State<CharacterScreen> {
               child: Form(
                 key: _formKey,
                 child: ListView(
+                  shrinkWrap: true,
                   children: [
                     Row(
                       children: [
-                        Text('Name: '),
                         Expanded(
                           child: TextField(
+                            decoration:
+                                const InputDecoration(labelText: 'Name'),
                             controller: TextEditingController(
                               text: character.name,
                             ),
@@ -48,36 +50,55 @@ class _CharacterScreenState extends State<CharacterScreen> {
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Text('Job: '),
-                        Expanded(
-                          child: DropdownButton<Job>(
-                            value: character.job,
-                            onChanged: (Job? newValue) {
-                              setState(() {
-                                character.job = newValue!;
-                              });
-                            },
-                            items: Job.values.map((Job job) {
-                              return DropdownMenuItem<Job>(
-                                value: job,
-                                child: Text(job.toString().split('.').last),
-                              );
-                            }).toList(),
+                    SizedBox(
+                      height: 60,
+                      child: Row(
+                        children: [
+                          Text('Job: '),
+                          Expanded(
+                            child: DropdownButton<Job>(
+                              value: character.job,
+                              onChanged: (Job? newValue) {
+                                setState(() {
+                                  character.job = newValue!;
+                                });
+                              },
+                              items: Job.values.map((Job job) {
+                                return DropdownMenuItem<Job>(
+                                  value: job,
+                                  child: Text(job.name),
+                                );
+                              }).toList(),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Text('Level: '),
-                        Expanded(
-                          child: Text(
-                            character.level.toString(),
+                    SizedBox(
+                      height: 60,
+                      child: Row(
+                        children: [
+                          Text('Level: '),
+                          Expanded(
+                            child: Text(
+                              character.level.toString(),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 60,
+                      child: Row(
+                        children: [
+                          Text('Max HP: '),
+                          Expanded(
+                            child: Text(
+                              character.maxHp.toString(),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
