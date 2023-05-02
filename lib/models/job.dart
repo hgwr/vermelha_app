@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/status_parameter.dart';
 
 enum Job {
   fighter(id: 1, name: '戦士'),
@@ -49,7 +50,11 @@ Character getInitializedCharacterByJob(Job job) {
       defense: 10,
       magicPower: 10,
       speed: 10,
-      priorityParameters: [],
+      priorityParameters: [
+        StatusParameter.hp,
+        StatusParameter.attack,
+        StatusParameter.defense,
+      ],
       battleRules: [],
     ),
     Job.paladin: Character(
@@ -64,7 +69,11 @@ Character getInitializedCharacterByJob(Job job) {
       defense: 10,
       magicPower: 10,
       speed: 10,
-      priorityParameters: [],
+      priorityParameters: [
+        StatusParameter.hp,
+        StatusParameter.defense,
+        StatusParameter.mp,
+      ],
       battleRules: [],
     ),
     Job.ranger: Character(
@@ -79,7 +88,11 @@ Character getInitializedCharacterByJob(Job job) {
       defense: 10,
       magicPower: 10,
       speed: 10,
-      priorityParameters: [],
+      priorityParameters: [
+        StatusParameter.hp,
+        StatusParameter.attack,
+        StatusParameter.speed,
+      ],
       battleRules: [],
     ),
     Job.wizard: Character(
@@ -94,7 +107,11 @@ Character getInitializedCharacterByJob(Job job) {
       defense: 10,
       magicPower: 10,
       speed: 10,
-      priorityParameters: [],
+      priorityParameters: [
+        StatusParameter.hp,
+        StatusParameter.magicPower,
+        StatusParameter.mp,
+      ],
       battleRules: [],
     ),
     Job.shaman: Character(
@@ -109,7 +126,11 @@ Character getInitializedCharacterByJob(Job job) {
       defense: 10,
       magicPower: 10,
       speed: 10,
-      priorityParameters: [],
+      priorityParameters: [
+        StatusParameter.hp,
+        StatusParameter.magicPower,
+        StatusParameter.mp,
+      ],
       battleRules: [],
     ),
     Job.priest: Character(
@@ -124,7 +145,11 @@ Character getInitializedCharacterByJob(Job job) {
       defense: 10,
       magicPower: 10,
       speed: 10,
-      priorityParameters: [],
+      priorityParameters: [
+        StatusParameter.hp,
+        StatusParameter.magicPower,
+        StatusParameter.mp,
+      ],
       battleRules: [],
     ),
   }[job]!;
