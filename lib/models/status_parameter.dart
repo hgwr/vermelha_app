@@ -10,3 +10,5 @@ enum StatusParameter {
 
   const StatusParameter({required this.name});
 }
+
+const List<StatusParameter> statusParameters = StatusParameter.values;

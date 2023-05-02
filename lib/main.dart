@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/screens/character_screen.dart';
+import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 
 import './db/db_migration.dart';
 import './providers/screen_provider.dart';
@@ -70,6 +71,8 @@ class _MyAppState extends State<MyApp> {
             PartyScreen.routeName: (ctx) => const PartyScreen(),
             SettingsScreen.routeName: (ctx) => const SettingsScreen(),
             CharacterScreen.routeName: (ctx) => CharacterScreen(),
+            EditPriorityParametersScreen.routeName: (ctx) =>
+                const EditPriorityParametersScreen(),
           },
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 
 import '../models/character.dart';
 import '../models/job.dart';
@@ -110,6 +111,31 @@ class _CharacterScreenState extends State<CharacterScreen> {
         characterPropertyItem('Defense: ', character.defense.toString()),
         characterPropertyItem('Magic Power: ', character.magicPower.toString()),
         characterPropertyItem('Speed: ', character.speed.toString()),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              EditPriorityParametersScreen.routeName,
+              arguments: character,
+            );
+          },
+          child: SizedBox(
+            height: 40,
+            child: Row(
+              children: [
+                Text('Priority Parameters: '),
+                Expanded(
+                  child: Text(
+                    character.priorityParameters
+                        .map((e) => e.name)
+                        .toList()
+                        .join(', '),
+                  ),
+                ),
+                const Icon(Icons.arrow_forward_ios)
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
