@@ -112,11 +112,16 @@ class _CharacterScreenState extends State<CharacterScreen> {
         characterPropertyItem('Magic Power: ', character.magicPower.toString()),
         characterPropertyItem('Speed: ', character.speed.toString()),
         GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed(
+          onTap: () async {
+            final editedCharacter = await Navigator.of(context).pushNamed(
               EditPriorityParametersScreen.routeName,
               arguments: character,
             );
+            if (editedCharacter != null) {
+              setState(() {
+                character = editedCharacter as Character;
+              });
+            }
           },
           child: SizedBox(
             height: 40,
