@@ -15,8 +15,8 @@ class CharactersProvider extends ChangeNotifier {
   }
 
   Future<Character> addCharacter(Character character) async {
-    _characters.add(character);
     final c = await _characterRepository.save(character);
+    _characters.add(c);
     notifyListeners();
     return c;
   }

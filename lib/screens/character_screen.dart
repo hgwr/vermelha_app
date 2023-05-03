@@ -20,6 +20,13 @@ class CharacterScreen extends StatefulWidget {
 class _CharacterScreenState extends State<CharacterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Character character = getInitializedCharacterByJob(Job.fighter);
+  TextEditingController _characterNameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _characterNameController.text = character.name;
+  }
 
   void saveCharacter() async {
     if (_formKey.currentState!.validate()) {
@@ -27,11 +34,11 @@ class _CharacterScreenState extends State<CharacterScreen> {
       if (character.id != null) {
         character =
             await Provider.of<CharactersProvider>(context, listen: false)
-            .updateCharacter(character);
+                .updateCharacter(character);
       } else {
         character =
             await Provider.of<CharactersProvider>(context, listen: false)
-            .addCharacter(character);
+                .addCharacter(character);
       }
     }
   }
@@ -40,6 +47,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
   Widget build(BuildContext context) {
     if (ModalRoute.of(context)!.settings.arguments != null) {
       character = ModalRoute.of(context)!.settings.arguments as Character;
+      _characterNameController.text = character.name;
     }
 
     return Scaffold(
@@ -79,19 +87,17 @@ class _CharacterScreenState extends State<CharacterScreen> {
         Row(
           children: [
             Expanded(
-              child: TextField(
-                decoration: const InputDecoration(labelText: 'Name'),
-                controller: TextEditingController(
-                  text: character.name,
+              child: Focus(
+                onFocusChange: (hasFocus) {
+                  if (!hasFocus) {
+                    character.name = _characterNameController.text;
+                    saveCharacter();
+                  }
+                },
+                child: TextField(
+                  decoration: const InputDecoration(labelText: 'Name'),
+                  controller: _characterNameController,
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    character.name = value;
-                  });
-                },
-                onSubmitted: (value) {
-                  saveCharacter();
-                },
               ),
             ),
           ],
