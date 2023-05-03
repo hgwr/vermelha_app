@@ -81,7 +81,9 @@ class _PartyScreenState extends State<PartyScreen> {
                     child: getImageByJob(character.job!),
                   ),
                 ),
-                Text(character.name),
+                Expanded(
+                  child: Text(character.name),
+                ),
                 if (_isDeleting)
                   IconButton(
                     onPressed: () {
