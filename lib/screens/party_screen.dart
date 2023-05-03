@@ -74,6 +74,13 @@ class _PartyScreenState extends State<PartyScreen> {
             },
             child: Row(
               children: [
+                if (_isDeleting)
+                  IconButton(
+                    onPressed: () {
+                      _showConfirmDeleteDialog(character);
+                    },
+                    icon: const Icon(Icons.delete),
+                  ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
@@ -84,13 +91,6 @@ class _PartyScreenState extends State<PartyScreen> {
                 Expanded(
                   child: Text(character.name),
                 ),
-                if (_isDeleting)
-                  IconButton(
-                    onPressed: () {
-                      _showConfirmDeleteDialog(character);
-                    },
-                    icon: const Icon(Icons.delete),
-                  ),
               ],
             ),
           );
