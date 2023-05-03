@@ -9,7 +9,7 @@ import '../models/status_parameter.dart';
 class CharacterRepository {
   Future<List<Character>> findAll() async {
     try {
-      final db = await openVermelhaDatabase();
+      final db = await DbConnection().database;
       final result = await db.query('character');
       List<Character> characters = [];
       for (var json in result) {
@@ -18,14 +18,15 @@ class CharacterRepository {
         characters.add(character);
       }
       return characters;
-    } catch (e) {
-      debugPrint(e.toString());
+    } catch (e, s) {
+      debugPrint("$e");
+      debugPrint("$s");
       return [];
     }
   }
 
   Future<Character> findById(int id) async {
-    final db = await openVermelhaDatabase();
+    final db = await DbConnection().database;
     final result = await db.query(
       'character',
       where: 'id = ?',
@@ -62,7 +63,7 @@ class CharacterRepository {
   }
 
   Future<Character> save(Character character) async {
-    final db = await openVermelhaDatabase();
+    final db = await DbConnection().database;
     final newCharacter = await db.transaction((txn) async {
       final id = await txn.insert('character', character.toJson());
       for (var priorityParameter in character.priorityParameters) {
@@ -86,7 +87,7 @@ class CharacterRepository {
   }
 
   Future<Character> update(Character character) async {
-    final db = await openVermelhaDatabase();
+    final db = await DbConnection().database;
     final updatedCharacter = await db.transaction((txn) async {
       await txn.update(
         'character',
@@ -125,7 +126,7 @@ class CharacterRepository {
   }
 
   Future<void> delete(Character character) async {
-    final db = await openVermelhaDatabase();
+    final db = await DbConnection().database;
     await db.transaction((txn) async {
       await txn.delete(
         'status_parameter',

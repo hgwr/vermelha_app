@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS battle_rule (
 Future<void> migrateDatabase() async {
   debugPrint("Database migration started");
 
-  var db = await openVermelhaDatabase();
+  var db = await DbConnection().database;
   await db.execute(dbMigrationTableCreate);
 
   // if (debug) {
@@ -90,6 +90,4 @@ Future<void> migrateDatabase() async {
   }
 
   debugPrint("Database migration finished");
-
-  db.close();
 }
