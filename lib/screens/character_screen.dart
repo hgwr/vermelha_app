@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
 
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 import '../providers/characters_provider.dart';
@@ -170,6 +171,25 @@ class _CharacterScreenState extends State<CharacterScreen> {
                   ),
                 ),
                 const Icon(Icons.arrow_forward_ios)
+              ],
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              EditBattleRulesScreen.routeName,
+              arguments: character,
+            );
+          },
+          child: SizedBox(
+            height: 40,
+            child: Row(
+              children: const [
+                Expanded(
+                  child: Text('戦闘ルール'),
+                ),
+                Icon(Icons.arrow_forward_ios)
               ],
             ),
           ),
