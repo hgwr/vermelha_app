@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
 
 import '../providers/screen_provider.dart';
@@ -23,10 +24,25 @@ class PartyScreen extends StatelessWidget {
             );
           }
           Character character = characters[index];
-          return Row(
-            children: [
-              Text(character.name),
-            ],
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(
+                '/character',
+                arguments: character,
+              );
+            },
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 50,
+                    child: getImageByJob(character.job!),
+                  ),
+                ),
+                Text(character.name),
+              ],
+            ),
           );
         },
       ),

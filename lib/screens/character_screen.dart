@@ -36,6 +36,10 @@ class _CharacterScreenState extends State<CharacterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      character = ModalRoute.of(context)!.settings.arguments as Character;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: character.id != null ? Text(character.name) : Text('New'),
@@ -92,7 +96,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
           height: 60,
           child: Row(
             children: [
-              Text('Job: '),
+              const Text('Job: '),
               Expanded(
                 child: DropdownButton<Job>(
                   value: character.job,
@@ -150,7 +154,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
             height: 40,
             child: Row(
               children: [
-                Text('Priority Parameters: '),
+                const Text('Priority Parameters: '),
                 Expanded(
                   child: Text(
                     character.priorityParameters
