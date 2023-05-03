@@ -14,10 +14,11 @@ class CharactersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addCharacter(Character character) async {
+  Future<Character> addCharacter(Character character) async {
     _characters.add(character);
-    await _characterRepository.save(character);
+    final c = await _characterRepository.save(character);
     notifyListeners();
+    return c;
   }
 
   Future<void> removeCharacter(Character character) async {
@@ -26,10 +27,11 @@ class CharactersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateCharacter(Character character) async {
+  Future<Character> updateCharacter(Character character) async {
     final index = _characters.indexWhere((c) => c.id == character.id);
     _characters[index] = character;
-    await _characterRepository.update(character);
+    final c = await _characterRepository.update(character);
     notifyListeners();
+    return c;
   }
 }

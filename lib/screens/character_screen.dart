@@ -25,10 +25,12 @@ class _CharacterScreenState extends State<CharacterScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (character.id != null) {
-        await Provider.of<CharactersProvider>(context, listen: false)
+        character =
+            await Provider.of<CharactersProvider>(context, listen: false)
             .updateCharacter(character);
       } else {
-        await Provider.of<CharactersProvider>(context, listen: false)
+        character =
+            await Provider.of<CharactersProvider>(context, listen: false)
             .addCharacter(character);
       }
     }
@@ -86,6 +88,8 @@ class _CharacterScreenState extends State<CharacterScreen> {
                   setState(() {
                     character.name = value;
                   });
+                },
+                onSubmitted: (value) {
                   saveCharacter();
                 },
               ),
