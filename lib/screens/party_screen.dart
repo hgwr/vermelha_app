@@ -7,10 +7,51 @@ import 'package:vermelha_app/providers/characters_provider.dart';
 import '../providers/screen_provider.dart';
 import '../widgets/bottom_bar_widget.dart';
 
-class PartyScreen extends StatelessWidget {
+class PartyScreen extends StatefulWidget {
   const PartyScreen({Key? key}) : super(key: key);
 
   static const routeName = '/party';
+
+  @override
+  State<PartyScreen> createState() => _PartyScreenState();
+}
+
+class _PartyScreenState extends State<PartyScreen> {
+  bool _isDeleting = false;
+
+  void _showConfirmDeleteDialog(Character character) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('キャラクターを削除しますか？'),
+          content: const Text('削除すると元に戻せません。'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _isDeleting = false;
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text('キャンセル'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _isDeleting = false;
+                });
+                Provider.of<CharactersProvider>(context, listen: false)
+                    .removeCharacter(character);
+                Navigator.of(context).pop();
+              },
+              child: const Text('削除'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Widget createListView(BuildContext context, List<Character> characters) {
     return RefreshIndicator(
@@ -41,6 +82,13 @@ class PartyScreen extends StatelessWidget {
                   ),
                 ),
                 Text(character.name),
+                if (_isDeleting)
+                  IconButton(
+                    onPressed: () {
+                      _showConfirmDeleteDialog(character);
+                    },
+                    icon: const Icon(Icons.delete),
+                  ),
               ],
             ),
           );
@@ -54,7 +102,21 @@ class PartyScreen extends StatelessWidget {
     return Consumer<CharactersProvider>(
       builder: (ctx, charactersProvider, _) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Party')),
+          appBar: AppBar(
+            title: const Text('Party'),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isDeleting = !_isDeleting;
+                  });
+                },
+                icon: Icon(
+                  _isDeleting ? Icons.delete : Icons.delete_outline,
+                ),
+              ),
+            ],
+          ),
           body: Column(
             children: [
               Expanded(

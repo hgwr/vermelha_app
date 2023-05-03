@@ -22,8 +22,10 @@ class CharactersProvider extends ChangeNotifier {
   }
 
   Future<void> removeCharacter(Character character) async {
+    debugPrint("removing character ${character.name}");
     _characters.remove(character);
-    await _characterRepository.delete(character);
+    int count = await _characterRepository.delete(character);
+    debugPrint("removed $count character");
     notifyListeners();
   }
 

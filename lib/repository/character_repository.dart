@@ -125,9 +125,10 @@ class CharacterRepository {
     return updatedCharacter;
   }
 
-  Future<void> delete(Character character) async {
+  Future<int> delete(Character character) async {
     final db = await DbConnection().database;
-    await db.transaction((txn) async {
+    debugPrint("deleting character with id ${character.id}");
+    final count = await db.transaction((txn) async {
       await txn.delete(
         'status_parameter',
         where: 'character_id = ?',
@@ -138,11 +139,14 @@ class CharacterRepository {
         where: 'owner_id = ?',
         whereArgs: [character.id],
       );
-      await db.delete(
+      final count = await txn.delete(
         'character',
         where: 'id = ?',
         whereArgs: [character.id],
       );
+      debugPrint("Character deleted successfully with id ${character.id}");
+      return count;
     });
+    return count;
   }
 }
