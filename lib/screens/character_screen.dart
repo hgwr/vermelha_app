@@ -82,10 +82,6 @@ class _CharacterScreenState extends State<CharacterScreen> {
                 child: getImageByJob(character.job!),
               ),
             ),
-          ],
-        ),
-        Row(
-          children: [
             Expanded(
               child: Focus(
                 onFocusChange: (hasFocus) {
