@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
+import 'package:provider/provider.dart';
 
+import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
+import '../providers/characters_provider.dart';
 import '../models/character.dart';
 import '../models/job.dart';
 
@@ -18,6 +20,19 @@ class CharacterScreen extends StatefulWidget {
 class _CharacterScreenState extends State<CharacterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Character character = getInitializedCharacterByJob(Job.fighter);
+
+  void saveCharacter() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      if (character.id != null) {
+        await Provider.of<CharactersProvider>(context, listen: false)
+            .updateCharacter(character);
+      } else {
+        await Provider.of<CharactersProvider>(context, listen: false)
+            .addCharacter(character);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +79,10 @@ class _CharacterScreenState extends State<CharacterScreen> {
                   text: character.name,
                 ),
                 onChanged: (value) {
-                  character.name = value;
+                  setState(() {
+                    character.name = value;
+                  });
+                  saveCharacter();
                 },
               ),
             ),
@@ -81,8 +99,12 @@ class _CharacterScreenState extends State<CharacterScreen> {
                   onChanged: (Job? newValue) {
                     setState(() {
                       character.job = newValue!;
-                      character = getInitializedCharacterByJob(character.job!);
+                      if (character.id == null) {
+                        character =
+                            getInitializedCharacterByJob(character.job!);
+                      }
                     });
+                    saveCharacter();
                   },
                   items: Job.values.map((Job job) {
                     return DropdownMenuItem<Job>(
@@ -121,6 +143,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
               setState(() {
                 character = editedCharacter as Character;
               });
+              saveCharacter();
             }
           },
           child: SizedBox(
