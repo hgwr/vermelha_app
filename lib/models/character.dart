@@ -40,23 +40,17 @@ class Character {
       id: json['id'],
       name: json['name'],
       level: json['level'],
-      maxHp: json['maxHp'],
-      maxMp: json['maxMp'],
+      maxHp: json['max_hp'],
+      maxMp: json['max_mp'],
       hp: json['hp'],
       mp: json['mp'],
       attack: json['attack'],
       defense: json['defense'],
-      magicPower: json['magicPower'],
+      magicPower: json['magic_power'],
       speed: json['speed'],
-      job: Job.values.firstWhere((job) => job.name == json['job']),
-      priorityParameters: json['priorityParameters']
-          .map<StatusParameter>((parameter) => StatusParameter.values
-              .firstWhere((statusParameter) =>
-                  statusParameter.name == parameter['name']))
-          .toList(),
-      battleRules: json['battleRules']
-          .map<BattleRule>((battleRule) => BattleRule.fromJson(battleRule))
-          .toList(),
+      job: getJobById(json['job_id'] as int),
+      priorityParameters: [],
+      battleRules: [],
     );
   }
 
@@ -65,19 +59,15 @@ class Character {
       'id': id,
       'name': name,
       'level': level,
-      'maxHp': maxHp,
-      'maxMp': maxMp,
+      'max_hp': maxHp,
+      'max_mp': maxMp,
       'hp': hp,
       'mp': mp,
       'attack': attack,
       'defense': defense,
-      'magicPower': magicPower,
+      'magic_power': magicPower,
       'speed': speed,
-      'job': job?.name,
-      'priorityParameters': priorityParameters
-          .map((statusParameter) => {'name': statusParameter.name})
-          .toList(),
-      'battleRules': battleRules.map((battleRule) => battleRule.toJson()),
+      'job_id': job?.id,
     };
   }
 

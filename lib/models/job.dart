@@ -19,6 +19,25 @@ enum Job {
   });
 }
 
+Job getJobById(int id) {
+  switch (id) {
+    case 1:
+      return Job.fighter;
+    case 2:
+      return Job.paladin;
+    case 3:
+      return Job.ranger;
+    case 4:
+      return Job.wizard;
+    case 5:
+      return Job.shaman;
+    case 6:
+      return Job.priest;
+    default:
+      return Job.fighter;
+  }
+}
+
 Image getImageByJob(Job job) {
   switch (job) {
     case Job.fighter:

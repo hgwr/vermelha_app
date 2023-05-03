@@ -124,3 +124,7 @@ List<Action> getActionList() {
     )
   ];
 }
+
+Action getActionByUuid(String uuid) {
+  return getActionList().firstWhere((action) => action.uuid == uuid);
+}

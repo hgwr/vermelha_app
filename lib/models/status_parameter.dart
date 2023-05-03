@@ -12,3 +12,7 @@ enum StatusParameter {
 }
 
 const List<StatusParameter> statusParameters = StatusParameter.values;
+
+StatusParameter getStatusParameterByName(String name) {
+  return statusParameters.firstWhere((element) => element.name == name);
+}

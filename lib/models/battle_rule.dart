@@ -20,24 +20,26 @@ class BattleRule {
   });
 
   static BattleRule fromJson(Map<String, dynamic> json) {
+    Condition condition = getConditionByUuid(json['condition_uuid']);
+    Action action = getActionByUuid(json['action_uuid']);
     return BattleRule(
       id: json['id'],
       owner: json['owner'],
       priority: json['priority'],
       name: json['name'],
-      condition: json['condition'],
-      action: json['action'],
+      condition: condition,
+      action: action,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'owner': owner,
+      'owner_id': owner.id,
       'priority': priority,
       'name': name,
-      'condition': condition,
-      'action': action,
+      'condition_uuid': condition.uuid,
+      'action_uuid': action.uuid,
     };
   }
 
