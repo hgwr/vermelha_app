@@ -17,12 +17,12 @@ class EditPriorityParametersScreen extends StatefulWidget {
 class _EditPriorityParametersScreenState
     extends State<EditPriorityParametersScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  Character character = getInitializedCharacterByJob(Job.fighter);
+  PlayerCharacter character = getInitializedCharacterByJob(Job.fighter);
 
   @override
   Widget build(BuildContext context) {
     if (ModalRoute.of(context)!.settings.arguments != null) {
-      character = ModalRoute.of(context)!.settings.arguments as Character;
+      character = ModalRoute.of(context)!.settings.arguments as PlayerCharacter;
     }
 
     return WillPopScope(

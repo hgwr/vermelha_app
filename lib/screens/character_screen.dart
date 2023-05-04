@@ -20,7 +20,7 @@ class CharacterScreen extends StatefulWidget {
 
 class _CharacterScreenState extends State<CharacterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  Character character = getInitializedCharacterByJob(Job.fighter);
+  PlayerCharacter character = getInitializedCharacterByJob(Job.fighter);
   TextEditingController _characterNameController = TextEditingController();
 
   @override
@@ -47,7 +47,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
   @override
   Widget build(BuildContext context) {
     if (ModalRoute.of(context)!.settings.arguments != null) {
-      character = ModalRoute.of(context)!.settings.arguments as Character;
+      character = ModalRoute.of(context)!.settings.arguments as PlayerCharacter;
       _characterNameController.text = character.name;
     }
 
@@ -152,7 +152,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
             );
             if (editedCharacter != null) {
               setState(() {
-                character = editedCharacter as Character;
+                character = editedCharacter as PlayerCharacter;
               });
               saveCharacter();
             }

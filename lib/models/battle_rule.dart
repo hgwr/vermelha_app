@@ -4,7 +4,7 @@ import 'package:vermelha_app/models/condition.dart';
 
 class BattleRule {
   final int? id;
-  final Character owner;
+  final PlayerCharacter owner;
   final int priority;
   final String name;
   Condition condition;
@@ -19,7 +19,7 @@ class BattleRule {
     required this.action,
   });
 
-  static BattleRule fromJson(Map<String, dynamic> json, Character owner) {
+  static BattleRule fromJson(Map<String, dynamic> json, PlayerCharacter owner) {
     Condition condition = getConditionByUuid(json['condition_uuid']);
     Action action = getActionByUuid(json['action_uuid']);
     return BattleRule(
@@ -45,7 +45,7 @@ class BattleRule {
 
   BattleRule copyWith({
     int? id,
-    Character? owner,
+    PlayerCharacter? owner,
     int? priority,
     String? name,
     Condition? condition,

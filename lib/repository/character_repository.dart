@@ -7,13 +7,13 @@ import 'package:vermelha_app/models/character.dart';
 import '../models/status_parameter.dart';
 
 class CharacterRepository {
-  Future<List<Character>> findAll() async {
+  Future<List<PlayerCharacter>> findAll() async {
     try {
       final db = await DbConnection().database;
       final result = await db.query('character');
-      List<Character> characters = [];
+      List<PlayerCharacter> characters = [];
       for (var json in result) {
-        var character = Character.fromJson(json);
+        var character = PlayerCharacter.fromJson(json);
         character = await _setParams(db, character);
         characters.add(character);
       }
@@ -25,19 +25,20 @@ class CharacterRepository {
     }
   }
 
-  Future<Character> findById(int id) async {
+  Future<PlayerCharacter> findById(int id) async {
     final db = await DbConnection().database;
     final result = await db.query(
       'character',
       where: 'id = ?',
       whereArgs: [id],
     );
-    var character = Character.fromJson(result.first);
+    var character = PlayerCharacter.fromJson(result.first);
     character = await _setParams(db, character);
     return character;
   }
 
-  Future<Character> _setParams(Database db, Character character) async {
+  Future<PlayerCharacter> _setParams(
+      Database db, PlayerCharacter character) async {
     final id = character.id!;
     final statusParamJsonList = await db.query(
       'status_parameter',
@@ -62,7 +63,7 @@ class CharacterRepository {
     return character;
   }
 
-  Future<Character> save(Character character) async {
+  Future<PlayerCharacter> save(PlayerCharacter character) async {
     final db = await DbConnection().database;
     final newCharacter = await db.transaction((txn) async {
       final id = await txn.insert('character', character.toJson());
@@ -86,7 +87,7 @@ class CharacterRepository {
     return newCharacter;
   }
 
-  Future<Character> update(Character character) async {
+  Future<PlayerCharacter> update(PlayerCharacter character) async {
     final db = await DbConnection().database;
     final updatedCharacter = await db.transaction((txn) async {
       await txn.update(
@@ -125,7 +126,7 @@ class CharacterRepository {
     return updatedCharacter;
   }
 
-  Future<int> delete(Character character) async {
+  Future<int> delete(PlayerCharacter character) async {
     final db = await DbConnection().database;
     debugPrint("deleting character with id ${character.id}");
     final count = await db.transaction((txn) async {

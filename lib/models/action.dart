@@ -4,14 +4,14 @@ import 'package:vermelha_app/models/vermelha_context.dart';
 
 typedef ApplyEffect = Future<bool> Function(
   VermelhaContext context,
-  Character subject,
-  List<Character> targets,
+  PlayerCharacter subject,
+  List<PlayerCharacter> targets,
 );
 typedef ComputeDuration = double Function(
   double baseDurationSeconds,
   VermelhaContext context,
-  Character subject,
-  List<Character> targets,
+  PlayerCharacter subject,
+  List<PlayerCharacter> targets,
 );
 
 class Action {

@@ -3,13 +3,13 @@ import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/character.dart';
 
 class BattleRuleRepository {
-  Future<List<BattleRule>> findAll(Character ch) async {
+  Future<List<BattleRule>> findAll(PlayerCharacter ch) async {
     final db = await DbConnection().database;
     final result = await db.query('battle_rules');
     return result.map((json) => BattleRule.fromJson(json, ch)).toList();
   }
 
-  Future<BattleRule> findById(int id, Character ch) async {
+  Future<BattleRule> findById(int id, PlayerCharacter ch) async {
     final db = await DbConnection().database;
     final result = await db.query(
       'battle_rules',

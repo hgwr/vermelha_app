@@ -3,25 +3,25 @@ import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/repository/character_repository.dart';
 
 class CharactersProvider extends ChangeNotifier {
-  List<Character> _characters = [];
+  List<PlayerCharacter> _characters = [];
 
   final CharacterRepository _characterRepository = CharacterRepository();
 
-  List<Character> get characters => _characters;
+  List<PlayerCharacter> get characters => _characters;
 
   Future<void> loadCharacters() async {
     _characters = await _characterRepository.findAll();
     notifyListeners();
   }
 
-  Future<Character> addCharacter(Character character) async {
+  Future<PlayerCharacter> addCharacter(PlayerCharacter character) async {
     final c = await _characterRepository.save(character);
     _characters.add(c);
     notifyListeners();
     return c;
   }
 
-  Future<void> removeCharacter(Character character) async {
+  Future<void> removeCharacter(PlayerCharacter character) async {
     debugPrint("removing character ${character.name}");
     _characters.remove(character);
     int count = await _characterRepository.delete(character);
@@ -29,7 +29,7 @@ class CharactersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Character> updateCharacter(Character character) async {
+  Future<PlayerCharacter> updateCharacter(PlayerCharacter character) async {
     final index = _characters.indexWhere((c) => c.id == character.id);
     _characters[index] = character;
     final c = await _characterRepository.update(character);

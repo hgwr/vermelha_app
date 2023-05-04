@@ -5,7 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:vermelha_app/models/vermelha_context.dart';
 import 'package:vermelha_app/models/character.dart';
 
-typedef GetTargets = List<Character> Function(VermelhaContext context);
+typedef GetTargets = List<PlayerCharacter> Function(VermelhaContext context);
 
 enum TargetCategory {
   ally,

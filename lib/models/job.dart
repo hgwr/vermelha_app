@@ -55,9 +55,9 @@ Image getImageByJob(Job job) {
   }
 }
 
-Character getInitializedCharacterByJob(Job job) {
+PlayerCharacter getInitializedCharacterByJob(Job job) {
   return {
-    Job.fighter: Character(
+    Job.fighter: PlayerCharacter(
       job: Job.fighter,
       name: '戦士',
       level: 1,
@@ -76,7 +76,7 @@ Character getInitializedCharacterByJob(Job job) {
       ],
       battleRules: [],
     ),
-    Job.paladin: Character(
+    Job.paladin: PlayerCharacter(
       job: Job.paladin,
       name: '神殿騎士',
       level: 1,
@@ -95,7 +95,7 @@ Character getInitializedCharacterByJob(Job job) {
       ],
       battleRules: [],
     ),
-    Job.ranger: Character(
+    Job.ranger: PlayerCharacter(
       job: Job.ranger,
       name: 'レンジャー',
       level: 1,
@@ -114,7 +114,7 @@ Character getInitializedCharacterByJob(Job job) {
       ],
       battleRules: [],
     ),
-    Job.wizard: Character(
+    Job.wizard: PlayerCharacter(
       job: Job.wizard,
       name: '魔法使い',
       level: 1,
@@ -133,7 +133,7 @@ Character getInitializedCharacterByJob(Job job) {
       ],
       battleRules: [],
     ),
-    Job.shaman: Character(
+    Job.shaman: PlayerCharacter(
       job: Job.shaman,
       name: 'シャーマン',
       level: 1,
@@ -152,7 +152,7 @@ Character getInitializedCharacterByJob(Job job) {
       ],
       battleRules: [],
     ),
-    Job.priest: Character(
+    Job.priest: PlayerCharacter(
       job: Job.priest,
       name: '僧侶',
       level: 1,

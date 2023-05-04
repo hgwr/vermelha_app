@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:vermelha_app/models/character.dart';
 
 class VermelhaContext {
-  final List<Character> allies;
-  final List<Character> enemies;
+  final List<PlayerCharacter> allies;
+  final List<PlayerCharacter> enemies;
 
   final random = Random();
 

@@ -19,7 +19,7 @@ class PartyScreen extends StatefulWidget {
 class _PartyScreenState extends State<PartyScreen> {
   bool _isDeleting = false;
 
-  void _showConfirmDeleteDialog(Character character) {
+  void _showConfirmDeleteDialog(PlayerCharacter character) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -53,7 +53,8 @@ class _PartyScreenState extends State<PartyScreen> {
     );
   }
 
-  Widget createListView(BuildContext context, List<Character> characters) {
+  Widget createListView(
+      BuildContext context, List<PlayerCharacter> characters) {
     return RefreshIndicator(
       onRefresh: () async {},
       child: ListView.builder(
@@ -64,7 +65,7 @@ class _PartyScreenState extends State<PartyScreen> {
               child: Text('No characters'),
             );
           }
-          Character character = characters[index];
+          PlayerCharacter character = characters[index];
           return GestureDetector(
             onTap: () {
               Navigator.of(context).pushNamed(

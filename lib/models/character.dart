@@ -2,7 +2,7 @@ import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
 
-class Character {
+class PlayerCharacter {
   int? id;
   String name;
   int level;
@@ -18,7 +18,7 @@ class Character {
   List<StatusParameter> priorityParameters;
   List<BattleRule> battleRules;
 
-  Character({
+  PlayerCharacter({
     this.id,
     required this.name,
     required this.level,
@@ -35,8 +35,8 @@ class Character {
     required this.battleRules,
   });
 
-  static Character fromJson(Map<String, dynamic> json) {
-    return Character(
+  static PlayerCharacter fromJson(Map<String, dynamic> json) {
+    return PlayerCharacter(
       id: json['id'],
       name: json['name'],
       level: json['level'],
@@ -71,7 +71,7 @@ class Character {
     };
   }
 
-  Character copyWith({
+  PlayerCharacter copyWith({
     int? id,
     String? name,
     int? level,
@@ -87,7 +87,7 @@ class Character {
     List<StatusParameter>? priorityParameters,
     List<BattleRule>? battleRules,
   }) {
-    return Character(
+    return PlayerCharacter(
       id: id ?? this.id,
       name: name ?? this.name,
       level: level ?? this.level,

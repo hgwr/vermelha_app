@@ -11,9 +11,9 @@ class Task {
   final String uuid;
   final DateTime startedAt;
   DateTime? finishedAt;
-  final Character subject;
+  final PlayerCharacter subject;
   final Action action;
-  final List<Character> targets;
+  final List<PlayerCharacter> targets;
   TaskStatus status;
 
   Task({

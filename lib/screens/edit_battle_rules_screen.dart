@@ -24,7 +24,7 @@ class EditBattleRulesScreen extends StatefulWidget {
 
 class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  Character character = getInitializedCharacterByJob(Job.fighter);
+  PlayerCharacter character = getInitializedCharacterByJob(Job.fighter);
   bool _isOrdering = false;
 
   void saveCharacter() async {
@@ -83,7 +83,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
   @override
   Widget build(BuildContext context) {
     if (ModalRoute.of(context)!.settings.arguments != null) {
-      character = ModalRoute.of(context)!.settings.arguments as Character;
+      character = ModalRoute.of(context)!.settings.arguments as PlayerCharacter;
     }
 
     return Scaffold(
