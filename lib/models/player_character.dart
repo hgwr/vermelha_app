@@ -1,39 +1,43 @@
 import 'package:vermelha_app/models/battle_rule.dart';
+import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
 
-class PlayerCharacter {
-  int? id;
-  String name;
-  int level;
-  int maxHp;
-  int maxMp;
-  int hp;
-  int mp;
-  int attack;
-  int defense;
-  int magicPower;
-  int speed;
+class PlayerCharacter extends Character {
   Job? job;
-  List<StatusParameter> priorityParameters;
-  List<BattleRule> battleRules;
 
   PlayerCharacter({
-    this.id,
-    required this.name,
-    required this.level,
-    required this.maxHp,
-    required this.maxMp,
-    required this.hp,
-    required this.mp,
-    required this.attack,
-    required this.defense,
-    required this.magicPower,
-    required this.speed,
+    uuid,
+    id,
+    required name,
+    required level,
+    required maxHp,
+    required maxMp,
+    required hp,
+    required mp,
+    required attack,
+    required defense,
+    required magicPower,
+    required speed,
+    required priorityParameters,
+    required battleRules,
     this.job,
-    required this.priorityParameters,
-    required this.battleRules,
-  });
+  }) : super(
+          uuid: uuid,
+          id: id,
+          name: name,
+          level: level,
+          maxHp: maxHp,
+          maxMp: maxMp,
+          hp: hp,
+          mp: mp,
+          attack: attack,
+          defense: defense,
+          magicPower: magicPower,
+          speed: speed,
+          priorityParameters: priorityParameters,
+          battleRules: battleRules,
+        );
 
   static PlayerCharacter fromJson(Map<String, dynamic> json) {
     return PlayerCharacter(
@@ -49,8 +53,8 @@ class PlayerCharacter {
       magicPower: json['magic_power'],
       speed: json['speed'],
       job: getJobById(json['job_id'] as int),
-      priorityParameters: [],
-      battleRules: [],
+      priorityParameters: <StatusParameter>[],
+      battleRules: <BattleRule>[],
     );
   }
 
@@ -71,7 +75,9 @@ class PlayerCharacter {
     };
   }
 
+  @override
   PlayerCharacter copyWith({
+    String? uuid,
     int? id,
     String? name,
     int? level,
@@ -88,6 +94,7 @@ class PlayerCharacter {
     List<BattleRule>? battleRules,
   }) {
     return PlayerCharacter(
+      uuid: uuid ?? this.uuid,
       id: id ?? this.id,
       name: name ?? this.name,
       level: level ?? this.level,
