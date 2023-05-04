@@ -29,7 +29,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
     _characterNameController.text = character.name;
   }
 
-  void saveCharacter() async {
+  Future<void> saveCharacter() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (character.id != null) {
@@ -62,7 +62,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: _formKey,
-                child: createListView(),
+                child: createListView(context),
               ),
             ),
           ),
@@ -71,62 +71,88 @@ class _CharacterScreenState extends State<CharacterScreen> {
     );
   }
 
-  ListView createListView() {
+  ListView createListView(BuildContext context) {
+    double nameFieldWidth = MediaQuery.of(context).size.width - 180;
+
     return ListView(
       shrinkWrap: true,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Expanded(
-              child: SizedBox(
-                height: 100,
-                child: getImageByJob(character.job!),
-              ),
+            SizedBox(
+              height: 100,
+              width: 100,
+              child: getImageByJob(character.job!),
             ),
-            Expanded(
-              child: Focus(
-                onFocusChange: (hasFocus) {
-                  if (!hasFocus) {
-                    character.name = _characterNameController.text;
-                    saveCharacter();
-                  }
-                },
-                child: TextField(
-                  decoration: const InputDecoration(labelText: 'Name'),
-                  controller: _characterNameController,
-                ),
+            SizedBox(
+              height: 100,
+              width: nameFieldWidth,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Focus(
+                      onFocusChange: (hasFocus) {
+                        if (!hasFocus) {
+                          character.name = _characterNameController.text;
+                          saveCharacter();
+                        }
+                      },
+                      child: TextField(
+                        decoration: const InputDecoration(labelText: '名前'),
+                        controller: _characterNameController,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        const Text('ジョブ: '),
+                        Expanded(
+                          child: DropdownButton<Job>(
+                            value: character.job,
+                            onChanged: (Job? newValue) {
+                              setState(() {
+                                character.job = newValue!;
+                                if (character.id == null) {
+                                  character = getInitializedCharacterByJob(
+                                      character.job!);
+                                }
+                              });
+                              saveCharacter();
+                            },
+                            items: Job.values.map((Job job) {
+                              return DropdownMenuItem<Job>(
+                                value: job,
+                                child: Text(job.name),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
-        SizedBox(
-          height: 60,
-          child: Row(
-            children: [
-              const Text('Job: '),
-              Expanded(
-                child: DropdownButton<Job>(
-                  value: character.job,
-                  onChanged: (Job? newValue) {
-                    setState(() {
-                      character.job = newValue!;
-                      if (character.id == null) {
-                        character =
-                            getInitializedCharacterByJob(character.job!);
-                      }
-                    });
-                    saveCharacter();
-                  },
-                  items: Job.values.map((Job job) {
-                    return DropdownMenuItem<Job>(
-                      value: job,
-                      child: Text(job.name),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
+        const SizedBox(
+          height: 8,
+        ),
+        Row(
+          children: [
+            const Text('パーティ参加: '),
+            Switch(
+              value: character.isActive,
+              onChanged: (value) {
+                setState(() {
+                  character.isActive = value;
+                });
+                saveCharacter();
+              },
+            ),
+          ],
         ),
         characterPropertyItem(
           'レベル: ',
@@ -180,7 +206,10 @@ class _CharacterScreenState extends State<CharacterScreen> {
           ),
         ),
         GestureDetector(
-          onTap: () {
+          onTap: () async {
+            if (character.id == null) {
+              await saveCharacter();
+            }
             Navigator.of(context).pushNamed(
               EditBattleRulesScreen.routeName,
               arguments: character,
@@ -204,7 +233,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
 
   SizedBox characterPropertyItem(String label, String value) {
     return SizedBox(
-      height: 40,
+      height: 32,
       child: Row(
         children: [
           Text(label),
