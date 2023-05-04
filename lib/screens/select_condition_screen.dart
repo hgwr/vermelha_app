@@ -44,7 +44,7 @@ class _SelectConditionScreenState extends State<SelectConditionScreen> {
                     for (var condition in getConditionList())
                       ListTile(
                         key: ValueKey(condition.uuid),
-                        leading: _battleRule!.condition?.uuid == condition.uuid
+                        leading: _battleRule!.condition.uuid == condition.uuid
                             ? const Icon(Icons.check)
                             : null,
                         title: Text(condition.name),

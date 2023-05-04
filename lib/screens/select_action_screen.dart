@@ -41,7 +41,7 @@ class _SelectActionScreenState extends State<SelectActionScreen> {
                   for (var action in getActionList())
                     ListTile(
                       key: ValueKey(action.uuid),
-                      leading: _battleRule!.action?.uuid == action.uuid
+                      leading: _battleRule!.action.uuid == action.uuid
                           ? const Icon(Icons.check)
                           : null,
                       title: Text(action.name),
