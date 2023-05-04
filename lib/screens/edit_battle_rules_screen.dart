@@ -90,8 +90,8 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
               actions: [
                 IconButton(
                   icon: _isOrdering
-                      ? Icon(Icons.swap_vert_circle)
-                      : Icon(Icons.swap_vert),
+                      ? const Icon(Icons.swap_vert_circle)
+                      : const Icon(Icons.swap_vert),
                   onPressed: () {
                     setState(() {
                       _isOrdering = !_isOrdering;
@@ -200,7 +200,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
         }
         for (int i = 1; i <= character.battleRules.length; i++) {
           character.battleRules[i - 1] = character.battleRules[i - 1]
-              .copyWith(priority: character.battleRules.length - i + 1);
+              .copyWith(priority: i);
         }
         setState(() {});
       },
