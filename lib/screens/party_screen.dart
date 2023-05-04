@@ -73,26 +73,29 @@ class _PartyScreenState extends State<PartyScreen> {
                 arguments: character,
               );
             },
-            child: Row(
-              children: [
-                if (_isDeleting)
-                  IconButton(
-                    onPressed: () {
-                      _showConfirmDeleteDialog(character);
-                    },
-                    icon: const Icon(Icons.delete),
+            child: ListTile(
+              leading: _isDeleting
+                  ? IconButton(
+                      onPressed: () {
+                        _showConfirmDeleteDialog(character);
+                      },
+                      icon: const Icon(Icons.delete),
+                    )
+                  : getImageByJob(character.job!),
+              title: Row(
+                children: [
+                  character.isActive
+                      ? const Icon(Icons.person)
+                      : const Icon(Icons.person_off_outlined),
+                  Text(
+                    character.name,
                   ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 50,
-                    child: getImageByJob(character.job!),
-                  ),
-                ),
-                Expanded(
-                  child: Text(character.name),
-                ),
-              ],
+                ],
+              ),
+              subtitle: Text(
+                "${character.job!.name} "
+                "Lv.${character.level} ",
+              ),
             ),
           );
         },
