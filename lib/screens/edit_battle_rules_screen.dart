@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vermelha_app/screens/select_action_screen.dart';
 import 'package:vermelha_app/screens/select_condition_screen.dart';
 
 import '../providers/characters_provider.dart';
@@ -148,7 +149,14 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
                 ),
               ),
               subtitle: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamed(SelectActionScreen.routeName,
+                          arguments: battleRule)
+                      .then((value) {
+                    setState(() {});
+                  });
+                },
                 child: Row(
                   children: [
                     Text(battleRule.action.name),
