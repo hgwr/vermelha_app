@@ -4,7 +4,7 @@ import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
 
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 import '../providers/characters_provider.dart';
-import '../models/character.dart';
+import '../models/player_character.dart';
 import '../models/job.dart';
 
 class CharacterScreen extends StatefulWidget {

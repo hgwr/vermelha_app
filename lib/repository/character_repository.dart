@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:vermelha_app/db/db_connection.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
-import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/player_character.dart';
 import '../models/status_parameter.dart';
 
 class CharacterRepository {

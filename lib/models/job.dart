@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
 
 enum Job {

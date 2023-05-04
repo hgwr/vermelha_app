@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/characters_provider.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
-import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/job.dart';

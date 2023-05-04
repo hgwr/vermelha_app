@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/character.dart';
+import '../models/player_character.dart';
 import '../models/job.dart';
 import '../models/status_parameter.dart';
 

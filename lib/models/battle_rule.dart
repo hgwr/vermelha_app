@@ -1,5 +1,5 @@
 import 'package:vermelha_app/models/action.dart';
-import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/condition.dart';
 
 class BattleRule {

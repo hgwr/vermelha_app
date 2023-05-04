@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/repository/character_repository.dart';
 
 class CharactersProvider extends ChangeNotifier {
