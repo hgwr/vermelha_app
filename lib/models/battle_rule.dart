@@ -7,10 +7,10 @@ class BattleRule {
   final Character owner;
   final int priority;
   final String name;
-  final Condition condition;
-  final Action action;
+  Condition condition;
+  Action action;
 
-  const BattleRule({
+  BattleRule({
     this.id,
     required this.owner,
     required this.priority,

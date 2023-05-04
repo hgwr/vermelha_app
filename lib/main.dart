@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:vermelha_app/screens/character_screen.dart';
 import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
+import 'package:vermelha_app/screens/select_action_screen.dart';
+import 'package:vermelha_app/screens/select_condition_screen.dart';
 
 import './db/db_migration.dart';
 import './providers/screen_provider.dart';
@@ -76,6 +78,9 @@ class _MyAppState extends State<MyApp> {
                 const EditPriorityParametersScreen(),
             EditBattleRulesScreen.routeName: (ctx) =>
                 const EditBattleRulesScreen(),
+            SelectConditionScreen.routeName: (ctx) =>
+                const SelectConditionScreen(),
+            SelectActionScreen.routeName: (ctx) => const SelectActionScreen(),
           },
         ),
       ),
