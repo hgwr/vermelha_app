@@ -60,6 +60,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider.value(
           value: charactersProvider,
         ),
+        ChangeNotifierProvider.value(
+          value: tasksProvider,
+        ),
       ],
       child: Consumer<ScreenProvider>(
         builder: (ctx, screenProvider, _) => MaterialApp(
