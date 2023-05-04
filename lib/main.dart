@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/screens/character_screen.dart';
 import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 import 'package:vermelha_app/screens/select_action_screen.dart';
 import 'package:vermelha_app/screens/select_condition_screen.dart';
+import 'package:vermelha_app/screens/select_player_characters_screen.dart';
 
 import './db/db_migration.dart';
 import './providers/screen_provider.dart';
@@ -38,6 +40,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   final CharactersProvider charactersProvider = CharactersProvider();
+  final TasksProvider tasksProvider = TasksProvider();
 
   @override
   void initState() {
@@ -81,6 +84,8 @@ class _MyAppState extends State<MyApp> {
             SelectConditionScreen.routeName: (ctx) =>
                 const SelectConditionScreen(),
             SelectActionScreen.routeName: (ctx) => const SelectActionScreen(),
+            SelectPlayerCharactersScreen.routeName: (ctx) =>
+                const SelectPlayerCharactersScreen(),
           },
         ),
       ),
