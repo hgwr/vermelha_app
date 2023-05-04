@@ -56,7 +56,7 @@ class CharacterRepository {
     );
     List<BattleRule> battleRules = [];
     for (var json in battleRuleJsonList) {
-      battleRules.add(BattleRule.fromJson(json));
+      battleRules.add(BattleRule.fromJson(json, character));
     }
     character = character.copyWith(battleRules: battleRules);
     return character;

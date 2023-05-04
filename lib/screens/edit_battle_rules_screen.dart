@@ -58,6 +58,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
               setState(() {
                 character.battleRules.remove(rule);
               });
+              saveCharacter();
             },
           ),
         ],
@@ -137,6 +138,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
                       .then((value) {
                     setState(() {});
                   });
+                  saveCharacter();
                 },
                 child: Row(
                   children: [
@@ -156,6 +158,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
                       .then((value) {
                     setState(() {});
                   });
+                  saveCharacter();
                 },
                 child: Row(
                   children: [
@@ -186,6 +189,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
                 setState(() {
                   character.battleRules.add(createNewBattleRule());
                 });
+                saveCharacter();
               },
             ),
           ),
@@ -215,10 +219,11 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
           character.battleRules[current] = startItem;
         }
         for (int i = 1; i <= character.battleRules.length; i++) {
-          character.battleRules[i - 1] = character.battleRules[i - 1]
-              .copyWith(priority: i);
+          character.battleRules[i - 1] =
+              character.battleRules[i - 1].copyWith(priority: i);
         }
         setState(() {});
+        saveCharacter();
       },
       children: [
         ...character.battleRules.map((battleRule) {

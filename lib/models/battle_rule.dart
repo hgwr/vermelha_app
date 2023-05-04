@@ -19,12 +19,12 @@ class BattleRule {
     required this.action,
   });
 
-  static BattleRule fromJson(Map<String, dynamic> json) {
+  static BattleRule fromJson(Map<String, dynamic> json, Character owner) {
     Condition condition = getConditionByUuid(json['condition_uuid']);
     Action action = getActionByUuid(json['action_uuid']);
     return BattleRule(
       id: json['id'],
-      owner: json['owner'],
+      owner: owner,
       priority: json['priority'],
       name: json['name'],
       condition: condition,
