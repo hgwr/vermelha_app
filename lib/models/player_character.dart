@@ -5,6 +5,8 @@ import 'package:vermelha_app/models/status_parameter.dart';
 
 class PlayerCharacter extends Character {
   Job? job;
+  int exp = 0;
+  bool isActive = true;
 
   PlayerCharacter({
     uuid,
@@ -22,6 +24,8 @@ class PlayerCharacter extends Character {
     required priorityParameters,
     required battleRules,
     this.job,
+    this.exp = 0,
+    this.isActive = true,
   }) : super(
           uuid: uuid,
           id: id,
@@ -55,6 +59,8 @@ class PlayerCharacter extends Character {
       job: getJobById(json['job_id'] as int),
       priorityParameters: <StatusParameter>[],
       battleRules: <BattleRule>[],
+      exp: json['exp'],
+      isActive: json['is_active'] == 1,
     );
   }
 
@@ -72,6 +78,8 @@ class PlayerCharacter extends Character {
       'magic_power': magicPower,
       'speed': speed,
       'job_id': job?.id,
+      'exp': exp,
+      'is_active': isActive ? 1 : 0,
     };
   }
 
@@ -92,6 +100,8 @@ class PlayerCharacter extends Character {
     Job? job,
     List<StatusParameter>? priorityParameters,
     List<BattleRule>? battleRules,
+    int? exp,
+    bool? isActive,
   }) {
     return PlayerCharacter(
       uuid: uuid ?? this.uuid,
@@ -109,6 +119,8 @@ class PlayerCharacter extends Character {
       job: job ?? this.job,
       priorityParameters: priorityParameters ?? this.priorityParameters,
       battleRules: battleRules ?? this.battleRules,
+      exp: exp ?? this.exp,
+      isActive: isActive ?? this.isActive,
     );
   }
 }

@@ -129,8 +129,12 @@ class _CharacterScreenState extends State<CharacterScreen> {
           ),
         ),
         characterPropertyItem(
-          'Level: ',
+          'レベル: ',
           character.level.toString(),
+        ),
+        characterPropertyItem(
+          '経験値: ',
+          character.exp.toString(),
         ),
         characterPropertyItem(
           'HP: ',
@@ -140,10 +144,10 @@ class _CharacterScreenState extends State<CharacterScreen> {
           'MP: ',
           "${character.mp} / ${character.maxMp}",
         ),
-        characterPropertyItem('Attack: ', character.attack.toString()),
-        characterPropertyItem('Defense: ', character.defense.toString()),
-        characterPropertyItem('Magic Power: ', character.magicPower.toString()),
-        characterPropertyItem('Speed: ', character.speed.toString()),
+        characterPropertyItem('攻撃力: ', character.attack.toString()),
+        characterPropertyItem('防御力: ', character.defense.toString()),
+        characterPropertyItem('魔法力: ', character.magicPower.toString()),
+        characterPropertyItem('素早さ: ', character.speed.toString()),
         GestureDetector(
           onTap: () async {
             final editedCharacter = await Navigator.of(context).pushNamed(
@@ -161,7 +165,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
             height: 40,
             child: Row(
               children: [
-                const Text('Priority Parameters: '),
+                const Text('優先パラメータ: '),
                 Expanded(
                   child: Text(
                     character.priorityParameters

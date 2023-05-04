@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
 
@@ -74,7 +75,7 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.attack,
         StatusParameter.defense,
       ],
-      battleRules: [],
+      battleRules: <BattleRule>[],
     ),
     Job.paladin: PlayerCharacter(
       job: Job.paladin,
@@ -93,7 +94,7 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.defense,
         StatusParameter.mp,
       ],
-      battleRules: [],
+      battleRules: <BattleRule>[],
     ),
     Job.ranger: PlayerCharacter(
       job: Job.ranger,
@@ -112,7 +113,7 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.attack,
         StatusParameter.speed,
       ],
-      battleRules: [],
+      battleRules: <BattleRule>[],
     ),
     Job.wizard: PlayerCharacter(
       job: Job.wizard,
@@ -131,7 +132,7 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.magicPower,
         StatusParameter.mp,
       ],
-      battleRules: [],
+      battleRules: <BattleRule>[],
     ),
     Job.shaman: PlayerCharacter(
       job: Job.shaman,
@@ -150,7 +151,7 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.magicPower,
         StatusParameter.mp,
       ],
-      battleRules: [],
+      battleRules: <BattleRule>[],
     ),
     Job.priest: PlayerCharacter(
       job: Job.priest,
@@ -169,7 +170,7 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.magicPower,
         StatusParameter.mp,
       ],
-      battleRules: [],
+      battleRules: <BattleRule>[],
     ),
   }[job]!;
 }

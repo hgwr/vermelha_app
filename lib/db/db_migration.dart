@@ -53,6 +53,12 @@ CREATE TABLE IF NOT EXISTS battle_rule (
     action_uuid TEXT NOT NULL,
     FOREIGN KEY(owner_id) REFERENCES character(id))
     ''',
+  23050500100: '''
+alter table character add column exp INTEGER NOT NULL DEFAULT 0
+''',
+  23050500110: '''
+alter table character add column is_active INTEGER NOT NULL DEFAULT 1
+''',
 };
 
 Future<void> migrateDatabase() async {
