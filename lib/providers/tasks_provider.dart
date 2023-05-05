@@ -18,7 +18,7 @@ enum EngineStatus {
   paused,
 }
 
-
+typedef ScrollDownFunc = void Function();
 
 class TasksProvider extends ChangeNotifier {
   CharactersProvider charactersProvider;
@@ -26,6 +26,7 @@ class TasksProvider extends ChangeNotifier {
   EngineStatus _engineStatus = EngineStatus.paused;
   VermelhaContext _vermelhaContext = VermelhaContext(allies: [], enemies: []);
   Timer? _timer;
+  ScrollDownFunc? scrollDownFunc;
 
   TasksProvider(this.charactersProvider);
 
@@ -122,6 +123,10 @@ class TasksProvider extends ChangeNotifier {
         );
         debugPrint(newTask.toString());
         _tasks.add(newTask);
+        if (scrollDownFunc != null) {
+          scrollDownFunc!();
+        }
+        break;
       }
     }
 

@@ -41,6 +41,8 @@ class _DungeonScreenState extends State<DungeonScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Consumer<TasksProvider>(
                 builder: (ctx, taskProvider, child) {
+                  taskProvider.scrollDownFunc = scrollDown;
+                  
                   return ListView.builder(
                     controller: _scrollController,
                     itemCount: taskProvider.tasks.length,
