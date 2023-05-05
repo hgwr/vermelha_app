@@ -1,10 +1,11 @@
 import 'package:vermelha_app/models/action.dart';
+import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/condition.dart';
 
 class BattleRule {
   final int? id;
-  final PlayerCharacter owner;
+  final Character owner;
   final int priority;
   final String name;
   Condition condition;

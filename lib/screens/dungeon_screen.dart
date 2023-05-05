@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/job.dart';
+import 'package:vermelha_app/models/player_character.dart';
+import 'package:vermelha_app/models/task.dart';
 import 'package:vermelha_app/models/vermelha_context.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 
@@ -16,6 +20,15 @@ class DungeonScreen extends StatefulWidget {
 }
 
 class _DungeonScreenState extends State<DungeonScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  void scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeOut,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +40,39 @@ class _DungeonScreenState extends State<DungeonScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Consumer<TasksProvider>(
-                builder: (context, value, child) {
-                  return ListView(
-                    children: [
-                      for (var task in value.tasks)
-                        ListTile(
-                          key: ValueKey(task.uuid),
-                          title: Text(task.uuid),
-                        ),
-                    ],
+                builder: (ctx, taskProvider, child) {
+                  return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: taskProvider.tasks.length,
+                    itemBuilder: (ctx, index) {
+                      final task = taskProvider.tasks[index];
+                      final subtitle = task.status == TaskStatus.running
+                          ? "${task.progress}"
+                          : task.status.toString();
+                      if (task.subject is PlayerCharacter) {
+                        final character = task.subject as PlayerCharacter;
+                        return ListTile(
+                          leading: getImageByJob(character.job!),
+                          title: Text(
+                            "${character.name}: "
+                            "${task.action.name} → "
+                            "${task.targets.map((t) => t.name).join(', ')}",
+                          ),
+                          subtitle: Text(subtitle),
+                        );
+                      } else {
+                        final character = task.subject;
+                        return ListTile(
+                          leading: const Icon(Icons.dashboard_outlined),
+                          title: Text(
+                            "${character.name}: "
+                            "${task.action.name} → "
+                            "${task.targets.map((t) => t.name).join(', ')}",
+                          ),
+                          subtitle: Text(subtitle),
+                        );
+                      }
+                    },
                   );
                 },
               ),
