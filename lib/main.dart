@@ -40,7 +40,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   final CharactersProvider charactersProvider = CharactersProvider();
-  final TasksProvider tasksProvider = TasksProvider();
 
   @override
   void initState() {
@@ -60,8 +59,12 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider.value(
           value: charactersProvider,
         ),
-        ChangeNotifierProvider.value(
-          value: tasksProvider,
+        ChangeNotifierProxyProvider<CharactersProvider, TasksProvider>(
+          create: (_) => TasksProvider(charactersProvider),
+          update: (_, charactersProvider, tasksProvider) {
+            tasksProvider!.charactersProvider = charactersProvider;
+            return tasksProvider;
+          },
         ),
       ],
       child: Consumer<ScreenProvider>(

@@ -13,4 +13,14 @@ class VermelhaContext {
     required this.allies,
     required this.enemies,
   });
+
+  VermelhaContext copyWith({
+    List<PlayerCharacter>? allies,
+    List<Character>? enemies,
+  }) {
+    return VermelhaContext(
+      allies: allies ?? this.allies,
+      enemies: enemies ?? this.enemies,
+    );
+  }
 }
