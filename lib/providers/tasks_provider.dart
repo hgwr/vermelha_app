@@ -39,5 +39,7 @@ class TasksProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void calculation() {}
+  void calculation() {
+    debugPrint("calculating");
+  }
 }

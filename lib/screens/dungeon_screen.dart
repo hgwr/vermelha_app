@@ -41,26 +41,20 @@ class _DungeonScreenState extends State<DungeonScreen> {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Provider.of<TasksProvider>(context, listen: false)
-                      .startEngine();
-                },
-                child: const Text('Start'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Provider.of<TasksProvider>(context, listen: false)
-                      .pauseEngine();
-                },
-                child: const Text('Pause'),
-              ),
-            ],
-          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Provider.of<TasksProvider>(context, listen: false).engineStatus ==
+                  EngineStatus.running
+              ? Provider.of<TasksProvider>(context, listen: false).pauseEngine()
+              : Provider.of<TasksProvider>(context, listen: false)
+                  .startEngine();
+        },
+        child: Provider.of<TasksProvider>(context).engineStatus ==
+                EngineStatus.running
+            ? const Icon(Icons.pause)
+            : const Icon(Icons.play_arrow),
       ),
       bottomNavigationBar: const BottomBarWidget(
         currentScreenIndex: ScreenProvider.dungeonScreenIndex,
