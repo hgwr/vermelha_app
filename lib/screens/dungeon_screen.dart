@@ -6,6 +6,7 @@ import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/task.dart';
 import 'package:vermelha_app/models/vermelha_context.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
+import 'package:vermelha_app/widgets/task_widget.dart';
 
 import '../providers/screen_provider.dart';
 import '../widgets/bottom_bar_widget.dart';
@@ -42,38 +43,16 @@ class _DungeonScreenState extends State<DungeonScreen> {
               child: Consumer<TasksProvider>(
                 builder: (ctx, taskProvider, child) {
                   taskProvider.scrollDownFunc = scrollDown;
-                  
+
                   return ListView.builder(
                     controller: _scrollController,
                     itemCount: taskProvider.tasks.length,
                     itemBuilder: (ctx, index) {
                       final task = taskProvider.tasks[index];
-                      final subtitle = task.status == TaskStatus.running
-                          ? "${task.progress}"
-                          : task.status.toString();
-                      if (task.subject is PlayerCharacter) {
-                        final character = task.subject as PlayerCharacter;
-                        return ListTile(
-                          leading: getImageByJob(character.job!),
-                          title: Text(
-                            "${character.name}: "
-                            "${task.action.name} → "
-                            "${task.targets.map((t) => t.name).join(', ')}",
-                          ),
-                          subtitle: Text(subtitle),
-                        );
-                      } else {
-                        final character = task.subject;
-                        return ListTile(
-                          leading: const Icon(Icons.dashboard_outlined),
-                          title: Text(
-                            "${character.name}: "
-                            "${task.action.name} → "
-                            "${task.targets.map((t) => t.name).join(', ')}",
-                          ),
-                          subtitle: Text(subtitle),
-                        );
-                      }
+                      return TaskWidget(
+                        key: ValueKey(task.uuid.toString()),
+                        task: task,
+                      );
                     },
                   );
                 },
