@@ -32,7 +32,7 @@ class _EditPriorityParametersScreenState
       },
       child: Scaffold(
         appBar: AppBar(
-          title: character.id != null ? Text(character.name) : Text('New'),
+          title: character.id != null ? Text(character.name) : const Text('New'),
         ),
         body: Column(
           children: [

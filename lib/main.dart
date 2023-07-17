@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
             DungeonScreen.routeName: (ctx) => const DungeonScreen(),
             PartyScreen.routeName: (ctx) => const PartyScreen(),
             SettingsScreen.routeName: (ctx) => const SettingsScreen(),
-            CharacterScreen.routeName: (ctx) => CharacterScreen(),
+            CharacterScreen.routeName: (ctx) => const CharacterScreen(),
             EditPriorityParametersScreen.routeName: (ctx) =>
                 const EditPriorityParametersScreen(),
             EditBattleRulesScreen.routeName: (ctx) =>

@@ -24,7 +24,7 @@ class TaskWidget extends StatelessWidget {
   }
 
   Widget leadingWidget() {
-    var icon;
+    Widget icon;
     if (task.subject is PlayerCharacter) {
       final playerCharacter = task.subject as PlayerCharacter;
       icon = getImageByJob(playerCharacter.job!);

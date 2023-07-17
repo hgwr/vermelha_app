@@ -1,5 +1,4 @@
 import 'package:vermelha_app/models/character.dart';
-import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/models/vermelha_context.dart';
 

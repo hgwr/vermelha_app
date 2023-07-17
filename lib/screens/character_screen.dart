@@ -10,7 +10,7 @@ import '../models/job.dart';
 class CharacterScreen extends StatefulWidget {
   static const routeName = '/character';
 
-  CharacterScreen({
+  const CharacterScreen({
     Key? key,
   }) : super(key: key);
 
@@ -21,7 +21,7 @@ class CharacterScreen extends StatefulWidget {
 class _CharacterScreenState extends State<CharacterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   PlayerCharacter character = getInitializedCharacterByJob(Job.fighter);
-  TextEditingController _characterNameController = TextEditingController();
+  final TextEditingController _characterNameController = TextEditingController();
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: character.id != null ? Text(character.name) : Text('New'),
+        title: character.id != null ? Text(character.name) : const Text('New'),
       ),
       body: Column(
         children: [
@@ -215,10 +215,10 @@ class _CharacterScreenState extends State<CharacterScreen> {
               arguments: character,
             );
           },
-          child: SizedBox(
+          child: const SizedBox(
             height: 40,
             child: Row(
-              children: const [
+              children: [
                 Expanded(
                   child: Text('戦闘ルール'),
                 ),

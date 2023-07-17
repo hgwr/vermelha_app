@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vermelha_app/models/character.dart';
-import 'package:vermelha_app/models/job.dart';
-import 'package:vermelha_app/models/player_character.dart';
-import 'package:vermelha_app/models/task.dart';
-import 'package:vermelha_app/models/vermelha_context.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/widgets/task_widget.dart';
 

@@ -11,7 +11,6 @@ import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/job.dart';
-import 'package:vermelha_app/models/battle_rule.dart';
 
 class EditBattleRulesScreen extends StatefulWidget {
   static const routeName = '/edit-battle-rules';
