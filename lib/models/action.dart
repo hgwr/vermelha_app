@@ -48,7 +48,7 @@ List<Action> getActionList() {
       ],
       name: '物理攻撃',
       mpCost: 0,
-      baseDurationSeconds: 1,
+      baseDurationSeconds: 10,
       computeDuration: (baseDurationSeconds, context, subject, targets) {
         return baseDurationSeconds / subject.speed;
       },
@@ -67,7 +67,7 @@ List<Action> getActionList() {
       availableJobs: [Job.priest],
       name: '大回復魔法',
       mpCost: 10,
-      baseDurationSeconds: 3,
+      baseDurationSeconds: 30,
       computeDuration: (baseDurationSeconds, context, subject, targets) {
         return baseDurationSeconds / subject.speed;
       },
@@ -82,7 +82,7 @@ List<Action> getActionList() {
       availableJobs: [Job.priest],
       name: '小回復魔法',
       mpCost: 5,
-      baseDurationSeconds: 1,
+      baseDurationSeconds: 10,
       computeDuration: (baseDurationSeconds, context, subject, targets) {
         return baseDurationSeconds / subject.speed;
       },
@@ -97,7 +97,7 @@ List<Action> getActionList() {
       availableJobs: [Job.shaman],
       name: '大治癒術',
       mpCost: 1,
-      baseDurationSeconds: 10,
+      baseDurationSeconds: 100,
       computeDuration: (baseDurationSeconds, context, subject, targets) {
         return baseDurationSeconds / subject.speed;
       },
@@ -112,7 +112,7 @@ List<Action> getActionList() {
       availableJobs: [Job.shaman],
       name: '小治癒術',
       mpCost: 0,
-      baseDurationSeconds: 5,
+      baseDurationSeconds: 50,
       computeDuration: (baseDurationSeconds, context, subject, targets) {
         return baseDurationSeconds / subject.speed;
       },
