@@ -81,8 +81,9 @@ class TasksProvider extends ChangeNotifier {
         Task runningTask = maybeRunningTask;
         double progressPercentage =
             runningTask.progressPercentage(vermelhaContext);
+        debugPrint("progressPercentage: $progressPercentage");
         runningTask.progress = progressPercentage;
-        if (progressPercentage >= 1) {
+        if (progressPercentage >= 100) {
           runningTask.status = TaskStatus.finished;
           runningTask.finishedAt = DateTime.now();
           runningTask.action.applyEffect(
@@ -92,7 +93,7 @@ class TasksProvider extends ChangeNotifier {
           );
           continue;
         }
-        if (progressPercentage > 0.5) {
+        if (progressPercentage > 50) {
           continue;
         }
       }
@@ -121,7 +122,7 @@ class TasksProvider extends ChangeNotifier {
           status: TaskStatus.running,
           progress: 0,
         );
-        debugPrint(newTask.toString());
+        debugPrint("newTask: $newTask");
         _tasks.add(newTask);
         if (scrollDownFunc != null) {
           scrollDownFunc!();

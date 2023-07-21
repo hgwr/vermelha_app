@@ -50,7 +50,7 @@ List<Action> getActionList() {
       mpCost: 0,
       baseDurationSeconds: 10,
       computeDuration: (baseDurationSeconds, context, subject, targets) {
-        return baseDurationSeconds / subject.speed;
+        return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
         final target = targets.first;
@@ -69,7 +69,7 @@ List<Action> getActionList() {
       mpCost: 10,
       baseDurationSeconds: 30,
       computeDuration: (baseDurationSeconds, context, subject, targets) {
-        return baseDurationSeconds / subject.speed;
+        return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
         final target = targets.first;
@@ -84,7 +84,7 @@ List<Action> getActionList() {
       mpCost: 5,
       baseDurationSeconds: 10,
       computeDuration: (baseDurationSeconds, context, subject, targets) {
-        return baseDurationSeconds / subject.speed;
+        return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
         final target = targets.first;
@@ -99,7 +99,7 @@ List<Action> getActionList() {
       mpCost: 1,
       baseDurationSeconds: 100,
       computeDuration: (baseDurationSeconds, context, subject, targets) {
-        return baseDurationSeconds / subject.speed;
+        return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
         final target = targets.first;
@@ -114,7 +114,7 @@ List<Action> getActionList() {
       mpCost: 0,
       baseDurationSeconds: 50,
       computeDuration: (baseDurationSeconds, context, subject, targets) {
-        return baseDurationSeconds / subject.speed;
+        return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
         final target = targets.first;

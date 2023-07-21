@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:vermelha_app/db/db_migration.dart';
 import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/vermelha_context.dart';
@@ -37,13 +39,17 @@ class Task {
       return 0;
     }
     final now = DateTime.now();
+    debugPrint("now: $now");
+    debugPrint("startedAt: $startedAt");
     final duration = now.difference(startedAt);
+    debugPrint("duration: ${duration.inMilliseconds}");
     final totalDuration = action.computeDuration(
       action.baseDurationSeconds,
       context,
       subject,
       targets,
     );
-    return (duration.inMilliseconds / totalDuration * 1000) / 100.0;
+    debugPrint("totalDuration: $totalDuration");
+    return (duration.inMilliseconds / (totalDuration * 1000)) * 100;
   }
 }
