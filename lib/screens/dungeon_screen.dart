@@ -186,7 +186,9 @@ class _DungeonScreenState extends State<DungeonScreen> {
   }
 
   Future<void> _handlePendingLoot(PendingLoot loot) async {
-    final l10n = AppLocalizations.of(context)!;
+    if (!mounted) {
+      return;
+    }
     final tasksProvider = Provider.of<TasksProvider>(context, listen: false);
     final charactersProvider =
         Provider.of<CharactersProvider>(context, listen: false);
@@ -195,6 +197,10 @@ class _DungeonScreenState extends State<DungeonScreen> {
 
     if (loot.type == LootType.gold) {
       await gameStateProvider.addGold(loot.gold);
+      if (!mounted) {
+        tasksProvider.resolvePendingLoot();
+        return;
+      }
       tasksProvider.addLog(
         LogType.loot,
         LogMessageId.lootGold,
@@ -223,16 +229,29 @@ class _DungeonScreenState extends State<DungeonScreen> {
 
     if (charactersProvider.isInventoryFull(owner)) {
       final discard = await _selectDiscardItem(context, owner, item);
+      if (!mounted) {
+        tasksProvider.resolvePendingLoot();
+        return;
+      }
       if (discard == null || discard.isNew) {
         tasksProvider.addLog(LogType.loot, LogMessageId.lootNone);
         tasksProvider.resolvePendingLoot();
         return;
       }
       await charactersProvider.removeItemFromInventory(owner, discard.item);
+      if (!mounted) {
+        tasksProvider.resolvePendingLoot();
+        return;
+      }
       owner = _findCharacter(charactersProvider, owner.id) ?? owner;
     }
 
     await charactersProvider.addItemToInventory(owner, item);
+    if (!mounted) {
+      tasksProvider.resolvePendingLoot();
+      return;
+    }
+    final l10n = AppLocalizations.of(context)!;
     tasksProvider.addLog(
       LogType.loot,
       LogMessageId.lootItem,

@@ -348,14 +348,14 @@ class TasksProvider extends ChangeNotifier {
     if (roll < goldChance) {
       final amount = 20 + vermelhaContext.random.nextInt(41);
       return PendingLoot.gold(
-        id: const Uuid().toString(),
+        id: const Uuid().v4(),
         amount: amount,
         source: source,
       );
     }
     final item = itemCatalog[vermelhaContext.random.nextInt(itemCatalog.length)];
     return PendingLoot.item(
-      id: const Uuid().toString(),
+      id: const Uuid().v4(),
       item: item,
       source: source,
       ownerId: charactersProvider.partyMembers.first.id,
