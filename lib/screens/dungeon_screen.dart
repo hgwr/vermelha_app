@@ -15,6 +15,7 @@ import 'package:vermelha_app/screens/camp_screen.dart';
 import 'package:vermelha_app/screens/city_menu_screen.dart';
 import 'package:vermelha_app/models/log_entry.dart';
 import 'package:vermelha_app/models/player_character.dart';
+import 'package:vermelha_app/models/party_position.dart';
 
 class DungeonScreen extends StatefulWidget {
   const DungeonScreen({Key? key}) : super(key: key);
@@ -27,6 +28,9 @@ class DungeonScreen extends StatefulWidget {
 
 class _DungeonScreenState extends State<DungeonScreen> {
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _logScrollController = ScrollController();
+  int _lastLogCount = 0;
+  bool _isLogScrollControllerDisposed = false;
   bool _isLootDialogOpen = false;
   String? _lastLootId;
 
@@ -108,6 +112,20 @@ class _DungeonScreenState extends State<DungeonScreen> {
     );
   }
 
+  void _scrollLogDown() {
+    if (_isLogScrollControllerDisposed) {
+      return;
+    }
+    if (!_logScrollController.hasClients) {
+      return;
+    }
+    _logScrollController.animateTo(
+      _logScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 120),
+      curve: Curves.easeOut,
+    );
+  }
+
   String _logTypeLabel(AppLocalizations l10n, LogType type) {
     switch (type) {
       case LogType.explore:
@@ -165,6 +183,23 @@ class _DungeonScreenState extends State<DungeonScreen> {
       case LogMessageId.returnToCity:
         return l10n.logReturnToCity;
     }
+  }
+
+  String _positionLabel(AppLocalizations l10n, PartyPosition position) {
+    switch (position) {
+      case PartyPosition.forward:
+        return l10n.partyPositionForward;
+      case PartyPosition.middle:
+        return l10n.partyPositionMiddle;
+      case PartyPosition.rear:
+        return l10n.partyPositionRear;
+    }
+  }
+
+  String _memberLabel(AppLocalizations l10n, PlayerCharacter member) {
+    final job = member.job;
+    final jobName = job == null ? '' : jobLabel(l10n, job);
+    return '$jobName ${member.name}';
   }
 
   void _maybeHandleLoot(TasksProvider tasksProvider) {
@@ -382,6 +417,60 @@ class _DungeonScreenState extends State<DungeonScreen> {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Consumer<CharactersProvider>(
+              builder: (context, charactersProvider, _) {
+                return Card(
+                  child: Column(
+                    children: [
+                      for (final position in PartyPosition.values) ...[
+                        Builder(
+                          builder: (context) {
+                            final member =
+                                charactersProvider.memberAt(position);
+                            return ListTile(
+                              dense: true,
+                              title: Text(_positionLabel(l10n, position)),
+                              subtitle: Text(
+                                member == null
+                                    ? l10n.partySlotEmpty
+                                    : _memberLabel(l10n, member),
+                              ),
+                              trailing: member == null
+                                  ? null
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '${l10n.hpShort} '
+                                          '${member.hp}'
+                                          '/'
+                                          '${member.maxHp}',
+                                        ),
+                                        Text(
+                                          '${l10n.mpShort} '
+                                          '${member.mp}'
+                                          '/'
+                                          '${member.maxMp}',
+                                        ),
+                                      ],
+                                    ),
+                            );
+                          },
+                        ),
+                        if (position != PartyPosition.values.last)
+                          const Divider(height: 1),
+                      ],
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
           Expanded(
             flex: 2,
             child: Padding(
@@ -389,8 +478,18 @@ class _DungeonScreenState extends State<DungeonScreen> {
               child: Consumer<TasksProvider>(
                 builder: (context, taskProvider, _) {
                   final logs = taskProvider.logEntries;
+                  if (logs.length != _lastLogCount) {
+                    _lastLogCount = logs.length;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (!mounted || _isLogScrollControllerDisposed) {
+                        return;
+                      }
+                      _scrollLogDown();
+                    });
+                  }
                   return Card(
                     child: ListView.builder(
+                      controller: _logScrollController,
                       padding: const EdgeInsets.all(8),
                       itemCount: logs.length,
                       itemBuilder: (context, index) {
@@ -491,6 +590,14 @@ class _DungeonScreenState extends State<DungeonScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _logScrollController.dispose();
+    _isLogScrollControllerDisposed = true;
+    super.dispose();
   }
 }
 
