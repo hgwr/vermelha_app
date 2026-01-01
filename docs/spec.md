@@ -211,17 +211,27 @@ Wizardryライクなキャラクター育成・ダンジョン探索と、Final 
 ## 4. データモデル (v1)
 
 ### 4.1 `PlayerCharacter`
-- `id`: String (UUID)
+- `id`: int (DBの主キー)
+- `uuid`?: String (UUID、v1では内部IDとしてのみ使用)
 - `name`: String
 - `job`: Job (Enum: `Fighter`, `Paladin`, ...)
 - `level`: int
 - `exp`: int
-- `stats`: `StatusParameter` (HP, MP, 攻撃力, 防御力, 素早さなど)
-- `jobBonus`: `StatusParameter` (ジョブ差分)
-- `equipment`: Map<EquipmentSlot, ItemID> (例: `rightHand`, `armor`)
+- `maxHp`: int
+- `hp`: int
+- `maxMp`: int
+- `mp`: int
+- `attack`: int
+- `defense`: int
+- `magicPower`: int
+- `speed`: int
+- `priorityParameters`: List<StatusParameter>
+- `battleRules`: List<BattleRule>
+- `equipment`: Map<EquipmentSlot, ItemID> (例: `rightHand`, `armor`, `accessory`)
 - `inventory`: List<ItemID>
 - `inventoryCapacity`: int (固定値)
-- `gambitSet`: List<BattleRule>
+- `partyPosition`?: PartyPosition (`Forward`, `Middle`, `Rear`)
+- `isActive`: bool
 
 ### 4.2 `BattleRule` (ガンビットルール)
 - `id`: String (UUID)
@@ -231,35 +241,42 @@ Wizardryライクなキャラクター育成・ダンジョン探索と、Final 
 - `priority`: int (優先順位)
 
 ### 4.3 `Item`
-- `id`: String (UUID)
+- `id`: String
 - `name`: String
 - `type`: ItemType (Enum: `Weapon`, `Armor`, `Consumable`)
-- `weaponType`?: WeaponType (Enum: `OneHandSword`, `TwoHandAxe`, `Bow`, ...)
-- `armorType`?: ArmorType (Enum: `Heavy`, `Light`, ...)
-- `effects`: Map<String, dynamic> (例: `attack: 10`, `defense: 5`)
+- `effects`: Map<String, int> (例: `attack: 10`, `defense: 5`)
+- `equipmentSlot`?: EquipmentSlot (例: `rightHand`, `armor`, `accessory`)
 - `price`: int
 
 ### 4.4 `Enemy`
-- `id`: String
+- `id`: int
 - `name`: String
 - `type`: EnemyType (Enum: `Regular`, `Irregular`)
-- `stats`: `StatusParameter`
+- `maxHp`: int
+- `hp`: int
+- `maxMp`: int
+- `mp`: int
+- `attack`: int
+- `defense`: int
+- `magicPower`: int
+- `speed`: int
 - `isTelegraphing`: bool (攻撃予兆フラグ)
-- `dropTable`: List<ItemID>
+- `dropTable`?: List<ItemID> (v1では未実装)
 
 ### 4.5 `Party`
 - `positions`: Map<PartyPosition, PlayerCharacterID> (`Forward`, `Middle`, `Rear`)
+- **v1 実装メモ:** 独立モデルは持たず `PlayerCharacter.partyPosition` で管理する。
 
 ### 4.6 `GameState`
 - `roster`: List<PlayerCharacter>
-- `party`: Party
 - `gold`: int
 - `maxReachedFloor`: int
 - `activeDungeon`?: DungeonState (探索中のみ)
+- **v1 実装メモ:** Party は roster の `partyPosition` から導出する。
 
 ### 4.7 `DungeonState`
 - `floor`: int
-- `seed`: String
+- `seed`?: String (v1では未使用)
 - `eventLog`: List<LogEntry>
 - `isPaused`: bool
 - `battleCountOnFloor`: int
@@ -268,7 +285,8 @@ Wizardryライクなキャラクター育成・ダンジョン探索と、Final 
 ### 4.8 `LogEntry`
 - `timestamp`: DateTime
 - `type`: LogType (Enum: `Explore`, `Battle`, `Loot`, `System`)
-- `message`: String
+- `messageId`: LogMessageId
+- `data`?: Map<String, String>
 
 ---
 
