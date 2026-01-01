@@ -246,7 +246,7 @@
   "targetLowestSpeedEnemy": "最も素早さが低い敵",
   "targetHighestSpeedAlly": "最も素早さが高い味方",
   "targetHighestSpeedEnemy": "最も素早さが高い敵",
-  "targetNearestEnemy": "最も近い敵",
+  "targetFirstEnemy": "先頭の敵",
   "targetAttackingEnemy": "自分を攻撃している敵",
   "itemWeaponShortSword": "ショートソード",
   "itemWeaponBattleAxe": "バトルアックス",

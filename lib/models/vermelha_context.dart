@@ -18,7 +18,6 @@ class VermelhaContext {
     Set<Character>? defending,
   })  : lastAttackers = lastAttackers ?? {},
         defending = defending ?? {};
-  });
 
   VermelhaContext copyWith({
     List<PlayerCharacter>? allies,

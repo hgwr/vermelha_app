@@ -200,8 +200,8 @@ String targetLabelByUuid(AppLocalizations l10n, String uuid) {
       return l10n.targetHighestSpeedAlly;
     case targetHighestSpeedEnemyId:
       return l10n.targetHighestSpeedEnemy;
-    case targetNearestEnemyId:
-      return l10n.targetNearestEnemy;
+    case targetFirstEnemyId:
+      return l10n.targetFirstEnemy;
     case targetAttackingEnemyId:
       return l10n.targetAttackingEnemy;
   }

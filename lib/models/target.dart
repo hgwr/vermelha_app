@@ -36,7 +36,7 @@ const String targetLowestSpeedAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b024';
 const String targetLowestSpeedEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b025';
 const String targetHighestSpeedAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b026';
 const String targetHighestSpeedEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b027';
-const String targetNearestEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b028';
+const String targetFirstEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b028';
 const String targetAttackingEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b029';
 
 class Target {
@@ -267,8 +267,8 @@ List<Target> getTargetList() {
           _selectSingle(candidates, (a, b) => a.speed > b.speed),
     ),
     Target(
-      uuid: targetNearestEnemyId,
-      name: '最も近い敵',
+      uuid: targetFirstEnemyId,
+      name: '先頭の敵',
       targetCategory: TargetCategory.enemy,
       selectTargets: (_, __, candidates) {
         if (candidates.isEmpty) {

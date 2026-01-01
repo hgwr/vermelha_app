@@ -580,7 +580,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get conditionAlways => '常に';
 
   @override
-  String get targetNearestEnemy => '最も近い敵';
+  String get targetFirstEnemy => '先頭の敵';
 
   @override
   String get targetAttackingEnemy => '自分を攻撃している敵';

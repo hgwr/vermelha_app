@@ -1228,11 +1228,11 @@ abstract class AppLocalizations {
   /// **'常に'**
   String get conditionAlways;
 
-  /// No description provided for @targetNearestEnemy.
+  /// No description provided for @targetFirstEnemy.
   ///
   /// In ja, this message translates to:
-  /// **'最も近い敵'**
-  String get targetNearestEnemy;
+  /// **'先頭の敵'**
+  String get targetFirstEnemy;
 
   /// No description provided for @targetAttackingEnemy.
   ///
