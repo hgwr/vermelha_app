@@ -30,6 +30,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
   final ScrollController _scrollController = ScrollController();
   final ScrollController _logScrollController = ScrollController();
   int _lastLogCount = 0;
+  bool _isLogScrollControllerDisposed = false;
   bool _isLootDialogOpen = false;
   String? _lastLootId;
 
@@ -112,6 +113,9 @@ class _DungeonScreenState extends State<DungeonScreen> {
   }
 
   void _scrollLogDown() {
+    if (_isLogScrollControllerDisposed) {
+      return;
+    }
     if (!_logScrollController.hasClients) {
       return;
     }
@@ -477,6 +481,9 @@ class _DungeonScreenState extends State<DungeonScreen> {
                   if (logs.length != _lastLogCount) {
                     _lastLogCount = logs.length;
                     WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (!mounted || _isLogScrollControllerDisposed) {
+                        return;
+                      }
                       _scrollLogDown();
                     });
                   }
@@ -589,6 +596,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
   void dispose() {
     _scrollController.dispose();
     _logScrollController.dispose();
+    _isLogScrollControllerDisposed = true;
     super.dispose();
   }
 }
