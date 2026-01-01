@@ -10,11 +10,6 @@ enum StatusParameter {
 const List<StatusParameter> statusParameters = StatusParameter.values;
 
 StatusParameter getStatusParameterByName(String name) {
-  for (final parameter in statusParameters) {
-    if (parameter.name == name) {
-      return parameter;
-    }
-  }
   final normalized = name.toLowerCase().replaceAll(' ', '');
   switch (normalized) {
     case 'hp':
@@ -30,5 +25,5 @@ StatusParameter getStatusParameterByName(String name) {
     case 'speed':
       return StatusParameter.speed;
   }
-  return StatusParameter.hp;
+  throw ArgumentError('Unknown StatusParameter name: $name');
 }
