@@ -146,6 +146,18 @@
   },
   "logBattleVictory": "戦闘に勝利した。",
   "logLootNone": "戦利品はなかった。",
+  "logLootGold": "ゴールド{amount}Gを獲得した。",
+  "@logLootGold": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "logLootItem": "戦利品: {item}を入手した。",
+  "@logLootItem": {
+    "placeholders": {
+      "item": {}
+    }
+  },
   "logCampHeal": "キャンプで全回復した。",
   "logReturnToCity": "街へ帰還した。",
   "taskStatusComplete": "完了",

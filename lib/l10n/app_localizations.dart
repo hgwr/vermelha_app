@@ -676,6 +676,18 @@ abstract class AppLocalizations {
   /// **'戦利品はなかった。'**
   String get logLootNone;
 
+  /// No description provided for @logLootGold.
+  ///
+  /// In ja, this message translates to:
+  /// **'ゴールド{amount}Gを獲得した。'**
+  String logLootGold(Object amount);
+
+  /// No description provided for @logLootItem.
+  ///
+  /// In ja, this message translates to:
+  /// **'戦利品: {item}を入手した。'**
+  String logLootItem(Object item);
+
   /// No description provided for @logCampHeal.
   ///
   /// In ja, this message translates to:

@@ -319,6 +319,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get logLootNone => '戦利品はなかった。';
 
   @override
+  String logLootGold(Object amount) {
+    return 'ゴールド${amount}Gを獲得した。';
+  }
+
+  @override
+  String logLootItem(Object item) {
+    return '戦利品: $itemを入手した。';
+  }
+
+  @override
   String get logCampHeal => 'キャンプで全回復した。';
 
   @override

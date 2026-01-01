@@ -4,14 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/model_localizations.dart';
 import 'package:vermelha_app/models/enemy.dart';
+import 'package:vermelha_app/models/item.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/providers/dungeon_provider.dart';
+import 'package:vermelha_app/providers/game_state_provider.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/widgets/task_widget.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/screens/camp_screen.dart';
 import 'package:vermelha_app/screens/city_menu_screen.dart';
 import 'package:vermelha_app/models/log_entry.dart';
+import 'package:vermelha_app/models/player_character.dart';
 
 class DungeonScreen extends StatefulWidget {
   const DungeonScreen({Key? key}) : super(key: key);
@@ -24,6 +27,8 @@ class DungeonScreen extends StatefulWidget {
 
 class _DungeonScreenState extends State<DungeonScreen> {
   final ScrollController _scrollController = ScrollController();
+  bool _isLootDialogOpen = false;
+  String? _lastLootId;
 
   _LogActor? _decodeActor(String? raw) {
     if (raw == null || raw.isEmpty) {
@@ -63,7 +68,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
     final kind = map['kind'] as String?;
     if (kind == 'enemy') {
       return _LogActor(
-        kind: kind,
+        kind: 'enemy',
         enemyType: _enemyTypeFromString(map['enemy_type'] as String?),
       );
     }
@@ -149,6 +154,12 @@ class _DungeonScreenState extends State<DungeonScreen> {
         return l10n.logBattleVictory;
       case LogMessageId.lootNone:
         return l10n.logLootNone;
+      case LogMessageId.lootGold:
+        final amount = entry.data?['amount'] ?? '';
+        return l10n.logLootGold(amount);
+      case LogMessageId.lootItem:
+        final item = entry.data?['item'] ?? l10n.unknownLabel;
+        return l10n.logLootItem(item);
       case LogMessageId.campHeal:
         return l10n.logCampHeal;
       case LogMessageId.returnToCity:
@@ -156,10 +167,203 @@ class _DungeonScreenState extends State<DungeonScreen> {
     }
   }
 
+  void _maybeHandleLoot(TasksProvider tasksProvider) {
+    final pending = tasksProvider.pendingLoot;
+    if (pending == null ||
+        _isLootDialogOpen ||
+        _lastLootId == pending.id) {
+      return;
+    }
+    _lastLootId = pending.id;
+    _isLootDialogOpen = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) {
+        return;
+      }
+      await _handlePendingLoot(pending);
+      _isLootDialogOpen = false;
+    });
+  }
+
+  Future<void> _handlePendingLoot(PendingLoot loot) async {
+    if (!mounted) {
+      return;
+    }
+    final tasksProvider = Provider.of<TasksProvider>(context, listen: false);
+    final charactersProvider =
+        Provider.of<CharactersProvider>(context, listen: false);
+    final gameStateProvider =
+        Provider.of<GameStateProvider>(context, listen: false);
+
+    if (loot.type == LootType.gold) {
+      await gameStateProvider.addGold(loot.gold);
+      if (!mounted) {
+        tasksProvider.resolvePendingLoot();
+        return;
+      }
+      tasksProvider.addLog(
+        LogType.loot,
+        LogMessageId.lootGold,
+        data: {
+          'amount': loot.gold.toString(),
+        },
+      );
+      tasksProvider.resolvePendingLoot();
+      return;
+    }
+
+    final item = loot.item;
+    if (item == null) {
+      tasksProvider.resolvePendingLoot();
+      return;
+    }
+
+    var owner = _findCharacter(charactersProvider, loot.ownerId) ??
+        (charactersProvider.partyMembers.isEmpty
+            ? null
+            : charactersProvider.partyMembers.first);
+    if (owner == null) {
+      tasksProvider.resolvePendingLoot();
+      return;
+    }
+
+    if (charactersProvider.isInventoryFull(owner)) {
+      final discard = await _selectDiscardItem(context, owner, item);
+      if (!mounted) {
+        tasksProvider.resolvePendingLoot();
+        return;
+      }
+      if (discard == null || discard.isNew) {
+        tasksProvider.addLog(LogType.loot, LogMessageId.lootNone);
+        tasksProvider.resolvePendingLoot();
+        return;
+      }
+      await charactersProvider.removeItemFromInventory(owner, discard.item);
+      if (!mounted) {
+        tasksProvider.resolvePendingLoot();
+        return;
+      }
+      owner = _findCharacter(charactersProvider, owner.id) ?? owner;
+    }
+
+    await charactersProvider.addItemToInventory(owner, item);
+    if (!mounted) {
+      tasksProvider.resolvePendingLoot();
+      return;
+    }
+    final l10n = AppLocalizations.of(context)!;
+    tasksProvider.addLog(
+      LogType.loot,
+      LogMessageId.lootItem,
+      data: {
+        'item': itemLabel(l10n, item),
+      },
+    );
+    tasksProvider.resolvePendingLoot();
+  }
+
+  Future<_DiscardOption?> _selectDiscardItem(
+    BuildContext context,
+    PlayerCharacter character,
+    Item newItem,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final choices = [
+      ...character.inventory
+          .map((item) => _DiscardOption(item: item, isNew: false)),
+      _DiscardOption(item: newItem, isNew: true),
+    ];
+    return showDialog<_DiscardOption>(
+      context: context,
+      builder: (context) {
+        _DiscardOption? selected;
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(l10n.inventoryFullTitle),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(l10n.inventoryFullBody),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 240,
+                      child: ListView.builder(
+                        itemCount: choices.length,
+                        itemBuilder: (context, index) {
+                          final option = choices[index];
+                          final item = option.item;
+                          final label = option.isNew
+                              ? l10n.inventoryDiscardNewItem(
+                                  itemLabel(l10n, item),
+                                )
+                              : itemLabel(l10n, item);
+                          return RadioListTile<_DiscardOption>(
+                            value: option,
+                            groupValue: selected,
+                            title: Text(label),
+                            onChanged: (value) {
+                              setState(() {
+                                selected = value;
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(null),
+                  child: Text(l10n.cancel),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(selected),
+                  child: Text(l10n.confirm),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  PlayerCharacter? _findCharacter(
+    CharactersProvider provider,
+    int? id,
+  ) {
+    if (id == null) {
+      return null;
+    }
+    for (final character in provider.characters) {
+      if (character.id == id) {
+        return character;
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final tasksProvider = Provider.of<TasksProvider>(context);
     final dungeonProvider = Provider.of<DungeonProvider>(context);
+    _maybeHandleLoot(tasksProvider);
+    if (!dungeonProvider.isExploring) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) {
+          return;
+        }
+        Navigator.of(context).popUntil(
+          (route) => route.settings.name == CityMenuScreen.routeName,
+        );
+      });
+    }
     final activeFloor = dungeonProvider.activeFloor ?? 1;
     final battleCount = dungeonProvider.battleCountOnFloor;
     final battlesToUnlock = dungeonProvider.battlesToUnlockNextFloor;
@@ -299,5 +503,15 @@ class _LogActor {
     required this.kind,
     this.name,
     this.enemyType,
+  });
+}
+
+class _DiscardOption {
+  final Item item;
+  final bool isNew;
+
+  const _DiscardOption({
+    required this.item,
+    required this.isNew,
   });
 }
