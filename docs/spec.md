@@ -225,6 +225,7 @@ Wizardryライクなキャラクター育成・ダンジョン探索と、Final 
 - `defense`: int
 - `magicPower`: int
 - `speed`: int
+- `jobBonus`: Map<StatusParameter, int> (ジョブ差分、v1では小さな補正のみ)
 - `priorityParameters`: List<StatusParameter>
 - `battleRules`: List<BattleRule>
 - `equipment`: Map<EquipmentSlot, ItemID> (例: `rightHand`, `armor`, `accessory`)
@@ -261,7 +262,7 @@ Wizardryライクなキャラクター育成・ダンジョン探索と、Final 
 - `magicPower`: int
 - `speed`: int
 - `isTelegraphing`: bool (攻撃予兆フラグ)
-- `dropTable`?: List<ItemID> (v1では未実装)
+- `dropTable`?: List<ItemID> (v1ではデータモデルのみ実装)
 
 ### 4.5 `Party`
 - `positions`: Map<PartyPosition, PlayerCharacterID> (`Forward`, `Middle`, `Rear`)
@@ -287,6 +288,11 @@ Wizardryライクなキャラクター育成・ダンジョン探索と、Final 
 - `type`: LogType (Enum: `Explore`, `Battle`, `Loot`, `System`)
 - `messageId`: LogMessageId
 - `data`?: Map<String, String>
+
+### 4.9 マイグレーション方針 (v1)
+- 既存セーブデータでは `character.job_bonus` は NULL のため、読み込み時は空の補正として扱う。
+- 既存セーブデータで `game_state.seed` が NULL の場合、探索中のみ読み込み時に UUID を補完する。
+- Party は `character.party_position` から導出し、独立テーブルは持たない。
 
 ---
 

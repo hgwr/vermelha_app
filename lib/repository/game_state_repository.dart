@@ -2,13 +2,16 @@ import 'dart:convert';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:vermelha_app/db/db_connection.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vermelha_app/models/dungeon_state.dart';
 import 'package:vermelha_app/models/game_state.dart';
 import 'package:vermelha_app/models/log_entry.dart';
+import 'package:vermelha_app/models/party.dart';
 import 'package:vermelha_app/models/player_character.dart';
 
 class GameStateRepository {
   static const int _singletonId = 1;
+  static final Uuid _uuid = Uuid();
 
   Future<GameState> load({
     List<PlayerCharacter> roster = const [],
@@ -23,6 +26,7 @@ class GameStateRepository {
     if (result.isEmpty) {
       final state = GameState(
         roster: roster,
+        party: Party.fromRoster(roster),
         gold: 0,
         maxReachedFloor: 1,
         activeDungeon: null,
@@ -39,10 +43,14 @@ class GameStateRepository {
             DungeonState.defaultBattlesToUnlockNextFloor;
     final isPaused = (row['is_paused'] as int? ?? 1) == 1;
     final eventLog = _decodeEventLog(row['event_log'] as String?);
+    final seedValue = row['seed'] as String?;
     final activeDungeon = activeFloor == null
         ? null
         : DungeonState(
             floor: activeFloor,
+            seed: (seedValue == null || seedValue.isEmpty)
+                ? _uuid.v4()
+                : seedValue,
             battleCountOnFloor: battleCount,
             battlesToUnlockNextFloor: battlesToUnlock,
             eventLog: eventLog,
@@ -51,6 +59,7 @@ class GameStateRepository {
 
     return GameState(
       roster: roster,
+      party: Party.fromRoster(roster),
       gold: row['gold'] as int? ?? 0,
       maxReachedFloor: row['max_reached_floor'] as int? ?? 1,
       activeDungeon: activeDungeon,
@@ -66,6 +75,7 @@ class GameStateRepository {
       'gold': state.gold,
       'max_reached_floor': state.maxReachedFloor,
       'active_floor': activeDungeon?.floor,
+      'seed': activeDungeon?.seed,
       'battle_count_on_floor': activeDungeon?.battleCountOnFloor ?? 0,
       'battles_to_unlock_next_floor':
           activeDungeon?.battlesToUnlockNextFloor ??

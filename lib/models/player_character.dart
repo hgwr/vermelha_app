@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/equipment_slot.dart';
@@ -14,6 +16,7 @@ class PlayerCharacter extends Character {
   List<Item> inventory;
   Map<EquipmentSlot, Item?> equipment;
   int inventoryCapacity;
+  Map<StatusParameter, int> jobBonus;
 
   PlayerCharacter({
     uuid,
@@ -33,6 +36,7 @@ class PlayerCharacter extends Character {
     this.inventory = const [],
     this.equipment = const {},
     this.inventoryCapacity = 10,
+    this.jobBonus = const {},
     this.job,
     this.exp = 0,
     this.isActive = true,
@@ -71,6 +75,7 @@ class PlayerCharacter extends Character {
       priorityParameters: <StatusParameter>[],
       battleRules: <BattleRule>[],
       exp: json['exp'],
+      jobBonus: _decodeJobBonus(json['job_bonus']),
       isActive: json['is_active'] == 1,
       partyPosition: partyPositionFromDb(json['party_position']),
     );
@@ -91,9 +96,51 @@ class PlayerCharacter extends Character {
       'speed': speed,
       'job_id': job?.id,
       'exp': exp,
+      'job_bonus': _encodeJobBonus(jobBonus),
       'is_active': isActive ? 1 : 0,
       'party_position': partyPosition?.index,
     };
+  }
+
+  static Map<StatusParameter, int> _decodeJobBonus(Object? value) {
+    if (value == null) {
+      return {};
+    }
+    final raw = value is String ? value : value.toString();
+    if (raw.isEmpty) {
+      return {};
+    }
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) {
+        return {};
+      }
+      final Map<StatusParameter, int> bonuses = {};
+      decoded.forEach((key, amount) {
+        final keyString = key.toString();
+        final parameter = _statusParameterFromName(keyString);
+        if (parameter == null || amount is! num) {
+          return;
+        }
+        bonuses[parameter] = amount.round();
+      });
+      return bonuses;
+    } catch (_) {
+      return {};
+    }
+  }
+
+  static String _encodeJobBonus(Map<StatusParameter, int> jobBonus) {
+    final mapped = jobBonus.map((key, value) => MapEntry(key.name, value));
+    return jsonEncode(mapped);
+  }
+
+  static StatusParameter? _statusParameterFromName(String name) {
+    try {
+      return StatusParameter.values.byName(name);
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
@@ -116,6 +163,7 @@ class PlayerCharacter extends Character {
     List<Item>? inventory,
     Map<EquipmentSlot, Item?>? equipment,
     int? inventoryCapacity,
+    Map<StatusParameter, int>? jobBonus,
     int? exp,
     bool? isActive,
     PartyPosition? partyPosition,
@@ -139,6 +187,7 @@ class PlayerCharacter extends Character {
       inventory: inventory ?? this.inventory,
       equipment: equipment ?? this.equipment,
       inventoryCapacity: inventoryCapacity ?? this.inventoryCapacity,
+      jobBonus: jobBonus ?? this.jobBonus,
       exp: exp ?? this.exp,
       isActive: isActive ?? this.isActive,
       partyPosition: partyPosition ?? this.partyPosition,

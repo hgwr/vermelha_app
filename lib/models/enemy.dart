@@ -10,6 +10,7 @@ enum EnemyType {
 class Enemy extends Character {
   final EnemyType type;
   bool isTelegraphing;
+  final List<String> dropTable;
 
   Enemy({
     required this.type,
@@ -28,6 +29,7 @@ class Enemy extends Character {
     required int speed,
     required List<StatusParameter> priorityParameters,
     required List<BattleRule> battleRules,
+    this.dropTable = const [],
   }) : super(
           uuid: uuid,
           id: id,
