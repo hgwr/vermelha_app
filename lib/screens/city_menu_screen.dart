@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
-import 'package:vermelha_app/screens/dungeon_screen.dart';
+import 'package:vermelha_app/screens/dungeon_select_screen.dart';
 import 'package:vermelha_app/screens/party_screen.dart';
 import 'package:vermelha_app/screens/placeholder_screen.dart';
 import 'package:vermelha_app/screens/tavern_screen.dart';
@@ -36,7 +36,8 @@ class CityMenuScreen extends StatelessWidget {
       ),
       _CityMenuItem(
         label: l10n.dungeonTitle,
-        onTap: () => Navigator.of(context).pushNamed(DungeonScreen.routeName),
+        onTap: () =>
+            Navigator.of(context).pushNamed(DungeonSelectScreen.routeName),
       ),
       _CityMenuItem(
         label: l10n.saveTitle,

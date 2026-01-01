@@ -2,6 +2,7 @@ import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/condition.dart';
+import 'package:vermelha_app/models/target.dart';
 
 class BattleRule {
   final int? id;
@@ -9,6 +10,7 @@ class BattleRule {
   final int priority;
   final String name;
   Condition condition;
+  Target target;
   Action action;
 
   BattleRule({
@@ -17,11 +19,19 @@ class BattleRule {
     required this.priority,
     required this.name,
     required this.condition,
+    required this.target,
     required this.action,
   });
 
   static BattleRule fromJson(Map<String, dynamic> json, PlayerCharacter owner) {
     Condition condition = getConditionByUuid(json['condition_uuid']);
+    final targetUuid = json['target_uuid'] as String?;
+    Target target = targetUuid == null || targetUuid.isEmpty
+        ? getTargetListByCategory(condition.targetCategory).first
+        : getTargetByUuid(
+            targetUuid,
+            fallbackCategory: condition.targetCategory,
+          );
     Action action = getActionByUuid(json['action_uuid']);
     return BattleRule(
       id: json['id'],
@@ -29,6 +39,7 @@ class BattleRule {
       priority: json['priority'],
       name: json['name'],
       condition: condition,
+      target: target,
       action: action,
     );
   }
@@ -40,6 +51,7 @@ class BattleRule {
       'priority': priority,
       'name': name,
       'condition_uuid': condition.uuid,
+      'target_uuid': target.uuid,
       'action_uuid': action.uuid,
     };
   }
@@ -50,6 +62,7 @@ class BattleRule {
     int? priority,
     String? name,
     Condition? condition,
+    Target? target,
     Action? action,
   }) {
     return BattleRule(
@@ -58,6 +71,7 @@ class BattleRule {
       priority: priority ?? this.priority,
       name: name ?? this.name,
       condition: condition ?? this.condition,
+      target: target ?? this.target,
       action: action ?? this.action,
     );
   }

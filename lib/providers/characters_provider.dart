@@ -76,4 +76,27 @@ class CharactersProvider extends ChangeNotifier {
 
     await updateCharacter(character.copyWith(partyPosition: position));
   }
+
+  Future<void> healPartyMembers() async {
+    bool updated = false;
+    for (int i = 0; i < _characters.length; i++) {
+      final character = _characters[i];
+      if (character.partyPosition == null) {
+        continue;
+      }
+      if (character.hp == character.maxHp && character.mp == character.maxMp) {
+        continue;
+      }
+      final healed = character.copyWith(
+        hp: character.maxHp,
+        mp: character.maxMp,
+      );
+      _characters[i] = healed;
+      await _characterRepository.update(healed);
+      updated = true;
+    }
+    if (updated) {
+      notifyListeners();
+    }
+  }
 }

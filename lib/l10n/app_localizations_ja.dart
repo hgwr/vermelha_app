@@ -30,6 +30,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get dungeonTitle => 'ダンジョン';
 
   @override
+  String get dungeonSelectTitle => 'ダンジョン選択';
+
+  @override
+  String floorLabel(Object floor) {
+    return 'フロア$floor';
+  }
+
+  @override
+  String battleCountProgress(Object current, Object required) {
+    return '戦闘回数: $current/$required';
+  }
+
+  @override
   String get partyTitle => 'パーティ';
 
   @override
@@ -55,6 +68,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get saveTitle => 'セーブ';
+
+  @override
+  String get campTitle => 'キャンプ';
+
+  @override
+  String get campButton => 'キャンプ';
+
+  @override
+  String get campHealButton => '全回復して戻る';
+
+  @override
+  String get returnToCity => '街へ戻る';
 
   @override
   String get settingsTitle => '設定';
@@ -153,10 +178,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get addBattleRule => '新しい戦闘ルールを追加する';
 
   @override
+  String get battleRuleLimitReached => '戦闘ルールは最大16件です';
+
+  @override
   String get selectConditionTitle => '条件を選択';
 
   @override
   String get selectActionTitle => 'アクションを選択';
+
+  @override
+  String get selectTargetTitle => 'ターゲットを選択';
 
   @override
   String get selectPlayerCharactersTitle => 'パーティメンバーを選択';

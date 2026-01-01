@@ -3,6 +3,7 @@ import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/condition.dart';
+import 'package:vermelha_app/models/target.dart';
 
 class SelectConditionScreen extends StatefulWidget {
   static const routeName = '/select-condition';
@@ -46,6 +47,12 @@ class _SelectConditionScreenState extends State<SelectConditionScreen> {
                         title: Text(condition.name),
                         onTap: () {
                           _battleRule!.condition = condition;
+                          if (_battleRule!.target.targetCategory !=
+                              condition.targetCategory) {
+                            _battleRule!.target =
+                                getTargetListByCategory(condition.targetCategory)
+                                    .first;
+                          }
                           Navigator.of(context).pop();
                         },
                       ),

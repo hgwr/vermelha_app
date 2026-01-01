@@ -79,6 +79,7 @@ class CharacterRepository {
           'priority': battleRule.priority,
           'name': battleRule.name,
           'condition_uuid': battleRule.condition.uuid,
+          'target_uuid': battleRule.target.uuid,
           'action_uuid': battleRule.action.uuid,
         });
       }
@@ -118,6 +119,7 @@ class CharacterRepository {
           'priority': battleRule.priority,
           'name': battleRule.name,
           'condition_uuid': battleRule.condition.uuid,
+          'target_uuid': battleRule.target.uuid,
           'action_uuid': battleRule.action.uuid,
         });
       }

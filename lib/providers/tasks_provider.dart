@@ -8,10 +8,12 @@ import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
+import 'package:vermelha_app/models/target.dart';
 
 import 'package:vermelha_app/models/task.dart';
 import 'package:vermelha_app/models/vermelha_context.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
+import 'package:vermelha_app/providers/dungeon_provider.dart';
 
 enum EngineStatus {
   running,
@@ -22,13 +24,15 @@ typedef ScrollDownFunc = void Function();
 
 class TasksProvider extends ChangeNotifier {
   CharactersProvider charactersProvider;
+  DungeonProvider? dungeonProvider;
   final List<Task> _tasks = [];
   EngineStatus _engineStatus = EngineStatus.paused;
   VermelhaContext _vermelhaContext = VermelhaContext(allies: [], enemies: []);
   Timer? _timer;
   ScrollDownFunc? scrollDownFunc;
+  bool _hasSpawnedEnemies = false;
 
-  TasksProvider(this.charactersProvider);
+  TasksProvider(this.charactersProvider, [this.dungeonProvider]);
 
   List<Task> get tasks => _tasks;
   EngineStatus get engineStatus => _engineStatus;
@@ -54,6 +58,18 @@ class TasksProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetBattle() {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+    _timer = null;
+    _engineStatus = EngineStatus.paused;
+    _tasks.clear();
+    _vermelhaContext = VermelhaContext(allies: [], enemies: []);
+    _hasSpawnedEnemies = false;
+    notifyListeners();
+  }
+
   void calculation() {
     debugPrint("calculating");
 
@@ -62,7 +78,11 @@ class TasksProvider extends ChangeNotifier {
     }
     if (vermelhaContext.enemies.isEmpty ||
         vermelhaContext.enemies.every((enemy) => enemy.hp <= 0)) {
+      if (_hasSpawnedEnemies) {
+        dungeonProvider?.registerBattle();
+      }
       fillEnemies();
+      _hasSpawnedEnemies = true;
     }
 
     final List<Character> characters = [
@@ -101,7 +121,15 @@ class TasksProvider extends ChangeNotifier {
       final List<BattleRule> rules = character.battleRules;
       rules.sort((a, b) => a.priority.compareTo(b.priority));
       for (var rule in rules) {
-        List<Character> targets = rule.condition.getTargets(vermelhaContext);
+        List<Character> candidates = rule.condition.getTargets(vermelhaContext);
+        if (candidates.isEmpty) {
+          continue;
+        }
+        final targets = rule.target.selectTargets(
+          vermelhaContext,
+          character,
+          candidates,
+        );
         if (targets.isEmpty) {
           continue;
         }
@@ -164,6 +192,7 @@ class TasksProvider extends ChangeNotifier {
         priority: 1,
         name: "Enemy Rule",
         condition: getConditionList().firstWhere((c) => c.name == "ランダムな敵"),
+        target: getTargetListByCategory(TargetCategory.enemy).first,
         action: getActionList().firstWhere((a) => a.name == "物理攻撃"),
       )
     ];

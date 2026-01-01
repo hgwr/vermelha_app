@@ -6,6 +6,20 @@
   "tavernTitle": "酒場",
   "shopTitle": "ショップ",
   "dungeonTitle": "ダンジョン",
+  "dungeonSelectTitle": "ダンジョン選択",
+  "floorLabel": "フロア{floor}",
+  "@floorLabel": {
+    "placeholders": {
+      "floor": {}
+    }
+  },
+  "battleCountProgress": "戦闘回数: {current}/{required}",
+  "@battleCountProgress": {
+    "placeholders": {
+      "current": {},
+      "required": {}
+    }
+  },
   "partyTitle": "パーティ",
   "partyFormationTitle": "パーティ編成",
   "partyPositionForward": "前衛",
@@ -15,6 +29,10 @@
   "partyClearSlot": "外す",
   "partyIncomplete": "前衛・中衛・後衛の3人を設定してください",
   "saveTitle": "セーブ",
+  "campTitle": "キャンプ",
+  "campButton": "キャンプ",
+  "campHealButton": "全回復して戻る",
+  "returnToCity": "街へ戻る",
   "settingsTitle": "設定",
   "settingsBody": "設定",
   "noCharacters": "キャラクターがいません",
@@ -51,8 +69,10 @@
   "noLabel": "いいえ",
   "yesLabel": "はい",
   "addBattleRule": "新しい戦闘ルールを追加する",
+  "battleRuleLimitReached": "戦闘ルールは最大16件です",
   "selectConditionTitle": "条件を選択",
   "selectActionTitle": "アクションを選択",
+  "selectTargetTitle": "ターゲットを選択",
   "selectPlayerCharactersTitle": "パーティメンバーを選択",
   "taskStatusComplete": "完了",
   "taskStatusCanceled": "キャンセル",

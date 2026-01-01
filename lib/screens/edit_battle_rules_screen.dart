@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/screens/select_action_screen.dart';
 import 'package:vermelha_app/screens/select_condition_screen.dart';
+import 'package:vermelha_app/screens/select_target_screen.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import '../providers/characters_provider.dart';
@@ -12,6 +13,7 @@ import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/job.dart';
+import 'package:vermelha_app/models/target.dart';
 
 class EditBattleRulesScreen extends StatefulWidget {
   static const routeName = '/edit-battle-rules';
@@ -23,6 +25,7 @@ class EditBattleRulesScreen extends StatefulWidget {
 }
 
 class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
+  static const int _maxRules = 16;
   final GlobalKey<FormState> _formKey = GlobalKey();
   PlayerCharacter character = getInitializedCharacterByJob(Job.fighter);
   bool _isOrdering = false;
@@ -68,6 +71,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
   }
 
   BattleRule createNewBattleRule() {
+    final defaultCondition = getConditionList().first;
     return BattleRule(
       owner: character,
       priority: character.battleRules.map((e) => e.priority).fold<int>(0,
@@ -76,7 +80,8 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
           }) +
           1,
       name: "",
-      condition: getConditionList().first,
+      condition: defaultCondition,
+      target: getTargetListByCategory(defaultCondition.targetCategory).first,
       action: getActionList().first,
     );
   }
@@ -126,6 +131,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
 
   ListView createListView() {
     final l10n = AppLocalizations.of(context)!;
+    final isAtLimit = character.battleRules.length >= _maxRules;
     return ListView(
       children: [
         ...character.battleRules.map((battleRule) {
@@ -136,12 +142,14 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
               title: GestureDetector(
                 onTap: () {
                   Navigator.of(context)
-                      .pushNamed(SelectConditionScreen.routeName,
-                          arguments: battleRule)
+                      .pushNamed(
+                        SelectConditionScreen.routeName,
+                        arguments: battleRule,
+                      )
                       .then((value) {
                     setState(() {});
+                    saveCharacter();
                   });
-                  saveCharacter();
                 },
                 child: Row(
                   children: [
@@ -153,25 +161,55 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
                   ],
                 ),
               ),
-              subtitle: GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .pushNamed(SelectActionScreen.routeName,
-                          arguments: battleRule)
-                      .then((value) {
-                    setState(() {});
-                  });
-                  saveCharacter();
-                },
-                child: Row(
-                  children: [
-                    Text(battleRule.action.name),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                    )
-                  ],
-                ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(
+                            SelectTargetScreen.routeName,
+                            arguments: battleRule,
+                          )
+                          .then((value) {
+                        setState(() {});
+                        saveCharacter();
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Text(battleRule.target.name),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(
+                            SelectActionScreen.routeName,
+                            arguments: battleRule,
+                          )
+                          .then((value) {
+                        setState(() {});
+                        saveCharacter();
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Text(battleRule.action.name),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
               trailing: IconButton(
                 icon: const Icon(Icons.delete),
@@ -186,14 +224,17 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
           key: const ValueKey("f4ed9d86-2c2b-4b52-b620-5c8f390b0f41"),
           child: ListTile(
             title: Text(l10n.addBattleRule),
+            subtitle: isAtLimit ? Text(l10n.battleRuleLimitReached) : null,
             trailing: IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () {
-                setState(() {
-                  character.battleRules.add(createNewBattleRule());
-                });
-                saveCharacter();
-              },
+              onPressed: isAtLimit
+                  ? null
+                  : () {
+                      setState(() {
+                        character.battleRules.add(createNewBattleRule());
+                      });
+                      saveCharacter();
+                    },
             ),
           ),
         ),
@@ -235,7 +276,9 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
             child: ListTile(
                 leading: Text(battleRule.priority.toString()),
                 title: Text(battleRule.condition.name),
-                subtitle: Text(battleRule.action.name),
+                subtitle: Text(
+                  "${battleRule.target.name} / ${battleRule.action.name}",
+                ),
                 trailing: const Icon(Icons.drag_handle)),
           );
         }).toList(),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
+import 'package:vermelha_app/providers/dungeon_provider.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/widgets/task_widget.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/screens/camp_screen.dart';
+import 'package:vermelha_app/screens/city_menu_screen.dart';
 
 class DungeonScreen extends StatefulWidget {
   const DungeonScreen({Key? key}) : super(key: key);
@@ -28,10 +31,25 @@ class _DungeonScreenState extends State<DungeonScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final dungeonProvider = Provider.of<DungeonProvider>(context);
+    final activeFloor = dungeonProvider.activeFloor ?? 1;
+    final battleCount = dungeonProvider.battleCountOnFloor;
+    final battlesToUnlock = dungeonProvider.battlesToUnlockNextFloor;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.dungeonTitle)),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.floorLabel(activeFloor)),
+                const SizedBox(height: 4),
+                Text(l10n.battleCountProgress(battleCount, battlesToUnlock)),
+              ],
+            ),
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -78,6 +96,40 @@ class _DungeonScreenState extends State<DungeonScreen> {
                 EngineStatus.running
             ? const Icon(Icons.pause)
             : const Icon(Icons.play_arrow),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    Provider.of<TasksProvider>(context, listen: false)
+                        .pauseEngine();
+                    Navigator.of(context).pushNamed(CampScreen.routeName);
+                  },
+                  child: Text(l10n.campButton),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    Provider.of<TasksProvider>(context, listen: false)
+                        .resetBattle();
+                    Provider.of<DungeonProvider>(context, listen: false)
+                        .returnToCity();
+                    Navigator.of(context).popUntil(
+                      (route) => route.settings.name == CityMenuScreen.routeName,
+                    );
+                  },
+                  child: Text(l10n.returnToCity),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

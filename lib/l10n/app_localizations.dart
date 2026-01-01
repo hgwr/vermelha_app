@@ -136,6 +136,24 @@ abstract class AppLocalizations {
   /// **'ダンジョン'**
   String get dungeonTitle;
 
+  /// No description provided for @dungeonSelectTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'ダンジョン選択'**
+  String get dungeonSelectTitle;
+
+  /// No description provided for @floorLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'フロア{floor}'**
+  String floorLabel(Object floor);
+
+  /// No description provided for @battleCountProgress.
+  ///
+  /// In ja, this message translates to:
+  /// **'戦闘回数: {current}/{required}'**
+  String battleCountProgress(Object current, Object required);
+
   /// No description provided for @partyTitle.
   ///
   /// In ja, this message translates to:
@@ -189,6 +207,30 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'セーブ'**
   String get saveTitle;
+
+  /// No description provided for @campTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンプ'**
+  String get campTitle;
+
+  /// No description provided for @campButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンプ'**
+  String get campButton;
+
+  /// No description provided for @campHealButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'全回復して戻る'**
+  String get campHealButton;
+
+  /// No description provided for @returnToCity.
+  ///
+  /// In ja, this message translates to:
+  /// **'街へ戻る'**
+  String get returnToCity;
 
   /// No description provided for @settingsTitle.
   ///
@@ -376,6 +418,12 @@ abstract class AppLocalizations {
   /// **'新しい戦闘ルールを追加する'**
   String get addBattleRule;
 
+  /// No description provided for @battleRuleLimitReached.
+  ///
+  /// In ja, this message translates to:
+  /// **'戦闘ルールは最大16件です'**
+  String get battleRuleLimitReached;
+
   /// No description provided for @selectConditionTitle.
   ///
   /// In ja, this message translates to:
@@ -387,6 +435,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'アクションを選択'**
   String get selectActionTitle;
+
+  /// No description provided for @selectTargetTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'ターゲットを選択'**
+  String get selectTargetTitle;
 
   /// No description provided for @selectPlayerCharactersTitle.
   ///

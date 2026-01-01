@@ -3,13 +3,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
+import 'package:vermelha_app/providers/dungeon_provider.dart';
 import 'package:vermelha_app/screens/character_screen.dart';
+import 'package:vermelha_app/screens/camp_screen.dart';
 import 'package:vermelha_app/screens/city_menu_screen.dart';
+import 'package:vermelha_app/screens/dungeon_select_screen.dart';
 import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 import 'package:vermelha_app/screens/select_action_screen.dart';
 import 'package:vermelha_app/screens/select_condition_screen.dart';
 import 'package:vermelha_app/screens/select_player_characters_screen.dart';
+import 'package:vermelha_app/screens/select_target_screen.dart';
 import 'package:vermelha_app/screens/tavern_screen.dart';
 import 'package:vermelha_app/screens/title_screen.dart';
 
@@ -48,10 +52,15 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider.value(
           value: charactersProvider,
         ),
-        ChangeNotifierProxyProvider<CharactersProvider, TasksProvider>(
+        ChangeNotifierProvider.value(
+          value: DungeonProvider(),
+        ),
+        ChangeNotifierProxyProvider2<CharactersProvider, DungeonProvider,
+            TasksProvider>(
           create: (_) => TasksProvider(charactersProvider),
-          update: (_, charactersProvider, tasksProvider) {
+          update: (_, charactersProvider, dungeonProvider, tasksProvider) {
             tasksProvider!.charactersProvider = charactersProvider;
+            tasksProvider.dungeonProvider = dungeonProvider;
             return tasksProvider;
           },
         ),
@@ -80,7 +89,9 @@ class _MyAppState extends State<MyApp> {
           TitleScreen.routeName: (ctx) => const TitleScreen(),
           CityMenuScreen.routeName: (ctx) => const CityMenuScreen(),
           TavernScreen.routeName: (ctx) => const TavernScreen(),
+          DungeonSelectScreen.routeName: (ctx) => const DungeonSelectScreen(),
           DungeonScreen.routeName: (ctx) => const DungeonScreen(),
+          CampScreen.routeName: (ctx) => const CampScreen(),
           PartyScreen.routeName: (ctx) => const PartyScreen(),
           SettingsScreen.routeName: (ctx) => const SettingsScreen(),
           CharacterScreen.routeName: (ctx) => const CharacterScreen(),
@@ -91,6 +102,7 @@ class _MyAppState extends State<MyApp> {
           SelectConditionScreen.routeName: (ctx) =>
               const SelectConditionScreen(),
           SelectActionScreen.routeName: (ctx) => const SelectActionScreen(),
+          SelectTargetScreen.routeName: (ctx) => const SelectTargetScreen(),
           SelectPlayerCharactersScreen.routeName: (ctx) =>
               const SelectPlayerCharactersScreen(),
         },

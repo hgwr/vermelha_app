@@ -60,6 +60,9 @@ alter table character add column is_active INTEGER NOT NULL DEFAULT 1
   23050500120: '''
 alter table character add column party_position INTEGER
 ''',
+  23050500130: '''
+alter table battle_rule add column target_uuid TEXT
+''',
 };
 
 Future<void> migrateDatabase() async {
