@@ -46,6 +46,12 @@ Commands:
   - gh issue comment <id> -R hgwr/vermelha_app -b "summary..."
   - gh issue close <id> -R hgwr/vermelha_app
 
+## Branching and Review
+When resolving GitHub issues, create a working branch from `main` and open a
+pull request for review before merging.
+After a pull request is reviewed and the issue acceptance criteria are met,
+merge the pull request, link it to the issue, then close the issue.
+
 ## Expectations for Changes
 - Keep UI minimal and mobile-first.
 - Use localization resources for labels; do not hard-code English UI strings for v1.
