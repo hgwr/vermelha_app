@@ -1,5 +1,6 @@
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/condition.dart';
+import 'package:vermelha_app/models/enemy.dart';
 import 'package:vermelha_app/models/vermelha_context.dart';
 
 typedef SelectTargets = List<Character> Function(
@@ -35,6 +36,8 @@ const String targetLowestSpeedAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b024';
 const String targetLowestSpeedEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b025';
 const String targetHighestSpeedAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b026';
 const String targetHighestSpeedEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b027';
+const String targetFirstEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b028';
+const String targetAttackingEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b029';
 
 class Target {
   final String uuid;
@@ -263,6 +266,32 @@ List<Target> getTargetList() {
       selectTargets: (_, __, candidates) =>
           _selectSingle(candidates, (a, b) => a.speed > b.speed),
     ),
+    Target(
+      uuid: targetFirstEnemyId,
+      name: '先頭の敵',
+      targetCategory: TargetCategory.enemy,
+      selectTargets: (_, __, candidates) {
+        if (candidates.isEmpty) {
+          return [];
+        }
+        return [candidates.first];
+      },
+    ),
+    Target(
+      uuid: targetAttackingEnemyId,
+      name: '自分を攻撃している敵',
+      targetCategory: TargetCategory.enemy,
+      selectTargets: (context, subject, candidates) {
+        final attacker = context.lastAttackers[subject];
+        if (attacker == null || attacker is! Enemy) {
+          return [];
+        }
+        if (candidates.any((candidate) => candidate == attacker)) {
+          return [attacker];
+        }
+        return [];
+      },
+    ),
   ];
 }
 
@@ -282,6 +311,9 @@ Target getTargetByUuid(
 }
 
 List<Target> getTargetListByCategory(TargetCategory category) {
+  if (category == TargetCategory.any) {
+    return getTargetList();
+  }
   return getTargetList()
       .where((target) => target.targetCategory == category)
       .toList();

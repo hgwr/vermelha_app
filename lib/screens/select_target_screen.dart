@@ -23,8 +23,9 @@ class _SelectTargetScreenState extends State<SelectTargetScreen> {
       _battleRule = ModalRoute.of(context)!.settings.arguments as BattleRule;
     }
 
-    final targets =
-        getTargetListByCategory(_battleRule!.condition.targetCategory);
+    final targets = _battleRule!.condition.targetCategory == TargetCategory.any
+        ? getTargetList()
+        : getTargetListByCategory(_battleRule!.condition.targetCategory);
 
     return Scaffold(
       appBar: AppBar(

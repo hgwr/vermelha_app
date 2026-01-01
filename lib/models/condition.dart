@@ -11,6 +11,7 @@ typedef GetTargets = List<Character> Function(VermelhaContext context);
 enum TargetCategory {
   ally,
   enemy,
+  any,
 }
 
 const String conditionLowestHpEnemyId = '43ed09b5-7682-4c43-94d7-077c2b6dcaaa';
@@ -59,6 +60,7 @@ const String conditionLowestSpeedAllyId =
     'cd7fa7f8-6810-43b3-9500-912176da75a9';
 const String conditionHighestSpeedAllyId =
     '5c12a2a6-cd78-4169-b84f-9773851e3058';
+const String conditionAlwaysId = '2b0c9d6a-0c6d-4d58-9e3b-3a8e5d3b9a1a';
 
 class Condition {
   final String uuid;
@@ -379,6 +381,14 @@ List<Condition> getConditionList() {
         final target = context.allies.reduce(
             (value, element) => value.speed > element.speed ? value : element);
         return [target];
+      },
+    ),
+    Condition(
+      uuid: conditionAlwaysId,
+      name: '常に',
+      targetCategory: TargetCategory.any,
+      getTargets: (context) {
+        return const <Character>[];
       },
     ),
   ];

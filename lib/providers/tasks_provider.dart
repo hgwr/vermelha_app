@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
@@ -222,6 +223,8 @@ class TasksProvider extends ChangeNotifier {
     _nextExploreAt = null;
     _turnOrder = [];
     _turnIndex = 0;
+    _vermelhaContext.lastAttackers.clear();
+    _vermelhaContext.defending.clear();
     addLog(LogType.battle, LogMessageId.battleEncounter);
     _buildTurnOrder();
   }
@@ -260,6 +263,8 @@ class TasksProvider extends ChangeNotifier {
       actor,
       targets,
     );
+    _registerAttackers(actor, targets);
+    _consumeActionCost(actor, action, targets);
     addActionLog(actor, action, targets);
     _tasks.add(
       Task(
@@ -442,8 +447,10 @@ class TasksProvider extends ChangeNotifier {
     final List<BattleRule> rules = actor.battleRules;
     rules.sort((a, b) => a.priority.compareTo(b.priority));
     for (var rule in rules) {
-      List<Character> candidates =
-          _aliveTargets(rule.condition.getTargets(vermelhaContext));
+      if (!_canExecuteAction(actor, rule.action)) {
+        continue;
+      }
+      List<Character> candidates = _aliveTargets(_candidatesForRule(rule));
       if (candidates.isEmpty) {
         continue;
       }
@@ -462,6 +469,78 @@ class TasksProvider extends ChangeNotifier {
     return _ActionDecision(defaultAction, defaultTargets);
   }
 
+  List<Character> _candidatesForRule(BattleRule rule) {
+    if (rule.condition.targetCategory == TargetCategory.any) {
+      return rule.target.targetCategory == TargetCategory.ally
+          ? vermelhaContext.allies
+          : vermelhaContext.enemies;
+    }
+    return rule.condition.getTargets(vermelhaContext);
+  }
+
+  bool _canExecuteAction(Character actor, Action action) {
+    if (actor.mp < action.mpCost) {
+      return false;
+    }
+    if (action.uuid == actionUsePotionId) {
+      return _hasConsumable(actor, 'consumable_potion');
+    }
+    if (action.uuid == actionUseEtherId) {
+      return _hasConsumable(actor, 'consumable_ether');
+    }
+    return true;
+  }
+
+  bool _hasConsumable(Character actor, String itemId) {
+    if (actor is! PlayerCharacter) {
+      return false;
+    }
+    return actor.inventory.any((item) => item.id == itemId);
+  }
+
+  void _consumeActionCost(
+    Character actor,
+    Action action,
+    List<Character> targets,
+  ) {
+    if (action.mpCost > 0) {
+      actor.mp = max(0, actor.mp - action.mpCost);
+    }
+    if (action.uuid == actionUsePotionId) {
+      _consumeItem(actor, 'consumable_potion', targets);
+    }
+    if (action.uuid == actionUseEtherId) {
+      _consumeItem(actor, 'consumable_ether', targets);
+    }
+  }
+
+  void _consumeItem(
+    Character actor,
+    String itemId,
+    List<Character> targets,
+  ) {
+    if (actor is! PlayerCharacter || targets.isEmpty) {
+      return;
+    }
+    final index = actor.inventory.indexWhere((item) => item.id == itemId);
+    if (index < 0) {
+      return;
+    }
+    final item = actor.inventory.removeAt(index);
+    _applyItemEffects(targets.first, item);
+  }
+
+  void _applyItemEffects(Character target, Item item) {
+    final hp = item.effects['hp'];
+    if (hp != null) {
+      target.hp = min(target.maxHp, target.hp + hp);
+    }
+    final mp = item.effects['mp'];
+    if (mp != null) {
+      target.mp = min(target.maxMp, target.mp + mp);
+    }
+  }
+
   List<Character> _fallbackTargets(Character actor) {
     final candidates = actor is PlayerCharacter
         ? vermelhaContext.enemies
@@ -476,6 +555,15 @@ class TasksProvider extends ChangeNotifier {
 
   List<Character> _aliveTargets(List<Character> candidates) {
     return candidates.where((candidate) => candidate.hp > 0).toList();
+  }
+
+  void _registerAttackers(Character actor, List<Character> targets) {
+    if (actor is! Enemy) {
+      return;
+    }
+    for (final target in targets) {
+      vermelhaContext.lastAttackers[target] = actor;
+    }
   }
 
   Map<String, String> _serializeActor(Character actor) {

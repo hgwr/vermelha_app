@@ -59,6 +59,12 @@ String actionLabelByUuid(AppLocalizations l10n, String uuid) {
       return l10n.actionBigCure;
     case actionSmallCureId:
       return l10n.actionSmallCure;
+    case actionDefendId:
+      return l10n.actionDefend;
+    case actionUsePotionId:
+      return l10n.actionUsePotion;
+    case actionUseEtherId:
+      return l10n.actionUseEther;
   }
   return l10n.unknownLabel;
 }
@@ -129,6 +135,8 @@ String conditionLabelByUuid(AppLocalizations l10n, String uuid) {
       return l10n.conditionLowestSpeedAlly;
     case conditionHighestSpeedAllyId:
       return l10n.conditionHighestSpeedAlly;
+    case conditionAlwaysId:
+      return l10n.conditionAlways;
   }
   return l10n.unknownLabel;
 }
@@ -193,6 +201,10 @@ String targetLabelByUuid(AppLocalizations l10n, String uuid) {
       return l10n.targetHighestSpeedAlly;
     case targetHighestSpeedEnemyId:
       return l10n.targetHighestSpeedEnemy;
+    case targetFirstEnemyId:
+      return l10n.targetFirstEnemy;
+    case targetAttackingEnemyId:
+      return l10n.targetAttackingEnemy;
   }
   return l10n.unknownLabel;
 }

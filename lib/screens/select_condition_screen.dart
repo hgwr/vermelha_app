@@ -48,8 +48,9 @@ class _SelectConditionScreenState extends State<SelectConditionScreen> {
                         title: Text(conditionLabel(l10n, condition)),
                         onTap: () {
                           _battleRule!.condition = condition;
-                          if (_battleRule!.target.targetCategory !=
-                              condition.targetCategory) {
+                          if (condition.targetCategory != TargetCategory.any &&
+                              _battleRule!.target.targetCategory !=
+                                  condition.targetCategory) {
                             _battleRule!.target =
                                 getTargetListByCategory(condition.targetCategory)
                                     .first;

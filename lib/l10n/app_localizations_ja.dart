@@ -586,6 +586,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get targetHighestSpeedEnemy => '最も素早さが高い敵';
 
   @override
+  String get actionDefend => '防御';
+
+  @override
+  String get actionUsePotion => '回復薬を使う';
+
+  @override
+  String get actionUseEther => '魔力水を使う';
+
+  @override
+  String get conditionAlways => '常に';
+
+  @override
+  String get targetFirstEnemy => '先頭の敵';
+
+  @override
+  String get targetAttackingEnemy => '自分を攻撃している敵';
+
+  @override
   String get itemWeaponShortSword => 'ショートソード';
 
   @override
