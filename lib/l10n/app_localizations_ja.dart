@@ -33,6 +33,27 @@ class AppLocalizationsJa extends AppLocalizations {
   String get partyTitle => 'パーティ';
 
   @override
+  String get partyFormationTitle => 'パーティ編成';
+
+  @override
+  String get partyPositionForward => '前衛';
+
+  @override
+  String get partyPositionMiddle => '中衛';
+
+  @override
+  String get partyPositionRear => '後衛';
+
+  @override
+  String get partySlotEmpty => '未設定';
+
+  @override
+  String get partyClearSlot => '外す';
+
+  @override
+  String get partyIncomplete => '前衛・中衛・後衛の3人を設定してください';
+
+  @override
   String get saveTitle => 'セーブ';
 
   @override

@@ -136,7 +136,7 @@ class TasksProvider extends ChangeNotifier {
 
   void fillAllies() {
     _vermelhaContext = _vermelhaContext.copyWith(
-      allies: charactersProvider.characters.where((c) => c.isActive).toList(),
+      allies: charactersProvider.partyMembers,
       enemies: _vermelhaContext.enemies,
     );
   }

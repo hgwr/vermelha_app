@@ -3,6 +3,7 @@ import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/screens/dungeon_screen.dart';
 import 'package:vermelha_app/screens/party_screen.dart';
 import 'package:vermelha_app/screens/placeholder_screen.dart';
+import 'package:vermelha_app/screens/tavern_screen.dart';
 
 class CityMenuScreen extends StatelessWidget {
   const CityMenuScreen({Key? key}) : super(key: key);
@@ -23,7 +24,7 @@ class CityMenuScreen extends StatelessWidget {
     final items = [
       _CityMenuItem(
         label: l10n.tavernTitle,
-        onTap: () => _openPlaceholder(context, l10n.tavernTitle),
+        onTap: () => Navigator.of(context).pushNamed(TavernScreen.routeName),
       ),
       _CityMenuItem(
         label: l10n.partyTitle,

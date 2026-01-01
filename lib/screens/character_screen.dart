@@ -145,20 +145,6 @@ class _CharacterScreenState extends State<CharacterScreen> {
         const SizedBox(
           height: 8,
         ),
-        Row(
-          children: [
-            Text('${l10n.partyJoinLabel}: '),
-            Switch(
-              value: character.isActive,
-              onChanged: (value) {
-                setState(() {
-                  character.isActive = value;
-                });
-                saveCharacter();
-              },
-            ),
-          ],
-        ),
         characterPropertyItem(
           '${l10n.levelLabel}: ',
           character.level.toString(),

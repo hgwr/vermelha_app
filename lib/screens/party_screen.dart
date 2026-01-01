@@ -1,105 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vermelha_app/models/player_character.dart';
-import 'package:vermelha_app/models/job.dart';
-import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/models/party_position.dart';
+import 'package:vermelha_app/models/player_character.dart';
+import 'package:vermelha_app/providers/characters_provider.dart';
 
-class PartyScreen extends StatefulWidget {
+class PartyScreen extends StatelessWidget {
   const PartyScreen({Key? key}) : super(key: key);
 
   static const routeName = '/party';
 
-  @override
-  State<PartyScreen> createState() => _PartyScreenState();
-}
-
-class _PartyScreenState extends State<PartyScreen> {
-  bool _isDeleting = false;
-
-  void _showConfirmDeleteDialog(PlayerCharacter character) {
-    final l10n = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(l10n.deleteCharacterTitle),
-          content: Text(l10n.deleteCharacterBody),
-          actions: [
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _isDeleting = false;
-                });
-                Navigator.of(context).pop();
-              },
-              child: Text(l10n.cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _isDeleting = false;
-                });
-                Provider.of<CharactersProvider>(context, listen: false)
-                    .removeCharacter(character);
-                Navigator.of(context).pop();
-              },
-              child: Text(l10n.delete),
-            ),
-          ],
-        );
-      },
-    );
+  String _positionLabel(AppLocalizations l10n, PartyPosition position) {
+    switch (position) {
+      case PartyPosition.forward:
+        return l10n.partyPositionForward;
+      case PartyPosition.middle:
+        return l10n.partyPositionMiddle;
+      case PartyPosition.rear:
+        return l10n.partyPositionRear;
+    }
   }
 
-  Widget createListView(
-      BuildContext context, List<PlayerCharacter> characters) {
+  String _memberLabel(PlayerCharacter member) {
+    final jobName = member.job?.name ?? '';
+    return '$jobName ${member.name}';
+  }
+
+  void _showMemberPicker(
+    BuildContext context,
+    PartyPosition position,
+    CharactersProvider charactersProvider,
+  ) {
     final l10n = AppLocalizations.of(context)!;
-    return RefreshIndicator(
-      onRefresh: () async {},
-      child: ListView.builder(
-        itemCount: characters.isEmpty ? 1 : characters.length,
-        itemBuilder: (BuildContext context, int index) {
-          if (characters.isEmpty) {
-            return Center(
-              child: Text(l10n.noCharacters),
-            );
-          }
-          PlayerCharacter character = characters[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                '/character',
-                arguments: character,
-              );
-            },
-            child: ListTile(
-              leading: _isDeleting
-                  ? IconButton(
-                      onPressed: () {
-                        _showConfirmDeleteDialog(character);
-                      },
-                      icon: const Icon(Icons.delete),
-                    )
-                  : getImageByJob(character.job!),
-              title: Row(
-                children: [
-                  character.isActive
-                      ? const Icon(Icons.person)
-                      : const Icon(Icons.person_off_outlined),
-                  Text(
-                    character.name,
-                  ),
-                ],
-              ),
-              subtitle: Text(
-                "${character.job!.name} "
-                "${l10n.levelShort}${character.level} ",
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        final members = charactersProvider.characters;
+        if (members.isEmpty) {
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Center(
+                child: Text(l10n.noCharacters),
               ),
             ),
           );
-        },
-      ),
+        }
+        return SafeArea(
+          child: ListView.separated(
+            itemCount: members.length,
+            separatorBuilder: (_, __) => const Divider(height: 1),
+            itemBuilder: (context, index) {
+              final member = members[index];
+              final isSelected = member.partyPosition == position;
+              final currentPositionLabel = member.partyPosition == null
+                  ? l10n.partySlotEmpty
+                  : _positionLabel(l10n, member.partyPosition!);
+              return ListTile(
+                leading: isSelected ? const Icon(Icons.check) : null,
+                title: Text(_memberLabel(member)),
+                subtitle: Text(currentPositionLabel),
+                onTap: () async {
+                  await charactersProvider.assignPartyMember(position, member);
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                },
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -110,35 +81,39 @@ class _PartyScreenState extends State<PartyScreen> {
       builder: (ctx, charactersProvider, _) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(l10n.partyTitle),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isDeleting = !_isDeleting;
-                  });
-                },
-                icon: Icon(
-                  _isDeleting ? Icons.delete : Icons.delete_outline,
-                ),
-              ),
-            ],
+            title: Text(l10n.partyFormationTitle),
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: createListView(
-                  ctx,
-                  charactersProvider.characters,
+          body: ListView.separated(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            itemCount: PartyPosition.values.length,
+            separatorBuilder: (_, __) => const Divider(height: 1),
+            itemBuilder: (context, index) {
+              final position = PartyPosition.values[index];
+              final member = charactersProvider.memberAt(position);
+              return ListTile(
+                title: Text(_positionLabel(l10n, position)),
+                subtitle: Text(
+                  member == null ? l10n.partySlotEmpty : _memberLabel(member),
                 ),
-              ),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/character');
+                trailing: member == null
+                    ? null
+                    : IconButton(
+                        icon: const Icon(Icons.clear),
+                        tooltip: l10n.partyClearSlot,
+                        onPressed: () async {
+                          await charactersProvider.assignPartyMember(
+                            position,
+                            null,
+                          );
+                        },
+                      ),
+                onTap: () => _showMemberPicker(
+                  context,
+                  position,
+                  charactersProvider,
+                ),
+              );
             },
-            child: const Icon(Icons.add),
           ),
         );
       },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/widgets/task_widget.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
@@ -57,6 +58,16 @@ class _DungeonScreenState extends State<DungeonScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          final charactersProvider =
+              Provider.of<CharactersProvider>(context, listen: false);
+          if (!charactersProvider.isPartyComplete) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n.partyIncomplete),
+              ),
+            );
+            return;
+          }
           Provider.of<TasksProvider>(context, listen: false).engineStatus ==
                   EngineStatus.running
               ? Provider.of<TasksProvider>(context, listen: false).pauseEngine()

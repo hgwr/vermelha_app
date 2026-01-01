@@ -10,6 +10,7 @@ import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 import 'package:vermelha_app/screens/select_action_screen.dart';
 import 'package:vermelha_app/screens/select_condition_screen.dart';
 import 'package:vermelha_app/screens/select_player_characters_screen.dart';
+import 'package:vermelha_app/screens/tavern_screen.dart';
 import 'package:vermelha_app/screens/title_screen.dart';
 
 import './db/db_migration.dart';
@@ -78,6 +79,7 @@ class _MyAppState extends State<MyApp> {
         routes: {
           TitleScreen.routeName: (ctx) => const TitleScreen(),
           CityMenuScreen.routeName: (ctx) => const CityMenuScreen(),
+          TavernScreen.routeName: (ctx) => const TavernScreen(),
           DungeonScreen.routeName: (ctx) => const DungeonScreen(),
           PartyScreen.routeName: (ctx) => const PartyScreen(),
           SettingsScreen.routeName: (ctx) => const SettingsScreen(),

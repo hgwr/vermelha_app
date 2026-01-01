@@ -142,6 +142,48 @@ abstract class AppLocalizations {
   /// **'パーティ'**
   String get partyTitle;
 
+  /// No description provided for @partyFormationTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'パーティ編成'**
+  String get partyFormationTitle;
+
+  /// No description provided for @partyPositionForward.
+  ///
+  /// In ja, this message translates to:
+  /// **'前衛'**
+  String get partyPositionForward;
+
+  /// No description provided for @partyPositionMiddle.
+  ///
+  /// In ja, this message translates to:
+  /// **'中衛'**
+  String get partyPositionMiddle;
+
+  /// No description provided for @partyPositionRear.
+  ///
+  /// In ja, this message translates to:
+  /// **'後衛'**
+  String get partyPositionRear;
+
+  /// No description provided for @partySlotEmpty.
+  ///
+  /// In ja, this message translates to:
+  /// **'未設定'**
+  String get partySlotEmpty;
+
+  /// No description provided for @partyClearSlot.
+  ///
+  /// In ja, this message translates to:
+  /// **'外す'**
+  String get partyClearSlot;
+
+  /// No description provided for @partyIncomplete.
+  ///
+  /// In ja, this message translates to:
+  /// **'前衛・中衛・後衛の3人を設定してください'**
+  String get partyIncomplete;
+
   /// No description provided for @saveTitle.
   ///
   /// In ja, this message translates to:

@@ -1,12 +1,14 @@
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/job.dart';
+import 'package:vermelha_app/models/party_position.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
 
 class PlayerCharacter extends Character {
   Job? job;
   int exp = 0;
   bool isActive = true;
+  PartyPosition? partyPosition;
 
   PlayerCharacter({
     uuid,
@@ -26,6 +28,7 @@ class PlayerCharacter extends Character {
     this.job,
     this.exp = 0,
     this.isActive = true,
+    this.partyPosition,
   }) : super(
           uuid: uuid,
           id: id,
@@ -61,6 +64,7 @@ class PlayerCharacter extends Character {
       battleRules: <BattleRule>[],
       exp: json['exp'],
       isActive: json['is_active'] == 1,
+      partyPosition: partyPositionFromDb(json['party_position']),
     );
   }
 
@@ -80,6 +84,7 @@ class PlayerCharacter extends Character {
       'job_id': job?.id,
       'exp': exp,
       'is_active': isActive ? 1 : 0,
+      'party_position': partyPosition?.index,
     };
   }
 
@@ -102,6 +107,7 @@ class PlayerCharacter extends Character {
     List<BattleRule>? battleRules,
     int? exp,
     bool? isActive,
+    PartyPosition? partyPosition,
   }) {
     return PlayerCharacter(
       uuid: uuid ?? this.uuid,
@@ -121,6 +127,7 @@ class PlayerCharacter extends Character {
       battleRules: battleRules ?? this.battleRules,
       exp: exp ?? this.exp,
       isActive: isActive ?? this.isActive,
+      partyPosition: partyPosition ?? this.partyPosition,
     );
   }
 }

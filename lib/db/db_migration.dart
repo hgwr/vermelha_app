@@ -57,6 +57,9 @@ alter table character add column exp INTEGER NOT NULL DEFAULT 0
   23050500110: '''
 alter table character add column is_active INTEGER NOT NULL DEFAULT 1
 ''',
+  23050500120: '''
+alter table character add column party_position INTEGER
+''',
 };
 
 Future<void> migrateDatabase() async {
