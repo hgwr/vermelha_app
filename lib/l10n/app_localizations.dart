@@ -250,6 +250,12 @@ abstract class AppLocalizations {
   /// **'外す'**
   String get partyClearSlot;
 
+  /// No description provided for @partyViewDetails.
+  ///
+  /// In ja, this message translates to:
+  /// **'詳細を見る'**
+  String get partyViewDetails;
+
   /// No description provided for @partyIncomplete.
   ///
   /// In ja, this message translates to:
