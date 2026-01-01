@@ -379,9 +379,8 @@ class TasksProvider extends ChangeNotifier {
       final enemy = Enemy(
         type: enemyType,
         isTelegraphing: false,
-        uuid: const Uuid().toString(),
-        id: vermelhaContext.random.nextInt(999999),
-        name: "Enemy",
+        uuid: const Uuid().v4(),
+        name: 'Enemy ${i + 1}',
         level: 1,
         maxHp: 100,
         hp: 100,
