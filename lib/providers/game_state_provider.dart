@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/models/game_state.dart';
+import 'package:vermelha_app/models/party.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/providers/dungeon_provider.dart';
 import 'package:vermelha_app/repository/game_state_repository.dart';
@@ -61,6 +62,7 @@ class GameStateProvider extends ChangeNotifier {
     }
     final state = GameState(
       roster: _charactersProvider!.characters,
+      party: Party.fromRoster(_charactersProvider!.characters),
       gold: gold,
       maxReachedFloor: _dungeonProvider!.maxReachedFloor,
       activeDungeon: _dungeonProvider!.toDungeonState(),

@@ -96,6 +96,12 @@ alter table game_state add column event_log TEXT
   23050500180: '''
 alter table game_state add column is_paused INTEGER NOT NULL DEFAULT 1
 ''',
+  26010100010: '''
+alter table character add column job_bonus TEXT
+''',
+  26010100020: '''
+alter table game_state add column seed TEXT
+''',
 };
 
 Future<void> migrateDatabase() async {

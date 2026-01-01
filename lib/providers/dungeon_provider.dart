@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vermelha_app/models/dungeon_state.dart';
 import 'package:vermelha_app/models/game_state.dart';
 import 'package:vermelha_app/models/log_entry.dart';
@@ -8,6 +9,7 @@ class DungeonProvider extends ChangeNotifier {
 
   int maxReachedFloor = 1;
   int? activeFloor;
+  String? seed;
   int battleCountOnFloor = 0;
   int battlesToUnlockNextFloor = defaultBattlesToUnlockNextFloor;
   bool isPaused = true;
@@ -17,6 +19,7 @@ class DungeonProvider extends ChangeNotifier {
 
   void startExploration(int floor) {
     activeFloor = floor;
+    seed = const Uuid().v4();
     battleCountOnFloor = 0;
     isPaused = true;
     eventLog = [];
@@ -28,12 +31,14 @@ class DungeonProvider extends ChangeNotifier {
     final activeDungeon = state.activeDungeon;
     if (activeDungeon == null) {
       activeFloor = null;
+      seed = null;
       battleCountOnFloor = 0;
       battlesToUnlockNextFloor = defaultBattlesToUnlockNextFloor;
       isPaused = true;
       eventLog = [];
     } else {
       activeFloor = activeDungeon.floor;
+      seed = activeDungeon.seed;
       battleCountOnFloor = activeDungeon.battleCountOnFloor;
       battlesToUnlockNextFloor = activeDungeon.battlesToUnlockNextFloor;
       isPaused = activeDungeon.isPaused;
@@ -48,6 +53,7 @@ class DungeonProvider extends ChangeNotifier {
     }
     return DungeonState(
       floor: activeFloor!,
+      seed: seed ?? const Uuid().v4(),
       battleCountOnFloor: battleCountOnFloor,
       battlesToUnlockNextFloor: battlesToUnlockNextFloor,
       eventLog: eventLog,
@@ -58,6 +64,7 @@ class DungeonProvider extends ChangeNotifier {
   void reset() {
     maxReachedFloor = 1;
     activeFloor = null;
+    seed = null;
     battleCountOnFloor = 0;
     battlesToUnlockNextFloor = defaultBattlesToUnlockNextFloor;
     isPaused = true;
@@ -80,6 +87,7 @@ class DungeonProvider extends ChangeNotifier {
 
   void returnToCity() {
     activeFloor = null;
+    seed = null;
     battleCountOnFloor = 0;
     isPaused = true;
     eventLog = [];
