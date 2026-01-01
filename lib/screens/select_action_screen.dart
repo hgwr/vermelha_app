@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/action.dart';
@@ -17,13 +18,14 @@ class _SelectActionScreenState extends State<SelectActionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (ModalRoute.of(context)!.settings.arguments != null) {
       _battleRule = ModalRoute.of(context)!.settings.arguments as BattleRule;
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Action'),
+        title: Text(l10n.selectActionTitle),
       ),
       body: Column(
         children: [

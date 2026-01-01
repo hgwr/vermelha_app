@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
+import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import '../providers/screen_provider.dart';
 import '../widgets/bottom_bar_widget.dart';
@@ -20,12 +21,13 @@ class _PartyScreenState extends State<PartyScreen> {
   bool _isDeleting = false;
 
   void _showConfirmDeleteDialog(PlayerCharacter character) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('キャラクターを削除しますか？'),
-          content: const Text('削除すると元に戻せません。'),
+          title: Text(l10n.deleteCharacterTitle),
+          content: Text(l10n.deleteCharacterBody),
           actions: [
             TextButton(
               onPressed: () {
@@ -34,7 +36,7 @@ class _PartyScreenState extends State<PartyScreen> {
                 });
                 Navigator.of(context).pop();
               },
-              child: const Text('キャンセル'),
+              child: Text(l10n.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -45,7 +47,7 @@ class _PartyScreenState extends State<PartyScreen> {
                     .removeCharacter(character);
                 Navigator.of(context).pop();
               },
-              child: const Text('削除'),
+              child: Text(l10n.delete),
             ),
           ],
         );
@@ -55,14 +57,15 @@ class _PartyScreenState extends State<PartyScreen> {
 
   Widget createListView(
       BuildContext context, List<PlayerCharacter> characters) {
+    final l10n = AppLocalizations.of(context)!;
     return RefreshIndicator(
       onRefresh: () async {},
       child: ListView.builder(
-        itemCount: characters.length,
+        itemCount: characters.isEmpty ? 1 : characters.length,
         itemBuilder: (BuildContext context, int index) {
           if (characters.isEmpty) {
-            return const Center(
-              child: Text('No characters'),
+            return Center(
+              child: Text(l10n.noCharacters),
             );
           }
           PlayerCharacter character = characters[index];
@@ -94,7 +97,7 @@ class _PartyScreenState extends State<PartyScreen> {
               ),
               subtitle: Text(
                 "${character.job!.name} "
-                "Lv.${character.level} ",
+                "${l10n.levelShort}${character.level} ",
               ),
             ),
           );
@@ -105,11 +108,12 @@ class _PartyScreenState extends State<PartyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<CharactersProvider>(
       builder: (ctx, charactersProvider, _) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Party'),
+            title: Text(l10n.partyTitle),
             actions: [
               IconButton(
                 onPressed: () {

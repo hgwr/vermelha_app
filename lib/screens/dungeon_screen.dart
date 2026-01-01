@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/widgets/task_widget.dart';
+import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import '../providers/screen_provider.dart';
 import '../widgets/bottom_bar_widget.dart';
@@ -28,8 +29,9 @@ class _DungeonScreenState extends State<DungeonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Dungeon')),
+      appBar: AppBar(title: Text(l10n.dungeonTitle)),
       body: Column(
         children: [
           Expanded(

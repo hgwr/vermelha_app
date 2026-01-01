@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/screens/character_screen.dart';
 import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
@@ -69,7 +71,8 @@ class _MyAppState extends State<MyApp> {
       ],
       child: Consumer<ScreenProvider>(
         builder: (ctx, screenProvider, _) => MaterialApp(
-          title: 'Vermelha',
+          onGenerateTitle: (titleContext) =>
+              AppLocalizations.of(titleContext)!.appTitle,
           theme: ThemeData(
             appBarTheme: const AppBarTheme(
               backgroundColor: Colors.white,
@@ -77,6 +80,15 @@ class _MyAppState extends State<MyApp> {
               iconTheme: IconThemeData(color: Colors.black),
             ),
           ),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('ja'),
+          ],
           home: getHome(screenProvider.currentScreenIndex),
           routes: {
             DungeonScreen.routeName: (ctx) => const DungeonScreen(),

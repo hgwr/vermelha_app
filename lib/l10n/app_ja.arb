@@ -1,0 +1,54 @@
+{
+  "appTitle": "Vermelha",
+  "dungeonTitle": "ダンジョン",
+  "partyTitle": "パーティ",
+  "settingsTitle": "設定",
+  "settingsBody": "設定",
+  "noCharacters": "キャラクターがいません",
+  "noCharactersFound": "キャラクターが見つかりません",
+  "deleteCharacterTitle": "キャラクターを削除しますか？",
+  "deleteCharacterBody": "削除すると元に戻せません。",
+  "cancel": "キャンセル",
+  "delete": "削除",
+  "newCharacterTitle": "新規",
+  "nameLabel": "名前",
+  "jobLabel": "ジョブ",
+  "partyJoinLabel": "パーティ参加",
+  "levelLabel": "レベル",
+  "levelShort": "Lv.",
+  "expLabel": "経験値",
+  "hpLabel": "HP",
+  "mpLabel": "MP",
+  "attackLabel": "攻撃力",
+  "defenseLabel": "防御力",
+  "magicPowerLabel": "魔法力",
+  "speedLabel": "素早さ",
+  "priorityParametersLabel": "優先パラメータ",
+  "battleRulesLabel": "戦闘ルール",
+  "priorityParametersDescription": "このキャラクターがレベルアップした時、優先的に成長するパラメーターを３つ選びます",
+  "battleRulesTitleWithName": "戦闘ルール：{name}",
+  "@battleRulesTitleWithName": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "battleRulesTitle": "戦闘ルール",
+  "deleteRuleTitle": "削除の確認",
+  "deleteRuleBody": "この戦闘ルールを削除しますか？",
+  "noLabel": "いいえ",
+  "yesLabel": "はい",
+  "addBattleRule": "新しい戦闘ルールを追加する",
+  "selectConditionTitle": "条件を選択",
+  "selectActionTitle": "アクションを選択",
+  "selectPlayerCharactersTitle": "パーティメンバーを選択",
+  "taskStatusComplete": "完了",
+  "taskStatusCanceled": "キャンセル",
+  "progressPercent": "{value}%",
+  "@progressPercent": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "hpShort": "HP",
+  "mpShort": "MP"
+}

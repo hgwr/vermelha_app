@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import '../providers/characters_provider.dart';
 import 'package:vermelha_app/models/player_character.dart';
@@ -20,6 +21,7 @@ class _SelectPlayerCharactersScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (ModalRoute.of(context)!.settings.arguments != null) {
       _playerCharacters =
           ModalRoute.of(context)!.settings.arguments as List<PlayerCharacter>;
@@ -27,7 +29,7 @@ class _SelectPlayerCharactersScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Player Characters'),
+        title: Text(l10n.selectPlayerCharactersTitle),
       ),
       body: Column(
         children: [
@@ -44,8 +46,9 @@ class _SelectPlayerCharactersScreenState
 
   Widget createListView() {
     if (Provider.of<CharactersProvider>(context).characters.isEmpty) {
-      return const Center(
-        child: Text('No characters found'),
+      final l10n = AppLocalizations.of(context)!;
+      return Center(
+        child: Text(l10n.noCharactersFound),
       );
     }
     return ListView(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/screens/select_action_screen.dart';
 import 'package:vermelha_app/screens/select_condition_screen.dart';
+import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import '../providers/characters_provider.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
@@ -38,20 +39,21 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
   }
 
   void _showConfirmDeleteRuleDialog(BattleRule rule) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("削除の確認"),
-        content: const Text("この戦闘ルールを削除しますか？"),
+        title: Text(l10n.deleteRuleTitle),
+        content: Text(l10n.deleteRuleBody),
         actions: [
           TextButton(
-            child: const Text("いいえ"),
+            child: Text(l10n.noLabel),
             onPressed: () {
               Navigator.of(ctx).pop();
             },
           ),
           TextButton(
-            child: const Text("はい"),
+            child: Text(l10n.yesLabel),
             onPressed: () {
               Navigator.of(ctx).pop();
               setState(() {
@@ -81,6 +83,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (ModalRoute.of(context)!.settings.arguments != null) {
       character = ModalRoute.of(context)!.settings.arguments as PlayerCharacter;
     }
@@ -88,7 +91,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
     return Scaffold(
       appBar: character.id != null
           ? AppBar(
-              title: Text("戦闘ルール：${character.name}"),
+              title: Text(l10n.battleRulesTitleWithName(character.name)),
               actions: [
                 IconButton(
                   icon: _isOrdering
@@ -122,6 +125,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
   }
 
   ListView createListView() {
+    final l10n = AppLocalizations.of(context)!;
     return ListView(
       children: [
         ...character.battleRules.map((battleRule) {
@@ -181,7 +185,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
         Card(
           key: const ValueKey("f4ed9d86-2c2b-4b52-b620-5c8f390b0f41"),
           child: ListTile(
-            title: const Text("新しい戦闘ルールを追加する"),
+            title: Text(l10n.addBattleRule),
             trailing: IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {

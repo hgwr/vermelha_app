@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import '../models/player_character.dart';
 import '../models/job.dart';
@@ -21,6 +22,7 @@ class _EditPriorityParametersScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (ModalRoute.of(context)!.settings.arguments != null) {
       character = ModalRoute.of(context)!.settings.arguments as PlayerCharacter;
     }
@@ -32,7 +34,9 @@ class _EditPriorityParametersScreenState
       },
       child: Scaffold(
         appBar: AppBar(
-          title: character.id != null ? Text(character.name) : const Text('New'),
+          title: character.id != null
+              ? Text(character.name)
+              : Text(l10n.newCharacterTitle),
         ),
         body: Column(
           children: [
@@ -48,8 +52,7 @@ class _EditPriorityParametersScreenState
                         children: [
                           Expanded(
                             child: Text(
-                              'このキャラクターがレベルアップした時、'
-                              '優先的に成長するパラメーターを３つ選びます',
+                              l10n.priorityParametersDescription,
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),
                           ),

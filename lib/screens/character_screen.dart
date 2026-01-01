@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
+import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 import '../providers/characters_provider.dart';
@@ -46,6 +47,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (ModalRoute.of(context)!.settings.arguments != null) {
       character = ModalRoute.of(context)!.settings.arguments as PlayerCharacter;
       _characterNameController.text = character.name;
@@ -53,7 +55,9 @@ class _CharacterScreenState extends State<CharacterScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: character.id != null ? Text(character.name) : const Text('New'),
+        title: character.id != null
+            ? Text(character.name)
+            : Text(l10n.newCharacterTitle),
       ),
       body: Column(
         children: [
@@ -72,6 +76,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
   }
 
   ListView createListView(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     double nameFieldWidth = MediaQuery.of(context).size.width - 180;
 
     return ListView(
@@ -99,7 +104,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
                         }
                       },
                       child: TextField(
-                        decoration: const InputDecoration(labelText: '名前'),
+                        decoration: InputDecoration(labelText: l10n.nameLabel),
                         controller: _characterNameController,
                       ),
                     ),
@@ -107,7 +112,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
                   Expanded(
                     child: Row(
                       children: [
-                        const Text('ジョブ: '),
+                        Text('${l10n.jobLabel}: '),
                         Expanded(
                           child: DropdownButton<Job>(
                             value: character.job,
@@ -142,7 +147,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
         ),
         Row(
           children: [
-            const Text('パーティ参加: '),
+            Text('${l10n.partyJoinLabel}: '),
             Switch(
               value: character.isActive,
               onChanged: (value) {
@@ -155,25 +160,37 @@ class _CharacterScreenState extends State<CharacterScreen> {
           ],
         ),
         characterPropertyItem(
-          'レベル: ',
+          '${l10n.levelLabel}: ',
           character.level.toString(),
         ),
         characterPropertyItem(
-          '経験値: ',
+          '${l10n.expLabel}: ',
           character.exp.toString(),
         ),
         characterPropertyItem(
-          'HP: ',
+          '${l10n.hpLabel}: ',
           "${character.hp} / ${character.maxHp}",
         ),
         characterPropertyItem(
-          'MP: ',
+          '${l10n.mpLabel}: ',
           "${character.mp} / ${character.maxMp}",
         ),
-        characterPropertyItem('攻撃力: ', character.attack.toString()),
-        characterPropertyItem('防御力: ', character.defense.toString()),
-        characterPropertyItem('魔法力: ', character.magicPower.toString()),
-        characterPropertyItem('素早さ: ', character.speed.toString()),
+        characterPropertyItem(
+          '${l10n.attackLabel}: ',
+          character.attack.toString(),
+        ),
+        characterPropertyItem(
+          '${l10n.defenseLabel}: ',
+          character.defense.toString(),
+        ),
+        characterPropertyItem(
+          '${l10n.magicPowerLabel}: ',
+          character.magicPower.toString(),
+        ),
+        characterPropertyItem(
+          '${l10n.speedLabel}: ',
+          character.speed.toString(),
+        ),
         GestureDetector(
           onTap: () async {
             final editedCharacter = await Navigator.of(context).pushNamed(
@@ -191,7 +208,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
             height: 40,
             child: Row(
               children: [
-                const Text('優先パラメータ: '),
+                Text('${l10n.priorityParametersLabel}: '),
                 Expanded(
                   child: Text(
                     character.priorityParameters
@@ -215,12 +232,12 @@ class _CharacterScreenState extends State<CharacterScreen> {
               arguments: character,
             );
           },
-          child: const SizedBox(
+          child: SizedBox(
             height: 40,
             child: Row(
               children: [
                 Expanded(
-                  child: Text('戦闘ルール'),
+                  child: Text(l10n.battleRulesLabel),
                 ),
                 Icon(Icons.arrow_forward_ios)
               ],

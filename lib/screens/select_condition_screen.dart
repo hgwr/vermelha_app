@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/condition.dart';
@@ -18,13 +19,14 @@ class _SelectConditionScreenState extends State<SelectConditionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (ModalRoute.of(context)!.settings.arguments != null) {
       _battleRule = ModalRoute.of(context)!.settings.arguments as BattleRule;
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Condition'),
+        title: Text(l10n.selectConditionTitle),
       ),
       body: Column(
         children: [

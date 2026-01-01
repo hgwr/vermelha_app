@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/models/player_character.dart';
+import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import '../models/task.dart';
 
@@ -12,18 +13,19 @@ class TaskWidget extends StatelessWidget {
 
   final Task task;
 
-  String taskStatus() {
+  String taskStatus(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (task.status) {
       case TaskStatus.running:
-        return "${task.progress}%";
+        return l10n.progressPercent(task.progress.toStringAsFixed(0));
       case TaskStatus.finished:
-        return "完了";
+        return l10n.taskStatusComplete;
       case TaskStatus.canceled:
-        return "キャンセル";
+        return l10n.taskStatusCanceled;
     }
   }
 
-  Widget leadingWidget() {
+  Widget leadingWidget(BuildContext context) {
     Widget icon;
     if (task.subject is PlayerCharacter) {
       final playerCharacter = task.subject as PlayerCharacter;
@@ -32,6 +34,7 @@ class TaskWidget extends StatelessWidget {
       icon = const Icon(Icons.help);
     }
     final character = task.subject;
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       width: 48,
       child: Column(
@@ -42,9 +45,9 @@ class TaskWidget extends StatelessWidget {
           ),
           Row(
             children: [
-              const Text(
-                "HP",
-                style: TextStyle(fontSize: 8),
+              Text(
+                l10n.hpShort,
+                style: const TextStyle(fontSize: 8),
               ),
               Expanded(
                 child: LinearProgressIndicator(
@@ -57,9 +60,9 @@ class TaskWidget extends StatelessWidget {
           ),
           Row(
             children: [
-              const Text(
-                "MP",
-                style: TextStyle(fontSize: 8),
+              Text(
+                l10n.mpShort,
+                style: const TextStyle(fontSize: 8),
               ),
               Expanded(
                 child: LinearProgressIndicator(
@@ -77,8 +80,8 @@ class TaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final subtitle = taskStatus();
-    final leading = leadingWidget();
+    final subtitle = taskStatus(context);
+    final leading = leadingWidget(context);
     if (task.subject is PlayerCharacter) {
       final character = task.subject as PlayerCharacter;
       return ListTile(
