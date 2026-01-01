@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/screens/city_menu_screen.dart';
 import 'package:vermelha_app/screens/dungeon_screen.dart';
+import 'package:vermelha_app/providers/dungeon_provider.dart';
 import 'package:vermelha_app/providers/game_state_provider.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 
@@ -55,8 +56,10 @@ class TitleScreen extends StatelessWidget {
                       await Provider.of<GameStateProvider>(context,
                               listen: false)
                           .loadGame();
+                      final dungeonProvider =
+                          Provider.of<DungeonProvider>(context, listen: false);
                       Provider.of<TasksProvider>(context, listen: false)
-                          .resetBattle(clearLog: true);
+                          .applyDungeonState(dungeonProvider.toDungeonState());
                       final hasActiveDungeon =
                           Provider.of<GameStateProvider>(context, listen: false)
                               .hasActiveDungeon;

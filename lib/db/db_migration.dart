@@ -90,6 +90,12 @@ CREATE TABLE IF NOT EXISTS character_equipment (
     FOREIGN KEY(character_id) REFERENCES character(id)
 )
 ''',
+  23050500170: '''
+alter table game_state add column event_log TEXT
+''',
+  23050500180: '''
+alter table game_state add column is_paused INTEGER NOT NULL DEFAULT 1
+''',
 };
 
 Future<void> migrateDatabase() async {

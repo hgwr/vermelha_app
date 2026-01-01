@@ -6,6 +6,8 @@ import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/condition.dart';
+import 'package:vermelha_app/models/dungeon_state.dart';
+import 'package:vermelha_app/models/enemy.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
 import 'package:vermelha_app/models/target.dart';
@@ -32,9 +34,13 @@ class TasksProvider extends ChangeNotifier {
   VermelhaContext _vermelhaContext = VermelhaContext(allies: [], enemies: []);
   Timer? _timer;
   ScrollDownFunc? scrollDownFunc;
-  bool _hasSpawnedEnemies = false;
+  bool _isInBattle = false;
+  DateTime? _nextExploreAt;
   List<Character> _turnOrder = [];
   int _turnIndex = 0;
+
+  static const int _exploreMinDelayMs = 1200;
+  static const int _exploreMaxDelayMs = 2800;
 
   TasksProvider(this.charactersProvider, [this.dungeonProvider]);
 
@@ -48,9 +54,11 @@ class TasksProvider extends ChangeNotifier {
       _timer!.cancel();
     }
     _engineStatus = EngineStatus.running;
+    dungeonProvider?.setPaused(false);
     if (_logEntries.isEmpty) {
       addLog(LogType.explore, LogMessageId.explorationStart);
     }
+    _scheduleNextExploreIfNeeded();
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       calculation();
     });
@@ -63,6 +71,7 @@ class TasksProvider extends ChangeNotifier {
     }
     _timer = null;
     _engineStatus = EngineStatus.paused;
+    dungeonProvider?.setPaused(true);
     notifyListeners();
   }
 
@@ -72,15 +81,34 @@ class TasksProvider extends ChangeNotifier {
     }
     _timer = null;
     _engineStatus = EngineStatus.paused;
+    dungeonProvider?.setPaused(true);
     _tasks.clear();
     _vermelhaContext = VermelhaContext(allies: [], enemies: []);
-    _hasSpawnedEnemies = false;
+    _isInBattle = false;
+    _nextExploreAt = null;
     _turnOrder = [];
     _turnIndex = 0;
     if (clearLog) {
       _logEntries.clear();
+      dungeonProvider?.syncEventLog(_logEntries);
     }
     notifyListeners();
+  }
+
+  void applyDungeonState(DungeonState? state) {
+    resetBattle(clearLog: true);
+    if (state == null) {
+      return;
+    }
+    _logEntries
+      ..clear()
+      ..addAll(state.eventLog);
+    dungeonProvider?.syncEventLog(_logEntries);
+    if (state.isPaused) {
+      pauseEngine();
+    } else {
+      startEngine();
+    }
   }
 
   void addLog(
@@ -96,6 +124,7 @@ class TasksProvider extends ChangeNotifier {
         data: data,
       ),
     );
+    dungeonProvider?.syncEventLog(_logEntries);
     notifyListeners();
   }
 
@@ -119,17 +148,75 @@ class TasksProvider extends ChangeNotifier {
     if (vermelhaContext.allies.isEmpty) {
       fillAllies();
     }
+    if (!_isInBattle) {
+      _handleExplorationTick();
+      return;
+    }
+
+    _handleBattleTick();
+  }
+
+  void _handleExplorationTick() {
+    _scheduleNextExploreIfNeeded();
+    if (_nextExploreAt == null) {
+      return;
+    }
+    if (DateTime.now().isBefore(_nextExploreAt!)) {
+      return;
+    }
+    _runExploreEvent();
+    if (!_isInBattle) {
+      _scheduleNextExplore();
+    }
+  }
+
+  void _runExploreEvent() {
+    final roll = vermelhaContext.random.nextDouble();
+    if (roll < 0.15) {
+      addLog(LogType.loot, LogMessageId.explorationTreasure);
+      return;
+    }
+    if (roll < 0.25) {
+      addLog(LogType.explore, LogMessageId.explorationTrap);
+      return;
+    }
+    if (roll < 0.55) {
+      _startBattle();
+      return;
+    }
+    addLog(LogType.explore, LogMessageId.explorationMove);
+  }
+
+  void _scheduleNextExploreIfNeeded() {
+    if (_nextExploreAt != null) {
+      return;
+    }
+    _scheduleNextExplore();
+  }
+
+  void _scheduleNextExplore() {
+    final range = _exploreMaxDelayMs - _exploreMinDelayMs;
+    final offset = range <= 0 ? 0 : vermelhaContext.random.nextInt(range + 1);
+    _nextExploreAt = DateTime.now().add(
+      Duration(milliseconds: _exploreMinDelayMs + offset),
+    );
+  }
+
+  void _startBattle() {
+    fillEnemies();
+    _isInBattle = true;
+    _nextExploreAt = null;
+    _turnOrder = [];
+    _turnIndex = 0;
+    addLog(LogType.battle, LogMessageId.battleEncounter);
+    _buildTurnOrder();
+  }
+
+  void _handleBattleTick() {
     if (vermelhaContext.enemies.isEmpty ||
         vermelhaContext.enemies.every((enemy) => enemy.hp <= 0)) {
-      if (_hasSpawnedEnemies) {
-        addLog(LogType.battle, LogMessageId.battleVictory);
-        addLog(LogType.loot, LogMessageId.lootNone);
-        dungeonProvider?.registerBattle();
-      }
-      fillEnemies();
-      _hasSpawnedEnemies = true;
-      addLog(LogType.battle, LogMessageId.battleEncounter);
-      _buildTurnOrder();
+      _finishBattle();
+      return;
     }
 
     if (_turnOrder.isEmpty) {
@@ -142,6 +229,7 @@ class TasksProvider extends ChangeNotifier {
     if (actor.hp <= 0) {
       return;
     }
+    final wasTelegraphing = actor is Enemy && actor.isTelegraphing;
     final decision = _decideAction(actor);
     final action = decision.action;
     final targets = decision.targets;
@@ -166,10 +254,37 @@ class TasksProvider extends ChangeNotifier {
         progress: 100,
       ),
     );
+    _maybeTriggerTelegraphing(actor, wasTelegraphing);
     if (scrollDownFunc != null) {
       scrollDownFunc!();
     }
     notifyListeners();
+  }
+
+  void _maybeTriggerTelegraphing(Character actor, bool wasTelegraphing) {
+    if (actor is! Enemy) {
+      return;
+    }
+    if (actor.hp <= 0) {
+      return;
+    }
+    if (wasTelegraphing || actor.isTelegraphing) {
+      return;
+    }
+    if (vermelhaContext.random.nextDouble() < 0.2) {
+      actor.isTelegraphing = true;
+    }
+  }
+
+  void _finishBattle() {
+    addLog(LogType.battle, LogMessageId.battleVictory);
+    addLog(LogType.loot, LogMessageId.lootNone);
+    dungeonProvider?.registerBattle();
+    _vermelhaContext = _vermelhaContext.copyWith(enemies: []);
+    _isInBattle = false;
+    _turnOrder = [];
+    _turnIndex = 0;
+    _scheduleNextExplore();
   }
 
   void fillAllies() {
@@ -180,7 +295,12 @@ class TasksProvider extends ChangeNotifier {
   }
 
   void fillEnemies() {
-    Character tmpEnemy = Character(
+    final enemyType = vermelhaContext.random.nextBool()
+        ? EnemyType.regular
+        : EnemyType.irregular;
+    final enemy = Enemy(
+      type: enemyType,
+      isTelegraphing: false,
       uuid: const Uuid().toString(),
       id: vermelhaContext.random.nextInt(999999),
       name: "Enemy",
@@ -198,19 +318,19 @@ class TasksProvider extends ChangeNotifier {
     );
     final List<BattleRule> enemyBattleRules = [
       BattleRule(
-        owner: tmpEnemy,
+        owner: enemy,
         priority: 1,
         name: "Enemy Rule",
-        condition: getConditionList().firstWhere((c) => c.name == "ランダムな敵"),
-        target: getTargetListByCategory(TargetCategory.enemy).first,
+        condition: getConditionList().firstWhere((c) => c.name == "ランダムな味方"),
+        target: getTargetListByCategory(TargetCategory.ally).first,
         action: getActionList().firstWhere((a) => a.name == "物理攻撃"),
       )
     ];
-    tmpEnemy = tmpEnemy.copyWith(battleRules: enemyBattleRules);
+    enemy.battleRules = enemyBattleRules;
 
     _vermelhaContext = _vermelhaContext.copyWith(
       allies: _vermelhaContext.allies,
-      enemies: [tmpEnemy],
+      enemies: [enemy],
     );
   }
 

@@ -184,6 +184,18 @@ abstract class AppLocalizations {
   /// **'ダンジョン選択'**
   String get dungeonSelectTitle;
 
+  /// No description provided for @dungeonSelectReachedOnly.
+  ///
+  /// In ja, this message translates to:
+  /// **'到達済みフロアのみ選択できます。'**
+  String get dungeonSelectReachedOnly;
+
+  /// No description provided for @unlockNextFloorProgress.
+  ///
+  /// In ja, this message translates to:
+  /// **'次フロア解放: {current}/{required}'**
+  String unlockNextFloorProgress(Object current, Object required);
+
   /// No description provided for @floorLabel.
   ///
   /// In ja, this message translates to:
@@ -615,6 +627,24 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'探索を開始した。'**
   String get logExplorationStart;
+
+  /// No description provided for @logExplorationMove.
+  ///
+  /// In ja, this message translates to:
+  /// **'探索を進めた。'**
+  String get logExplorationMove;
+
+  /// No description provided for @logExplorationTreasure.
+  ///
+  /// In ja, this message translates to:
+  /// **'宝箱を見つけた。'**
+  String get logExplorationTreasure;
+
+  /// No description provided for @logExplorationTrap.
+  ///
+  /// In ja, this message translates to:
+  /// **'罠にかかった。'**
+  String get logExplorationTrap;
 
   /// No description provided for @logBattleEncounter.
   ///

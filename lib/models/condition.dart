@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/enemy.dart';
 
 import 'package:vermelha_app/models/vermelha_context.dart';
 
@@ -81,6 +82,43 @@ List<Condition> getConditionList() {
       targetCategory: TargetCategory.ally,
       getTargets: (context) {
         return context.allies;
+      },
+    ),
+    Condition(
+      uuid: '7f6250c8-637c-4e4b-8f2f-1b40d8aa7e8e',
+      name: '敵が攻撃予兆',
+      targetCategory: TargetCategory.enemy,
+      getTargets: (context) {
+        return context.enemies
+            .where(
+              (enemy) => enemy is Enemy && enemy.isTelegraphing,
+            )
+            .toList();
+      },
+    ),
+    Condition(
+      uuid: 'ea6d45b9-b0a4-4e2d-8c68-2c1d8400d5e3',
+      name: '非定型の敵がいる',
+      targetCategory: TargetCategory.enemy,
+      getTargets: (context) {
+        return context.enemies
+            .where(
+              (enemy) =>
+                  enemy is Enemy && enemy.type == EnemyType.irregular,
+            )
+            .toList();
+      },
+    ),
+    Condition(
+      uuid: '6cfc4c5a-8bdf-4d77-861d-017bf66e63a6',
+      name: '定型の敵がいる',
+      targetCategory: TargetCategory.enemy,
+      getTargets: (context) {
+        return context.enemies
+            .where(
+              (enemy) => enemy is Enemy && enemy.type == EnemyType.regular,
+            )
+            .toList();
       },
     ),
     Condition(

@@ -24,6 +24,14 @@
   "notEnoughGold": "ゴールドが足りません。",
   "dungeonTitle": "ダンジョン",
   "dungeonSelectTitle": "ダンジョン選択",
+  "dungeonSelectReachedOnly": "到達済みフロアのみ選択できます。",
+  "unlockNextFloorProgress": "次フロア解放: {current}/{required}",
+  "@unlockNextFloorProgress": {
+    "placeholders": {
+      "current": {},
+      "required": {}
+    }
+  },
   "floorLabel": "フロア{floor}",
   "@floorLabel": {
     "placeholders": {
@@ -123,6 +131,9 @@
   "logTypeLoot": "戦利品",
   "logTypeSystem": "システム",
   "logExplorationStart": "探索を開始した。",
+  "logExplorationMove": "探索を進めた。",
+  "logExplorationTreasure": "宝箱を見つけた。",
+  "logExplorationTrap": "罠にかかった。",
   "logBattleEncounter": "敵と遭遇した。",
   "logBattleAction": "{subject}は{action} → {targets}",
   "@logBattleAction": {

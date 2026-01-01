@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:vermelha_app/db/db_connection.dart';
 import 'package:vermelha_app/models/dungeon_state.dart';
 import 'package:vermelha_app/models/game_state.dart';
+import 'package:vermelha_app/models/log_entry.dart';
 import 'package:vermelha_app/models/player_character.dart';
 
 class GameStateRepository {
@@ -34,12 +37,16 @@ class GameStateRepository {
     final battlesToUnlock =
         row['battles_to_unlock_next_floor'] as int? ??
             DungeonState.defaultBattlesToUnlockNextFloor;
+    final isPaused = (row['is_paused'] as int? ?? 1) == 1;
+    final eventLog = _decodeEventLog(row['event_log'] as String?);
     final activeDungeon = activeFloor == null
         ? null
         : DungeonState(
             floor: activeFloor,
             battleCountOnFloor: battleCount,
             battlesToUnlockNextFloor: battlesToUnlock,
+            eventLog: eventLog,
+            isPaused: isPaused,
           );
 
     return GameState(
@@ -53,6 +60,7 @@ class GameStateRepository {
   Future<void> save(GameState state) async {
     final db = await DbConnection().database;
     final activeDungeon = state.activeDungeon;
+    final eventLog = activeDungeon?.eventLog ?? const <LogEntry>[];
     final data = {
       'id': _singletonId,
       'gold': state.gold,
@@ -62,11 +70,33 @@ class GameStateRepository {
       'battles_to_unlock_next_floor':
           activeDungeon?.battlesToUnlockNextFloor ??
               DungeonState.defaultBattlesToUnlockNextFloor,
+      'event_log': jsonEncode(eventLog.map((entry) => entry.toJson()).toList()),
+      'is_paused': (activeDungeon?.isPaused ?? true) ? 1 : 0,
     };
     await db.insert(
       'game_state',
       data,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  List<LogEntry> _decodeEventLog(String? value) {
+    if (value == null || value.isEmpty) {
+      return [];
+    }
+    try {
+      final decoded = jsonDecode(value);
+      if (decoded is! List) {
+        return [];
+      }
+      return decoded
+          .whereType<Map>()
+          .map((entry) => LogEntry.fromJson(
+                Map<String, dynamic>.from(entry),
+              ))
+          .toList();
+    } catch (_) {
+      return [];
+    }
   }
 }

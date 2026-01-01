@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/models/dungeon_state.dart';
 import 'package:vermelha_app/models/game_state.dart';
+import 'package:vermelha_app/models/log_entry.dart';
 
 class DungeonProvider extends ChangeNotifier {
   static const int defaultBattlesToUnlockNextFloor = 3;
@@ -9,12 +10,16 @@ class DungeonProvider extends ChangeNotifier {
   int? activeFloor;
   int battleCountOnFloor = 0;
   int battlesToUnlockNextFloor = defaultBattlesToUnlockNextFloor;
+  bool isPaused = true;
+  List<LogEntry> eventLog = [];
 
   bool get isExploring => activeFloor != null;
 
   void startExploration(int floor) {
     activeFloor = floor;
     battleCountOnFloor = 0;
+    isPaused = true;
+    eventLog = [];
     notifyListeners();
   }
 
@@ -25,10 +30,14 @@ class DungeonProvider extends ChangeNotifier {
       activeFloor = null;
       battleCountOnFloor = 0;
       battlesToUnlockNextFloor = defaultBattlesToUnlockNextFloor;
+      isPaused = true;
+      eventLog = [];
     } else {
       activeFloor = activeDungeon.floor;
       battleCountOnFloor = activeDungeon.battleCountOnFloor;
       battlesToUnlockNextFloor = activeDungeon.battlesToUnlockNextFloor;
+      isPaused = activeDungeon.isPaused;
+      eventLog = List<LogEntry>.from(activeDungeon.eventLog);
     }
     notifyListeners();
   }
@@ -41,6 +50,8 @@ class DungeonProvider extends ChangeNotifier {
       floor: activeFloor!,
       battleCountOnFloor: battleCountOnFloor,
       battlesToUnlockNextFloor: battlesToUnlockNextFloor,
+      eventLog: eventLog,
+      isPaused: isPaused,
     );
   }
 
@@ -49,6 +60,8 @@ class DungeonProvider extends ChangeNotifier {
     activeFloor = null;
     battleCountOnFloor = 0;
     battlesToUnlockNextFloor = defaultBattlesToUnlockNextFloor;
+    isPaused = true;
+    eventLog = [];
     notifyListeners();
   }
 
@@ -68,6 +81,21 @@ class DungeonProvider extends ChangeNotifier {
   void returnToCity() {
     activeFloor = null;
     battleCountOnFloor = 0;
+    isPaused = true;
+    eventLog = [];
+    notifyListeners();
+  }
+
+  void setPaused(bool paused) {
+    if (isPaused == paused) {
+      return;
+    }
+    isPaused = paused;
+    notifyListeners();
+  }
+
+  void syncEventLog(List<LogEntry> logEntries) {
+    eventLog = List<LogEntry>.from(logEntries);
     notifyListeners();
   }
 }

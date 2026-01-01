@@ -46,6 +46,12 @@ class _DungeonScreenState extends State<DungeonScreen> {
     switch (entry.messageId) {
       case LogMessageId.explorationStart:
         return l10n.logExplorationStart;
+      case LogMessageId.explorationMove:
+        return l10n.logExplorationMove;
+      case LogMessageId.explorationTreasure:
+        return l10n.logExplorationTreasure;
+      case LogMessageId.explorationTrap:
+        return l10n.logExplorationTrap;
       case LogMessageId.battleEncounter:
         return l10n.logBattleEncounter;
       case LogMessageId.battleAction:

@@ -58,6 +58,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get dungeonSelectTitle => 'ダンジョン選択';
 
   @override
+  String get dungeonSelectReachedOnly => '到達済みフロアのみ選択できます。';
+
+  @override
+  String unlockNextFloorProgress(Object current, Object required) {
+    return '次フロア解放: $current/$required';
+  }
+
+  @override
   String floorLabel(Object floor) {
     return 'フロア$floor';
   }
@@ -283,6 +291,15 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get logExplorationStart => '探索を開始した。';
+
+  @override
+  String get logExplorationMove => '探索を進めた。';
+
+  @override
+  String get logExplorationTreasure => '宝箱を見つけた。';
+
+  @override
+  String get logExplorationTrap => '罠にかかった。';
 
   @override
   String get logBattleEncounter => '敵と遭遇した。';
