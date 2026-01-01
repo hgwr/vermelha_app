@@ -1204,6 +1204,42 @@ abstract class AppLocalizations {
   /// **'魔力水'**
   String get itemConsumableEther;
 
+  /// No description provided for @actionDefend.
+  ///
+  /// In ja, this message translates to:
+  /// **'防御'**
+  String get actionDefend;
+
+  /// No description provided for @actionUsePotion.
+  ///
+  /// In ja, this message translates to:
+  /// **'回復薬を使う'**
+  String get actionUsePotion;
+
+  /// No description provided for @actionUseEther.
+  ///
+  /// In ja, this message translates to:
+  /// **'魔力水を使う'**
+  String get actionUseEther;
+
+  /// No description provided for @conditionAlways.
+  ///
+  /// In ja, this message translates to:
+  /// **'常に'**
+  String get conditionAlways;
+
+  /// No description provided for @targetNearestEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も近い敵'**
+  String get targetNearestEnemy;
+
+  /// No description provided for @targetAttackingEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'自分を攻撃している敵'**
+  String get targetAttackingEnemy;
+
   /// No description provided for @notImplemented.
   ///
   /// In ja, this message translates to:

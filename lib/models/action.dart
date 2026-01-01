@@ -29,6 +29,9 @@ const String actionBigHealId = 'd3ab3cd3-fb49-4e9d-a79f-4abd05bb58a2';
 const String actionSmallHealId = '5647560a-ed11-4efb-be7a-4dce903927fd';
 const String actionBigCureId = 'be91d004-7c49-4382-9f94-2fa94da4a10d';
 const String actionSmallCureId = '66adfc55-f97f-4ecb-abbe-aacb4b3bcaa5';
+const String actionDefendId = '7d3b8b26-0c10-4b6c-9ad3-5b6b1a9db861';
+const String actionUsePotionId = 'f3fd6a9f-7e6c-4b52-b3d6-5c2e57c0d3a4';
+const String actionUseEtherId = 'a83f6f60-99b6-4d5d-8b4e-93fa25f6f1c5';
 
 class Action {
   final String uuid;
@@ -87,6 +90,18 @@ double _damageMultiplier(
   return 1.0;
 }
 
+int _applyDefending(
+  VermelhaContext context,
+  Character target,
+  int damage,
+) {
+  if (context.defending.contains(target)) {
+    context.defending.remove(target);
+    return (damage * 0.5).round();
+  }
+  return damage;
+}
+
 List<Action> getActionList() {
   return [
     Action(
@@ -119,6 +134,7 @@ List<Action> getActionList() {
           damage = (damage * 1.5).round();
         }
         damage = (damage * multiplier).round();
+        damage = _applyDefending(context, target, damage);
         target.hp -= damage;
         return true;
       },
@@ -145,6 +161,7 @@ List<Action> getActionList() {
           damage = (damage * 1.5).round();
         }
         damage = (damage * multiplier).round();
+        damage = _applyDefending(context, target, damage);
         target.hp -= damage;
         return true;
       },
@@ -212,7 +229,71 @@ List<Action> getActionList() {
         target.hp += 10;
         return true;
       },
-    )
+    ),
+    Action(
+      uuid: actionDefendId,
+      availableJobs: [
+        Job.fighter,
+        Job.paladin,
+        Job.ranger,
+        Job.wizard,
+        Job.shaman,
+        Job.priest
+      ],
+      name: '防御',
+      attackType: AttackType.none,
+      mpCost: 0,
+      baseDurationSeconds: 6,
+      computeDuration: (baseDurationSeconds, context, subject, targets) {
+        return baseDurationSeconds / subject.speed.toDouble();
+      },
+      applyEffect: (context, subject, targets) async {
+        context.defending.add(subject);
+        return true;
+      },
+    ),
+    Action(
+      uuid: actionUsePotionId,
+      availableJobs: [
+        Job.fighter,
+        Job.paladin,
+        Job.ranger,
+        Job.wizard,
+        Job.shaman,
+        Job.priest
+      ],
+      name: '回復薬を使う',
+      attackType: AttackType.none,
+      mpCost: 0,
+      baseDurationSeconds: 10,
+      computeDuration: (baseDurationSeconds, context, subject, targets) {
+        return baseDurationSeconds / subject.speed.toDouble();
+      },
+      applyEffect: (context, subject, targets) async {
+        return true;
+      },
+    ),
+    Action(
+      uuid: actionUseEtherId,
+      availableJobs: [
+        Job.fighter,
+        Job.paladin,
+        Job.ranger,
+        Job.wizard,
+        Job.shaman,
+        Job.priest
+      ],
+      name: '魔力水を使う',
+      attackType: AttackType.none,
+      mpCost: 0,
+      baseDurationSeconds: 10,
+      computeDuration: (baseDurationSeconds, context, subject, targets) {
+        return baseDurationSeconds / subject.speed.toDouble();
+      },
+      applyEffect: (context, subject, targets) async {
+        return true;
+      },
+    ),
   ];
 }
 
