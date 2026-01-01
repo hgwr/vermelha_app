@@ -311,7 +311,8 @@ class TasksProvider extends ChangeNotifier {
   }
 
   void _handlePartyDefeat() {
-    addLog(LogType.system, LogMessageId.returnToCity);
+    unawaited(charactersProvider.healPartyMembers());
+    addLog(LogType.system, LogMessageId.partyDefeatedReturn);
     resetBattle();
     dungeonProvider?.returnToCity();
   }

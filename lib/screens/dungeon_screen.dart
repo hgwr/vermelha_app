@@ -182,6 +182,8 @@ class _DungeonScreenState extends State<DungeonScreen> {
         return l10n.logLootItem(item);
       case LogMessageId.campHeal:
         return l10n.logCampHeal;
+      case LogMessageId.partyDefeatedReturn:
+        return l10n.logPartyDefeatedReturn;
       case LogMessageId.returnToCity:
         return l10n.logReturnToCity;
     }

@@ -736,6 +736,12 @@ abstract class AppLocalizations {
   /// **'キャンプで全回復した。'**
   String get logCampHeal;
 
+  /// No description provided for @logPartyDefeatedReturn.
+  ///
+  /// In ja, this message translates to:
+  /// **'全滅したため街へ帰還し、全回復した。'**
+  String get logPartyDefeatedReturn;
+
   /// No description provided for @logReturnToCity.
   ///
   /// In ja, this message translates to:
