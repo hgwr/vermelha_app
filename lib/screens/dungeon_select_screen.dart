@@ -34,7 +34,7 @@ class DungeonSelectScreen extends StatelessWidget {
                 onTap: () {
                   dungeonProvider.startExploration(floor);
                   Provider.of<TasksProvider>(context, listen: false)
-                      .resetBattle();
+                      .resetBattle(clearLog: true);
                   Navigator.of(context).pushNamed(DungeonScreen.routeName);
                 },
               );

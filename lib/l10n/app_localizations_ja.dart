@@ -193,6 +193,36 @@ class AppLocalizationsJa extends AppLocalizations {
   String get selectPlayerCharactersTitle => 'パーティメンバーを選択';
 
   @override
+  String get logTypeExplore => '探索';
+
+  @override
+  String get logTypeBattle => '戦闘';
+
+  @override
+  String get logTypeLoot => '戦利品';
+
+  @override
+  String get logTypeSystem => 'システム';
+
+  @override
+  String get logExplorationStart => '探索を開始した。';
+
+  @override
+  String get logBattleEncounter => '敵と遭遇した。';
+
+  @override
+  String get logBattleVictory => '戦闘に勝利した。';
+
+  @override
+  String get logLootNone => '戦利品はなかった。';
+
+  @override
+  String get logCampHeal => 'キャンプで全回復した。';
+
+  @override
+  String get logReturnToCity => '街へ帰還した。';
+
+  @override
   String get taskStatusComplete => '完了';
 
   @override

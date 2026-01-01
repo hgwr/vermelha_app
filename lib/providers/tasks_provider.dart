@@ -12,6 +12,7 @@ import 'package:vermelha_app/models/target.dart';
 
 import 'package:vermelha_app/models/task.dart';
 import 'package:vermelha_app/models/vermelha_context.dart';
+import 'package:vermelha_app/models/log_entry.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/providers/dungeon_provider.dart';
 
@@ -26,6 +27,7 @@ class TasksProvider extends ChangeNotifier {
   CharactersProvider charactersProvider;
   DungeonProvider? dungeonProvider;
   final List<Task> _tasks = [];
+  final List<LogEntry> _logEntries = [];
   EngineStatus _engineStatus = EngineStatus.paused;
   VermelhaContext _vermelhaContext = VermelhaContext(allies: [], enemies: []);
   Timer? _timer;
@@ -35,6 +37,7 @@ class TasksProvider extends ChangeNotifier {
   TasksProvider(this.charactersProvider, [this.dungeonProvider]);
 
   List<Task> get tasks => _tasks;
+  List<LogEntry> get logEntries => _logEntries;
   EngineStatus get engineStatus => _engineStatus;
   VermelhaContext get vermelhaContext => _vermelhaContext;
 
@@ -43,6 +46,9 @@ class TasksProvider extends ChangeNotifier {
       _timer!.cancel();
     }
     _engineStatus = EngineStatus.running;
+    if (_logEntries.isEmpty) {
+      addLog(LogType.explore, LogMessageId.explorationStart);
+    }
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       calculation();
     });
@@ -58,7 +64,7 @@ class TasksProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetBattle() {
+  void resetBattle({bool clearLog = false}) {
     if (_timer != null) {
       _timer!.cancel();
     }
@@ -67,6 +73,20 @@ class TasksProvider extends ChangeNotifier {
     _tasks.clear();
     _vermelhaContext = VermelhaContext(allies: [], enemies: []);
     _hasSpawnedEnemies = false;
+    if (clearLog) {
+      _logEntries.clear();
+    }
+    notifyListeners();
+  }
+
+  void addLog(LogType type, LogMessageId messageId) {
+    _logEntries.add(
+      LogEntry(
+        timestamp: DateTime.now(),
+        type: type,
+        messageId: messageId,
+      ),
+    );
     notifyListeners();
   }
 
@@ -79,10 +99,13 @@ class TasksProvider extends ChangeNotifier {
     if (vermelhaContext.enemies.isEmpty ||
         vermelhaContext.enemies.every((enemy) => enemy.hp <= 0)) {
       if (_hasSpawnedEnemies) {
+        addLog(LogType.battle, LogMessageId.battleVictory);
+        addLog(LogType.loot, LogMessageId.lootNone);
         dungeonProvider?.registerBattle();
       }
       fillEnemies();
       _hasSpawnedEnemies = true;
+      addLog(LogType.battle, LogMessageId.battleEncounter);
     }
 
     final List<Character> characters = [

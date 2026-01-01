@@ -56,7 +56,7 @@ class TitleScreen extends StatelessWidget {
                               listen: false)
                           .loadGame();
                       Provider.of<TasksProvider>(context, listen: false)
-                          .resetBattle();
+                          .resetBattle(clearLog: true);
                       final hasActiveDungeon =
                           Provider.of<GameStateProvider>(context, listen: false)
                               .hasActiveDungeon;

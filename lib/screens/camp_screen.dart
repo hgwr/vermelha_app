@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/models/log_entry.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 
@@ -25,6 +26,8 @@ class CampScreen extends StatelessWidget {
               onPressed: () async {
                 await Provider.of<CharactersProvider>(context, listen: false)
                     .healPartyMembers();
+                Provider.of<TasksProvider>(context, listen: false)
+                    .addLog(LogType.system, LogMessageId.campHeal);
                 Provider.of<TasksProvider>(context, listen: false)
                     .resetBattle();
                 if (context.mounted) {

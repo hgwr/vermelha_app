@@ -7,6 +7,7 @@ import 'package:vermelha_app/widgets/task_widget.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/screens/camp_screen.dart';
 import 'package:vermelha_app/screens/city_menu_screen.dart';
+import 'package:vermelha_app/models/log_entry.dart';
 
 class DungeonScreen extends StatefulWidget {
   const DungeonScreen({Key? key}) : super(key: key);
@@ -26,6 +27,36 @@ class _DungeonScreenState extends State<DungeonScreen> {
       duration: const Duration(milliseconds: 100),
       curve: Curves.easeOut,
     );
+  }
+
+  String _logTypeLabel(AppLocalizations l10n, LogType type) {
+    switch (type) {
+      case LogType.explore:
+        return l10n.logTypeExplore;
+      case LogType.battle:
+        return l10n.logTypeBattle;
+      case LogType.loot:
+        return l10n.logTypeLoot;
+      case LogType.system:
+        return l10n.logTypeSystem;
+    }
+  }
+
+  String _logMessage(AppLocalizations l10n, LogMessageId messageId) {
+    switch (messageId) {
+      case LogMessageId.explorationStart:
+        return l10n.logExplorationStart;
+      case LogMessageId.battleEncounter:
+        return l10n.logBattleEncounter;
+      case LogMessageId.battleVictory:
+        return l10n.logBattleVictory;
+      case LogMessageId.lootNone:
+        return l10n.logLootNone;
+      case LogMessageId.campHeal:
+        return l10n.logCampHeal;
+      case LogMessageId.returnToCity:
+        return l10n.logReturnToCity;
+    }
   }
 
   @override
@@ -51,6 +82,31 @@ class _DungeonScreenState extends State<DungeonScreen> {
             ),
           ),
           Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Consumer<TasksProvider>(
+                builder: (context, taskProvider, _) {
+                  final logs = taskProvider.logEntries;
+                  return Card(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: logs.length,
+                      itemBuilder: (context, index) {
+                        final log = logs[index];
+                        return Text(
+                          "[${_logTypeLabel(l10n, log.type)}] "
+                          "${_logMessage(l10n, log.messageId)}",
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Consumer<TasksProvider>(
@@ -116,6 +172,8 @@ class _DungeonScreenState extends State<DungeonScreen> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
+                    Provider.of<TasksProvider>(context, listen: false)
+                        .addLog(LogType.system, LogMessageId.returnToCity);
                     Provider.of<TasksProvider>(context, listen: false)
                         .resetBattle();
                     Provider.of<DungeonProvider>(context, listen: false)

@@ -448,6 +448,66 @@ abstract class AppLocalizations {
   /// **'パーティメンバーを選択'**
   String get selectPlayerCharactersTitle;
 
+  /// No description provided for @logTypeExplore.
+  ///
+  /// In ja, this message translates to:
+  /// **'探索'**
+  String get logTypeExplore;
+
+  /// No description provided for @logTypeBattle.
+  ///
+  /// In ja, this message translates to:
+  /// **'戦闘'**
+  String get logTypeBattle;
+
+  /// No description provided for @logTypeLoot.
+  ///
+  /// In ja, this message translates to:
+  /// **'戦利品'**
+  String get logTypeLoot;
+
+  /// No description provided for @logTypeSystem.
+  ///
+  /// In ja, this message translates to:
+  /// **'システム'**
+  String get logTypeSystem;
+
+  /// No description provided for @logExplorationStart.
+  ///
+  /// In ja, this message translates to:
+  /// **'探索を開始した。'**
+  String get logExplorationStart;
+
+  /// No description provided for @logBattleEncounter.
+  ///
+  /// In ja, this message translates to:
+  /// **'敵と遭遇した。'**
+  String get logBattleEncounter;
+
+  /// No description provided for @logBattleVictory.
+  ///
+  /// In ja, this message translates to:
+  /// **'戦闘に勝利した。'**
+  String get logBattleVictory;
+
+  /// No description provided for @logLootNone.
+  ///
+  /// In ja, this message translates to:
+  /// **'戦利品はなかった。'**
+  String get logLootNone;
+
+  /// No description provided for @logCampHeal.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンプで全回復した。'**
+  String get logCampHeal;
+
+  /// No description provided for @logReturnToCity.
+  ///
+  /// In ja, this message translates to:
+  /// **'街へ帰還した。'**
+  String get logReturnToCity;
+
   /// No description provided for @taskStatusComplete.
   ///
   /// In ja, this message translates to:
