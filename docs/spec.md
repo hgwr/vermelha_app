@@ -262,7 +262,7 @@ Wizardryライクなキャラクター育成・ダンジョン探索と、Final 
 - `magicPower`: int
 - `speed`: int
 - `isTelegraphing`: bool (攻撃予兆フラグ)
-- `dropTable`?: List<ItemID> (v1では未実装)
+- `dropTable`?: List<ItemID> (v1ではデータモデルのみ実装)
 
 ### 4.5 `Party`
 - `positions`: Map<PartyPosition, PlayerCharacterID> (`Forward`, `Middle`, `Rear`)

@@ -18,22 +18,14 @@ class Party {
 
   factory Party.fromRoster(List<PlayerCharacter> roster) {
     final positions = {
-      PartyPosition.forward: _memberIdFor(roster, PartyPosition.forward),
-      PartyPosition.middle: _memberIdFor(roster, PartyPosition.middle),
-      PartyPosition.rear: _memberIdFor(roster, PartyPosition.rear),
+      for (final position in PartyPosition.values) position: null,
     };
-    return Party(positions: positions);
-  }
-
-  static int? _memberIdFor(
-    List<PlayerCharacter> roster,
-    PartyPosition position,
-  ) {
     for (final member in roster) {
-      if (member.partyPosition == position) {
-        return member.id;
+      final position = member.partyPosition;
+      if (position != null) {
+        positions[position] = member.id;
       }
     }
-    return null;
+    return Party(positions: positions);
   }
 }

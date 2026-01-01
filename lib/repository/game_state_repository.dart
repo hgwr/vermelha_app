@@ -11,6 +11,7 @@ import 'package:vermelha_app/models/player_character.dart';
 
 class GameStateRepository {
   static const int _singletonId = 1;
+  static final Uuid _uuid = Uuid();
 
   Future<GameState> load({
     List<PlayerCharacter> roster = const [],
@@ -48,7 +49,7 @@ class GameStateRepository {
         : DungeonState(
             floor: activeFloor,
             seed: (seedValue == null || seedValue.isEmpty)
-                ? const Uuid().v4()
+                ? _uuid.v4()
                 : seedValue,
             battleCountOnFloor: battleCount,
             battlesToUnlockNextFloor: battlesToUnlock,

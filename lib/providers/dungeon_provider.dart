@@ -6,6 +6,7 @@ import 'package:vermelha_app/models/log_entry.dart';
 
 class DungeonProvider extends ChangeNotifier {
   static const int defaultBattlesToUnlockNextFloor = 3;
+  static final Uuid _uuid = Uuid();
 
   int maxReachedFloor = 1;
   int? activeFloor;
@@ -19,7 +20,7 @@ class DungeonProvider extends ChangeNotifier {
 
   void startExploration(int floor) {
     activeFloor = floor;
-    seed = const Uuid().v4();
+    seed = _uuid.v4();
     battleCountOnFloor = 0;
     isPaused = true;
     eventLog = [];
@@ -53,7 +54,7 @@ class DungeonProvider extends ChangeNotifier {
     }
     return DungeonState(
       floor: activeFloor!,
-      seed: seed ?? const Uuid().v4(),
+      seed: seed!,
       battleCountOnFloor: battleCountOnFloor,
       battlesToUnlockNextFloor: battlesToUnlockNextFloor,
       eventLog: eventLog,

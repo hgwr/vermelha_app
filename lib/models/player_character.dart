@@ -136,12 +136,11 @@ class PlayerCharacter extends Character {
   }
 
   static StatusParameter? _statusParameterFromName(String name) {
-    for (final parameter in StatusParameter.values) {
-      if (parameter.name == name) {
-        return parameter;
-      }
+    try {
+      return StatusParameter.values.byName(name);
+    } catch (_) {
+      return null;
     }
-    return null;
   }
 
   @override
