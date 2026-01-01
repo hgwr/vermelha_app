@@ -51,3 +51,4 @@ Commands:
 - Use localization resources for labels; do not hard-code English UI strings for v1.
 - Add clear acceptance criteria when creating new issues.
 - Ensure Flutter build and tests pass for the changed scope.
+- Keep the game playable at all times; avoid breaking the main flow.

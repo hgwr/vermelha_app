@@ -111,16 +111,16 @@ class _CharacterScreenState extends State<CharacterScreen> {
                         Expanded(
                           child: DropdownButton<Job>(
                             value: character.job,
-                            onChanged: (Job? newValue) {
-                              setState(() {
-                                character.job = newValue!;
-                                if (character.id == null) {
-                                  character = getInitializedCharacterByJob(
-                                      character.job!);
-                                }
-                              });
-                              saveCharacter();
-                            },
+                            onChanged: character.id == null
+                                ? (Job? newValue) {
+                                    setState(() {
+                                      character.job = newValue!;
+                                      character = getInitializedCharacterByJob(
+                                          character.job!);
+                                    });
+                                    saveCharacter();
+                                  }
+                                : null,
                             items: Job.values.map((Job job) {
                               return DropdownMenuItem<Job>(
                                 value: job,
