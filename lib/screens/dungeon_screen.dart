@@ -472,7 +472,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Consumer<TasksProvider>(
@@ -506,7 +506,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 1,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Consumer<TasksProvider>(
