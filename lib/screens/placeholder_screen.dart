@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+class PlaceholderScreen extends StatelessWidget {
+  const PlaceholderScreen({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
 
-  static const routeName = '/settings';
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.settingsTitle)),
+      appBar: AppBar(title: Text(title)),
       body: Center(
-        child: Text(l10n.settingsBody),
+        child: Text(l10n.notImplemented),
       ),
     );
   }

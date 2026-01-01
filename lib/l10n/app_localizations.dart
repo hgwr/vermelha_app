@@ -100,6 +100,36 @@ abstract class AppLocalizations {
   /// **'Vermelha'**
   String get appTitle;
 
+  /// No description provided for @newGame.
+  ///
+  /// In ja, this message translates to:
+  /// **'ニューゲーム'**
+  String get newGame;
+
+  /// No description provided for @loadGame.
+  ///
+  /// In ja, this message translates to:
+  /// **'ロードゲーム'**
+  String get loadGame;
+
+  /// No description provided for @cityTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'街'**
+  String get cityTitle;
+
+  /// No description provided for @tavernTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'酒場'**
+  String get tavernTitle;
+
+  /// No description provided for @shopTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'ショップ'**
+  String get shopTitle;
+
   /// No description provided for @dungeonTitle.
   ///
   /// In ja, this message translates to:
@@ -111,6 +141,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'パーティ'**
   String get partyTitle;
+
+  /// No description provided for @saveTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'セーブ'**
+  String get saveTitle;
 
   /// No description provided for @settingsTitle.
   ///
@@ -345,6 +381,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'MP'**
   String get mpShort;
+
+  /// No description provided for @notImplemented.
+  ///
+  /// In ja, this message translates to:
+  /// **'未実装です。'**
+  String get notImplemented;
 }
 
 class _AppLocalizationsDelegate

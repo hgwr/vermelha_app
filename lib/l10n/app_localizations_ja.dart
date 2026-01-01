@@ -12,10 +12,28 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => 'Vermelha';
 
   @override
+  String get newGame => 'ニューゲーム';
+
+  @override
+  String get loadGame => 'ロードゲーム';
+
+  @override
+  String get cityTitle => '街';
+
+  @override
+  String get tavernTitle => '酒場';
+
+  @override
+  String get shopTitle => 'ショップ';
+
+  @override
   String get dungeonTitle => 'ダンジョン';
 
   @override
   String get partyTitle => 'パーティ';
+
+  @override
+  String get saveTitle => 'セーブ';
 
   @override
   String get settingsTitle => '設定';
@@ -138,4 +156,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get mpShort => 'MP';
+
+  @override
+  String get notImplemented => '未実装です。';
 }

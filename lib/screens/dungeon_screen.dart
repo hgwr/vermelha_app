@@ -4,9 +4,6 @@ import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/widgets/task_widget.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 
-import '../providers/screen_provider.dart';
-import '../widgets/bottom_bar_widget.dart';
-
 class DungeonScreen extends StatefulWidget {
   const DungeonScreen({Key? key}) : super(key: key);
 
@@ -70,9 +67,6 @@ class _DungeonScreenState extends State<DungeonScreen> {
                 EngineStatus.running
             ? const Icon(Icons.pause)
             : const Icon(Icons.play_arrow),
-      ),
-      bottomNavigationBar: const BottomBarWidget(
-        currentScreenIndex: ScreenProvider.dungeonScreenIndex,
       ),
     );
   }

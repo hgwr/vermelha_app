@@ -5,9 +5,6 @@ import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 
-import '../providers/screen_provider.dart';
-import '../widgets/bottom_bar_widget.dart';
-
 class PartyScreen extends StatefulWidget {
   const PartyScreen({Key? key}) : super(key: key);
 
@@ -142,9 +139,6 @@ class _PartyScreenState extends State<PartyScreen> {
               Navigator.of(context).pushNamed('/character');
             },
             child: const Icon(Icons.add),
-          ),
-          bottomNavigationBar: const BottomBarWidget(
-            currentScreenIndex: ScreenProvider.partyScreenIndex,
           ),
         );
       },

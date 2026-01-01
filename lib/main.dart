@@ -4,14 +4,15 @@ import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/screens/character_screen.dart';
+import 'package:vermelha_app/screens/city_menu_screen.dart';
 import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 import 'package:vermelha_app/screens/select_action_screen.dart';
 import 'package:vermelha_app/screens/select_condition_screen.dart';
 import 'package:vermelha_app/screens/select_player_characters_screen.dart';
+import 'package:vermelha_app/screens/title_screen.dart';
 
 import './db/db_migration.dart';
-import './providers/screen_provider.dart';
 import './providers/characters_provider.dart';
 import './screens/dungeon_screen.dart';
 import './screens/party_screen.dart';
@@ -29,18 +30,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Widget getHome(int screenIndex) {
-    if (screenIndex == ScreenProvider.dungeonScreenIndex) {
-      return const DungeonScreen();
-    } else if (screenIndex == ScreenProvider.partyScreenIndex) {
-      return const PartyScreen();
-    } else if (screenIndex == ScreenProvider.settingsScreenIndex) {
-      return const SettingsScreen();
-    } else {
-      return const DungeonScreen();
-    }
-  }
-
   final CharactersProvider charactersProvider = CharactersProvider();
 
   @override
@@ -56,9 +45,6 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
-          value: ScreenProvider(),
-        ),
-        ChangeNotifierProvider.value(
           value: charactersProvider,
         ),
         ChangeNotifierProxyProvider<CharactersProvider, TasksProvider>(
@@ -69,43 +55,43 @@ class _MyAppState extends State<MyApp> {
           },
         ),
       ],
-      child: Consumer<ScreenProvider>(
-        builder: (ctx, screenProvider, _) => MaterialApp(
-          onGenerateTitle: (titleContext) =>
-              AppLocalizations.of(titleContext)!.appTitle,
-          theme: ThemeData(
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              iconTheme: IconThemeData(color: Colors.black),
-            ),
+      child: MaterialApp(
+        onGenerateTitle: (titleContext) =>
+            AppLocalizations.of(titleContext)!.appTitle,
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            iconTheme: IconThemeData(color: Colors.black),
           ),
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('ja'),
-          ],
-          home: getHome(screenProvider.currentScreenIndex),
-          routes: {
-            DungeonScreen.routeName: (ctx) => const DungeonScreen(),
-            PartyScreen.routeName: (ctx) => const PartyScreen(),
-            SettingsScreen.routeName: (ctx) => const SettingsScreen(),
-            CharacterScreen.routeName: (ctx) => const CharacterScreen(),
-            EditPriorityParametersScreen.routeName: (ctx) =>
-                const EditPriorityParametersScreen(),
-            EditBattleRulesScreen.routeName: (ctx) =>
-                const EditBattleRulesScreen(),
-            SelectConditionScreen.routeName: (ctx) =>
-                const SelectConditionScreen(),
-            SelectActionScreen.routeName: (ctx) => const SelectActionScreen(),
-            SelectPlayerCharactersScreen.routeName: (ctx) =>
-                const SelectPlayerCharactersScreen(),
-          },
         ),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('ja'),
+        ],
+        home: const TitleScreen(),
+        routes: {
+          TitleScreen.routeName: (ctx) => const TitleScreen(),
+          CityMenuScreen.routeName: (ctx) => const CityMenuScreen(),
+          DungeonScreen.routeName: (ctx) => const DungeonScreen(),
+          PartyScreen.routeName: (ctx) => const PartyScreen(),
+          SettingsScreen.routeName: (ctx) => const SettingsScreen(),
+          CharacterScreen.routeName: (ctx) => const CharacterScreen(),
+          EditPriorityParametersScreen.routeName: (ctx) =>
+              const EditPriorityParametersScreen(),
+          EditBattleRulesScreen.routeName: (ctx) =>
+              const EditBattleRulesScreen(),
+          SelectConditionScreen.routeName: (ctx) =>
+              const SelectConditionScreen(),
+          SelectActionScreen.routeName: (ctx) => const SelectActionScreen(),
+          SelectPlayerCharactersScreen.routeName: (ctx) =>
+              const SelectPlayerCharactersScreen(),
+        },
       ),
     );
   }
