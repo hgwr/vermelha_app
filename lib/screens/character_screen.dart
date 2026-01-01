@@ -298,7 +298,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
                 Expanded(
                   child: Text(
                     character.priorityParameters
-                        .map((e) => e.name)
+                        .map((e) => statusParameterLabel(l10n, e))
                         .toList()
                         .join(', '),
                   ),

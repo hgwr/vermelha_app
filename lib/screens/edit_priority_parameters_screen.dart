@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
 
 import '../models/player_character.dart';
 import '../models/job.dart';
@@ -64,7 +65,7 @@ class _EditPriorityParametersScreenState
                             children: [
                               Expanded(
                                 child: CheckboxListTile(
-                                  title: Text(e.name),
+                                  title: Text(statusParameterLabel(l10n, e)),
                                   value:
                                       character.priorityParameters.contains(e),
                                   onChanged: (bool? value) {

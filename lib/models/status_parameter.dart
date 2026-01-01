@@ -1,18 +1,34 @@
 enum StatusParameter {
-  hp(name: 'HP'),
-  mp(name: 'MP'),
-  attack(name: 'Attack'),
-  defense(name: 'Defense'),
-  magicPower(name: 'Magic Power'),
-  speed(name: 'Speed');
-
-  final String name;
-
-  const StatusParameter({required this.name});
+  hp,
+  mp,
+  attack,
+  defense,
+  magicPower,
+  speed;
 }
 
 const List<StatusParameter> statusParameters = StatusParameter.values;
 
 StatusParameter getStatusParameterByName(String name) {
-  return statusParameters.firstWhere((element) => element.name == name);
+  for (final parameter in statusParameters) {
+    if (parameter.name == name) {
+      return parameter;
+    }
+  }
+  final normalized = name.toLowerCase().replaceAll(' ', '');
+  switch (normalized) {
+    case 'hp':
+      return StatusParameter.hp;
+    case 'mp':
+      return StatusParameter.mp;
+    case 'attack':
+      return StatusParameter.attack;
+    case 'defense':
+      return StatusParameter.defense;
+    case 'magicpower':
+      return StatusParameter.magicPower;
+    case 'speed':
+      return StatusParameter.speed;
+  }
+  return StatusParameter.hp;
 }
