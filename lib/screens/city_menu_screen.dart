@@ -96,25 +96,22 @@ class CityMenuScreen extends StatelessWidget {
                             child: Text(l10n.partyTitle),
                           ),
                         ),
-                        for (final position in PartyPosition.values) ...[
-                          Builder(
-                            builder: (context) {
-                              final member =
-                                  charactersProvider.memberAt(position);
-                              return ListTile(
-                                dense: true,
-                                title: Text(_positionLabel(l10n, position)),
-                                subtitle: Text(
-                                  member == null
-                                      ? l10n.partySlotEmpty
-                                      : _memberLabel(l10n, member),
-                                ),
-                              );
-                            },
-                          ),
-                          if (position != PartyPosition.values.last)
-                            const Divider(height: 1),
-                        ],
+                        ...PartyPosition.values.expand((position) {
+                          final member = charactersProvider.memberAt(position);
+                          return [
+                            ListTile(
+                              dense: true,
+                              title: Text(_positionLabel(l10n, position)),
+                              subtitle: Text(
+                                member == null
+                                    ? l10n.partySlotEmpty
+                                    : _memberLabel(l10n, member),
+                              ),
+                            ),
+                            if (position != PartyPosition.values.last)
+                              const Divider(height: 1),
+                          ];
+                        }),
                       ],
                     ),
                   );
