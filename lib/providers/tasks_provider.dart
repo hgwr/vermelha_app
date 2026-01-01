@@ -42,6 +42,11 @@ class TasksProvider extends ChangeNotifier {
   DateTime? _nextExploreAt;
   List<Character> _turnOrder = [];
   int _turnIndex = 0;
+  Task? _currentTask;
+  int _currentTaskElapsedMs = 0;
+  int _currentTaskDurationMs = 0;
+  bool _currentTaskWasTelegraphing = false;
+  DateTime? _lastBattleTickAt;
   PendingLoot? _pendingLoot;
   bool _resumeAfterLoot = false;
 
@@ -65,6 +70,7 @@ class TasksProvider extends ChangeNotifier {
     }
     _engineStatus = EngineStatus.running;
     dungeonProvider?.setPaused(false);
+    _lastBattleTickAt = null;
     if (_logEntries.isEmpty) {
       addLog(LogType.explore, LogMessageId.explorationStart);
     }
@@ -82,6 +88,7 @@ class TasksProvider extends ChangeNotifier {
     _timer = null;
     _engineStatus = EngineStatus.paused;
     dungeonProvider?.setPaused(true);
+    _lastBattleTickAt = null;
     notifyListeners();
   }
 
@@ -98,6 +105,11 @@ class TasksProvider extends ChangeNotifier {
     _nextExploreAt = null;
     _turnOrder = [];
     _turnIndex = 0;
+    _currentTask = null;
+    _currentTaskElapsedMs = 0;
+    _currentTaskDurationMs = 0;
+    _currentTaskWasTelegraphing = false;
+    _lastBattleTickAt = null;
     _pendingLoot = null;
     _resumeAfterLoot = false;
     if (clearLog) {
@@ -223,6 +235,11 @@ class TasksProvider extends ChangeNotifier {
     _nextExploreAt = null;
     _turnOrder = [];
     _turnIndex = 0;
+    _currentTask = null;
+    _currentTaskElapsedMs = 0;
+    _currentTaskDurationMs = 0;
+    _currentTaskWasTelegraphing = false;
+    _lastBattleTickAt = null;
     _vermelhaContext.lastAttackers.clear();
     _vermelhaContext.defending.clear();
     addLog(LogType.battle, LogMessageId.battleEncounter);
@@ -238,6 +255,11 @@ class TasksProvider extends ChangeNotifier {
     if (vermelhaContext.enemies.isEmpty ||
         vermelhaContext.enemies.every((enemy) => enemy.hp <= 0)) {
       _finishBattle();
+      return;
+    }
+
+    if (_currentTask != null && _currentTask!.status == TaskStatus.running) {
+      _advanceCurrentTask();
       return;
     }
 
@@ -258,6 +280,66 @@ class TasksProvider extends ChangeNotifier {
     if (targets.isEmpty) {
       return;
     }
+    _startActionTask(actor, action, targets, wasTelegraphing);
+  }
+
+  void _startActionTask(
+    Character actor,
+    Action action,
+    List<Character> targets,
+    bool wasTelegraphing,
+  ) {
+    final durationSeconds = action.computeDuration(
+      action.baseDurationSeconds,
+      vermelhaContext,
+      actor,
+      targets,
+    );
+    final durationMs = max(1, (durationSeconds * 1000).round());
+    final task = Task(
+      uuid: const Uuid().toString(),
+      startedAt: DateTime.now(),
+      subject: actor,
+      action: action,
+      targets: targets,
+      status: TaskStatus.running,
+      progress: 0,
+    );
+    _currentTask = task;
+    _currentTaskElapsedMs = 0;
+    _currentTaskDurationMs = durationMs;
+    _currentTaskWasTelegraphing = wasTelegraphing;
+    _lastBattleTickAt = DateTime.now();
+    _tasks.add(task);
+    notifyListeners();
+  }
+
+  void _advanceCurrentTask() {
+    final task = _currentTask;
+    if (task == null) {
+      return;
+    }
+    final now = DateTime.now();
+    final lastTick = _lastBattleTickAt ?? now;
+    final deltaMs = now.difference(lastTick).inMilliseconds;
+    _lastBattleTickAt = now;
+    if (deltaMs <= 0) {
+      return;
+    }
+    _currentTaskElapsedMs += deltaMs;
+    final progress = (_currentTaskElapsedMs / _currentTaskDurationMs) * 100;
+    task.progress = progress.clamp(0, 100).toDouble();
+    if (task.progress >= 100) {
+      _resolveCurrentTask(task);
+      return;
+    }
+    notifyListeners();
+  }
+
+  void _resolveCurrentTask(Task task) {
+    final actor = task.subject;
+    final action = task.action;
+    final targets = task.targets;
     action.applyEffect(
       vermelhaContext,
       actor,
@@ -266,19 +348,15 @@ class TasksProvider extends ChangeNotifier {
     _registerAttackers(actor, targets);
     _consumeActionCost(actor, action, targets);
     addActionLog(actor, action, targets);
-    _tasks.add(
-      Task(
-        uuid: const Uuid().toString(),
-        startedAt: DateTime.now(),
-        finishedAt: DateTime.now(),
-        subject: actor,
-        action: action,
-        targets: targets,
-        status: TaskStatus.finished,
-        progress: 100,
-      ),
-    );
-    _maybeTriggerTelegraphing(actor, wasTelegraphing);
+    task.status = TaskStatus.finished;
+    task.progress = 100;
+    task.finishedAt = DateTime.now();
+    _maybeTriggerTelegraphing(actor, _currentTaskWasTelegraphing);
+    _currentTask = null;
+    _currentTaskElapsedMs = 0;
+    _currentTaskDurationMs = 0;
+    _currentTaskWasTelegraphing = false;
+    _lastBattleTickAt = null;
     if (scrollDownFunc != null) {
       scrollDownFunc!();
     }
