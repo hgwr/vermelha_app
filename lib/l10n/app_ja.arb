@@ -52,6 +52,7 @@
   "partyPositionRear": "後衛",
   "partySlotEmpty": "未設定",
   "partyClearSlot": "外す",
+  "partyViewDetails": "詳細を見る",
   "partyIncomplete": "前衛・中衛・後衛の3人を設定してください",
   "inventoryCapacityLabel": "所持品 {current}/{max}",
   "@inventoryCapacityLabel": {

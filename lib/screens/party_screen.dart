@@ -107,6 +107,7 @@ class PartyScreen extends StatelessWidget {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.info_outline),
+                            tooltip: l10n.partyViewDetails,
                             onPressed: () {
                               Navigator.of(context).pushNamed(
                                 CharacterScreen.routeName,

@@ -97,6 +97,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get partyClearSlot => '外す';
 
   @override
+  String get partyViewDetails => '詳細を見る';
+
+  @override
   String get partyIncomplete => '前衛・中衛・後衛の3人を設定してください';
 
   @override
