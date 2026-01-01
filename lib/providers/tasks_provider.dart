@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
@@ -133,13 +134,15 @@ class TasksProvider extends ChangeNotifier {
     Action action,
     List<Character> targets,
   ) {
+    final serializedTargets =
+        targets.map((target) => _serializeActor(target)).toList();
     addLog(
       LogType.battle,
       LogMessageId.battleAction,
       data: {
-        'subject': subject.name,
-        'action': action.name,
-        'targets': targets.map((t) => t.name).join(', '),
+        'subject': jsonEncode(_serializeActor(subject)),
+        'action_uuid': action.uuid,
+        'targets': jsonEncode(serializedTargets),
       },
     );
   }
@@ -321,9 +324,9 @@ class TasksProvider extends ChangeNotifier {
         owner: enemy,
         priority: 1,
         name: "Enemy Rule",
-        condition: getConditionList().firstWhere((c) => c.name == "ランダムな味方"),
+        condition: getConditionByUuid(conditionRandomAllyId),
         target: getTargetListByCategory(TargetCategory.ally).first,
-        action: getActionList().firstWhere((a) => a.name == "物理攻撃"),
+        action: getActionByUuid(actionPhysicalAttackId),
       )
     ];
     enemy.battleRules = enemyBattleRules;
@@ -378,8 +381,7 @@ class TasksProvider extends ChangeNotifier {
       }
       return _ActionDecision(rule.action, targets);
     }
-    final defaultAction =
-        getActionList().firstWhere((a) => a.name == "物理攻撃");
+    final defaultAction = getActionByUuid(actionPhysicalAttackId);
     final defaultTargets = _fallbackTargets(actor);
     return _ActionDecision(defaultAction, defaultTargets);
   }
@@ -394,6 +396,19 @@ class TasksProvider extends ChangeNotifier {
       }
     }
     return [];
+  }
+
+  Map<String, String> _serializeActor(Character actor) {
+    if (actor is Enemy) {
+      return {
+        'kind': 'enemy',
+        'enemy_type': actor.type.name,
+      };
+    }
+    return {
+      'kind': 'player',
+      'name': actor.name,
+    };
   }
 }
 

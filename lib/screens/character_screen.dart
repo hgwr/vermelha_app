@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
 
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 import '../providers/characters_provider.dart';
@@ -140,7 +141,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
                             items: Job.values.map((Job job) {
                               return DropdownMenuItem<Job>(
                                 value: job,
-                                child: Text(job.name),
+                                child: Text(jobLabel(l10n, job)),
                               );
                             }).toList(),
                           ),
@@ -196,7 +197,9 @@ class _CharacterScreenState extends State<CharacterScreen> {
           return ListTile(
             dense: true,
             title: Text(_equipmentSlotLabel(l10n, slot)),
-            subtitle: Text(equipped?.name ?? l10n.equipmentEmpty),
+            subtitle: Text(
+              equipped == null ? l10n.equipmentEmpty : itemLabel(l10n, equipped),
+            ),
             trailing: equipped == null
                 ? null
                 : TextButton(
@@ -250,7 +253,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
           ...character.inventory.map((item) {
             return ListTile(
               dense: true,
-              title: Text(item.name),
+              title: Text(itemLabel(l10n, item)),
               subtitle: Text(_itemTypeLabel(l10n, item.type)),
               trailing: item.isEquipable
                   ? TextButton(

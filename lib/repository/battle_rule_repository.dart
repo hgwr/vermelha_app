@@ -5,14 +5,14 @@ import 'package:vermelha_app/models/player_character.dart';
 class BattleRuleRepository {
   Future<List<BattleRule>> findAll(PlayerCharacter ch) async {
     final db = await DbConnection().database;
-    final result = await db.query('battle_rules');
+    final result = await db.query('battle_rule');
     return result.map((json) => BattleRule.fromJson(json, ch)).toList();
   }
 
   Future<BattleRule> findById(int id, PlayerCharacter ch) async {
     final db = await DbConnection().database;
     final result = await db.query(
-      'battle_rules',
+      'battle_rule',
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -21,14 +21,14 @@ class BattleRuleRepository {
 
   Future<BattleRule> save(BattleRule battleRule) async {
     final db = await DbConnection().database;
-    final id = await db.insert('battle_rules', battleRule.toJson());
+    final id = await db.insert('battle_rule', battleRule.toJson());
     return battleRule.copyWith(id: id);
   }
 
   Future<BattleRule> update(BattleRule battleRule) async {
     final db = await DbConnection().database;
     await db.update(
-      'battle_rules',
+      'battle_rule',
       battleRule.toJson(),
       where: 'id = ?',
       whereArgs: [battleRule.id],
@@ -39,7 +39,7 @@ class BattleRuleRepository {
   Future<void> delete(BattleRule battleRule) async {
     final db = await DbConnection().database;
     await db.delete(
-      'battle_rules',
+      'battle_rule',
       where: 'id = ?',
       whereArgs: [battleRule.id],
     );

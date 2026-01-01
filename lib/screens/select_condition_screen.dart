@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
 
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/condition.dart';
@@ -44,7 +45,7 @@ class _SelectConditionScreenState extends State<SelectConditionScreen> {
                         leading: _battleRule!.condition.uuid == condition.uuid
                             ? const Icon(Icons.check)
                             : null,
-                        title: Text(condition.name),
+                        title: Text(conditionLabel(l10n, condition)),
                         onTap: () {
                           _battleRule!.condition = condition;
                           if (_battleRule!.target.targetCategory !=

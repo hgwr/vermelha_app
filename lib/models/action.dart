@@ -23,6 +23,13 @@ enum AttackType {
   magic,
 }
 
+const String actionPhysicalAttackId = 'f2068e01-90d3-4390-bbc5-252cb32ddb65';
+const String actionAttackMagicId = 'd66c1d0a-5d6d-4b36-8e68-9bfe144d4d44';
+const String actionBigHealId = 'd3ab3cd3-fb49-4e9d-a79f-4abd05bb58a2';
+const String actionSmallHealId = '5647560a-ed11-4efb-be7a-4dce903927fd';
+const String actionBigCureId = 'be91d004-7c49-4382-9f94-2fa94da4a10d';
+const String actionSmallCureId = '66adfc55-f97f-4ecb-abbe-aacb4b3bcaa5';
+
 class Action {
   final String uuid;
   final List<Job> availableJobs;
@@ -83,7 +90,7 @@ double _damageMultiplier(
 List<Action> getActionList() {
   return [
     Action(
-      uuid: 'f2068e01-90d3-4390-bbc5-252cb32ddb65',
+      uuid: actionPhysicalAttackId,
       availableJobs: [
         Job.fighter,
         Job.paladin,
@@ -117,7 +124,7 @@ List<Action> getActionList() {
       },
     ),
     Action(
-      uuid: 'd66c1d0a-5d6d-4b36-8e68-9bfe144d4d44',
+      uuid: actionAttackMagicId,
       availableJobs: [Job.wizard, Job.shaman],
       name: '攻撃魔法',
       attackType: AttackType.magic,
@@ -143,7 +150,7 @@ List<Action> getActionList() {
       },
     ),
     Action(
-      uuid: 'd3ab3cd3-fb49-4e9d-a79f-4abd05bb58a2',
+      uuid: actionBigHealId,
       availableJobs: [Job.priest],
       name: '大回復魔法',
       attackType: AttackType.none,
@@ -159,7 +166,7 @@ List<Action> getActionList() {
       },
     ),
     Action(
-      uuid: '5647560a-ed11-4efb-be7a-4dce903927fd',
+      uuid: actionSmallHealId,
       availableJobs: [Job.priest],
       name: '小回復魔法',
       attackType: AttackType.none,
@@ -175,7 +182,7 @@ List<Action> getActionList() {
       },
     ),
     Action(
-      uuid: 'be91d004-7c49-4382-9f94-2fa94da4a10d',
+      uuid: actionBigCureId,
       availableJobs: [Job.shaman],
       name: '大治癒術',
       attackType: AttackType.none,
@@ -191,7 +198,7 @@ List<Action> getActionList() {
       },
     ),
     Action(
-      uuid: '66adfc55-f97f-4ecb-abbe-aacb4b3bcaa5',
+      uuid: actionSmallCureId,
       availableJobs: [Job.shaman],
       name: '小治癒術',
       attackType: AttackType.none,

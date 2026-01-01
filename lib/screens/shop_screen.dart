@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
 import 'package:vermelha_app/models/item.dart';
 import 'package:vermelha_app/models/item_catalog.dart';
 import 'package:vermelha_app/models/player_character.dart';
@@ -89,7 +90,7 @@ class _ShopScreenState extends State<ShopScreen>
       itemBuilder: (context, index) {
         final item = itemCatalog[index];
         return ListTile(
-          title: Text(item.name),
+          title: Text(itemLabel(l10n, item)),
           subtitle: Text(_itemTypeLabel(l10n, item.type)),
           trailing: Text(l10n.priceLabel(item.price)),
           onTap: () => _handleBuy(
@@ -159,7 +160,7 @@ class _ShopScreenState extends State<ShopScreen>
                     final item = inventory[index];
                     final sellPrice = item.price ~/ 2;
                     return ListTile(
-                      title: Text(item.name),
+                      title: Text(itemLabel(l10n, item)),
                       subtitle: Text(_itemTypeLabel(l10n, item.type)),
                       trailing: Text(l10n.sellPriceLabel(sellPrice)),
                       onTap: () async {
@@ -318,8 +319,10 @@ class _ShopScreenState extends State<ShopScreen>
                           final option = choices[index];
                           final item = option.item;
                           final label = option.isNew
-                              ? l10n.inventoryDiscardNewItem(item.name)
-                              : item.name;
+                              ? l10n.inventoryDiscardNewItem(
+                                  itemLabel(l10n, item),
+                                )
+                              : itemLabel(l10n, item);
                           return RadioListTile<_DiscardOption>(
                             value: option,
                             groupValue: selected,

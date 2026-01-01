@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
 import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
@@ -86,7 +87,7 @@ class _TavernScreenState extends State<TavernScreen> {
                   : getImageByJob(character.job!),
               title: Text(character.name),
               subtitle: Text(
-                "${character.job!.name} "
+                "${jobLabel(l10n, character.job!)} "
                 "${l10n.levelShort}${character.level} ",
               ),
             ),

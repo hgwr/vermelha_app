@@ -352,6 +352,12 @@ abstract class AppLocalizations {
   /// **'セーブ'**
   String get saveTitle;
 
+  /// No description provided for @saveSuccess.
+  ///
+  /// In ja, this message translates to:
+  /// **'セーブしました。'**
+  String get saveSuccess;
+
   /// No description provided for @campTitle.
   ///
   /// In ja, this message translates to:
@@ -711,6 +717,480 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'MP'**
   String get mpShort;
+
+  /// No description provided for @unknownLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'不明'**
+  String get unknownLabel;
+
+  /// No description provided for @enemyRegular.
+  ///
+  /// In ja, this message translates to:
+  /// **'定型の敵'**
+  String get enemyRegular;
+
+  /// No description provided for @enemyIrregular.
+  ///
+  /// In ja, this message translates to:
+  /// **'非定型の敵'**
+  String get enemyIrregular;
+
+  /// No description provided for @jobFighter.
+  ///
+  /// In ja, this message translates to:
+  /// **'戦士'**
+  String get jobFighter;
+
+  /// No description provided for @jobPaladin.
+  ///
+  /// In ja, this message translates to:
+  /// **'神殿騎士'**
+  String get jobPaladin;
+
+  /// No description provided for @jobRanger.
+  ///
+  /// In ja, this message translates to:
+  /// **'レンジャー'**
+  String get jobRanger;
+
+  /// No description provided for @jobWizard.
+  ///
+  /// In ja, this message translates to:
+  /// **'魔法使い'**
+  String get jobWizard;
+
+  /// No description provided for @jobShaman.
+  ///
+  /// In ja, this message translates to:
+  /// **'シャーマン'**
+  String get jobShaman;
+
+  /// No description provided for @jobPriest.
+  ///
+  /// In ja, this message translates to:
+  /// **'僧侶'**
+  String get jobPriest;
+
+  /// No description provided for @actionPhysicalAttack.
+  ///
+  /// In ja, this message translates to:
+  /// **'物理攻撃'**
+  String get actionPhysicalAttack;
+
+  /// No description provided for @actionAttackMagic.
+  ///
+  /// In ja, this message translates to:
+  /// **'攻撃魔法'**
+  String get actionAttackMagic;
+
+  /// No description provided for @actionBigHeal.
+  ///
+  /// In ja, this message translates to:
+  /// **'大回復魔法'**
+  String get actionBigHeal;
+
+  /// No description provided for @actionSmallHeal.
+  ///
+  /// In ja, this message translates to:
+  /// **'小回復魔法'**
+  String get actionSmallHeal;
+
+  /// No description provided for @actionBigCure.
+  ///
+  /// In ja, this message translates to:
+  /// **'大治癒術'**
+  String get actionBigCure;
+
+  /// No description provided for @actionSmallCure.
+  ///
+  /// In ja, this message translates to:
+  /// **'小治癒術'**
+  String get actionSmallCure;
+
+  /// No description provided for @conditionLowestHpEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最もHPが低い敵'**
+  String get conditionLowestHpEnemy;
+
+  /// No description provided for @conditionHighestHpEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最もHPが高い敵'**
+  String get conditionHighestHpEnemy;
+
+  /// No description provided for @conditionRandomEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'ランダムな敵'**
+  String get conditionRandomEnemy;
+
+  /// No description provided for @conditionRandomAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'ランダムな味方'**
+  String get conditionRandomAlly;
+
+  /// No description provided for @conditionAllEnemies.
+  ///
+  /// In ja, this message translates to:
+  /// **'敵全体'**
+  String get conditionAllEnemies;
+
+  /// No description provided for @conditionAllAllies.
+  ///
+  /// In ja, this message translates to:
+  /// **'味方全体'**
+  String get conditionAllAllies;
+
+  /// No description provided for @conditionEnemyTelegraph.
+  ///
+  /// In ja, this message translates to:
+  /// **'敵が攻撃予兆'**
+  String get conditionEnemyTelegraph;
+
+  /// No description provided for @conditionEnemyIrregularExists.
+  ///
+  /// In ja, this message translates to:
+  /// **'非定型の敵がいる'**
+  String get conditionEnemyIrregularExists;
+
+  /// No description provided for @conditionEnemyRegularExists.
+  ///
+  /// In ja, this message translates to:
+  /// **'定型の敵がいる'**
+  String get conditionEnemyRegularExists;
+
+  /// No description provided for @conditionAllyHpBelow75.
+  ///
+  /// In ja, this message translates to:
+  /// **'HPが75%以下の味方'**
+  String get conditionAllyHpBelow75;
+
+  /// No description provided for @conditionAllyHpBelow50.
+  ///
+  /// In ja, this message translates to:
+  /// **'HPが50%以下の味方'**
+  String get conditionAllyHpBelow50;
+
+  /// No description provided for @conditionAllyHpBelow25.
+  ///
+  /// In ja, this message translates to:
+  /// **'HPが25%以下の味方'**
+  String get conditionAllyHpBelow25;
+
+  /// No description provided for @conditionLowestMpEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最もMPが低い敵'**
+  String get conditionLowestMpEnemy;
+
+  /// No description provided for @conditionHighestMpEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最もMPが高い敵'**
+  String get conditionHighestMpEnemy;
+
+  /// No description provided for @conditionLowestAttackEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も攻撃力が低い敵'**
+  String get conditionLowestAttackEnemy;
+
+  /// No description provided for @conditionHighestAttackEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も攻撃力が高い敵'**
+  String get conditionHighestAttackEnemy;
+
+  /// No description provided for @conditionLowestDefenseEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も防御力が低い敵'**
+  String get conditionLowestDefenseEnemy;
+
+  /// No description provided for @conditionHighestDefenseEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も防御力が高い敵'**
+  String get conditionHighestDefenseEnemy;
+
+  /// No description provided for @conditionLowestSpeedEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も素早さが低い敵'**
+  String get conditionLowestSpeedEnemy;
+
+  /// No description provided for @conditionHighestSpeedEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も素早さが高い敵'**
+  String get conditionHighestSpeedEnemy;
+
+  /// No description provided for @conditionLowestHpAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最もHPが低い味方'**
+  String get conditionLowestHpAlly;
+
+  /// No description provided for @conditionHighestHpAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最もHPが高い味方'**
+  String get conditionHighestHpAlly;
+
+  /// No description provided for @conditionLowestMpAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最もMPが低い味方'**
+  String get conditionLowestMpAlly;
+
+  /// No description provided for @conditionHighestMpAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最もMPが高い味方'**
+  String get conditionHighestMpAlly;
+
+  /// No description provided for @conditionLowestAttackAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も攻撃力が低い味方'**
+  String get conditionLowestAttackAlly;
+
+  /// No description provided for @conditionHighestAttackAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も攻撃力が高い味方'**
+  String get conditionHighestAttackAlly;
+
+  /// No description provided for @conditionLowestDefenseAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も防御力が低い味方'**
+  String get conditionLowestDefenseAlly;
+
+  /// No description provided for @conditionHighestDefenseAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も防御力が高い味方'**
+  String get conditionHighestDefenseAlly;
+
+  /// No description provided for @conditionLowestSpeedAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も素早さが低い味方'**
+  String get conditionLowestSpeedAlly;
+
+  /// No description provided for @conditionHighestSpeedAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も素早さが高い味方'**
+  String get conditionHighestSpeedAlly;
+
+  /// No description provided for @targetMatchingAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'条件に合う味方'**
+  String get targetMatchingAlly;
+
+  /// No description provided for @targetMatchingEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'条件に合う敵'**
+  String get targetMatchingEnemy;
+
+  /// No description provided for @targetSelf.
+  ///
+  /// In ja, this message translates to:
+  /// **'自分自身'**
+  String get targetSelf;
+
+  /// No description provided for @targetRandomAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'ランダムな味方'**
+  String get targetRandomAlly;
+
+  /// No description provided for @targetRandomEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'ランダムな敵'**
+  String get targetRandomEnemy;
+
+  /// No description provided for @targetAllAllies.
+  ///
+  /// In ja, this message translates to:
+  /// **'味方全体'**
+  String get targetAllAllies;
+
+  /// No description provided for @targetAllEnemies.
+  ///
+  /// In ja, this message translates to:
+  /// **'敵全体'**
+  String get targetAllEnemies;
+
+  /// No description provided for @targetLowestHpAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'HPが最も低い味方'**
+  String get targetLowestHpAlly;
+
+  /// No description provided for @targetLowestHpEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'HPが最も低い敵'**
+  String get targetLowestHpEnemy;
+
+  /// No description provided for @targetHighestHpAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'HPが最も高い味方'**
+  String get targetHighestHpAlly;
+
+  /// No description provided for @targetHighestHpEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'HPが最も高い敵'**
+  String get targetHighestHpEnemy;
+
+  /// No description provided for @targetLowestMpAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'MPが最も低い味方'**
+  String get targetLowestMpAlly;
+
+  /// No description provided for @targetLowestMpEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'MPが最も低い敵'**
+  String get targetLowestMpEnemy;
+
+  /// No description provided for @targetHighestMpAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'MPが最も高い味方'**
+  String get targetHighestMpAlly;
+
+  /// No description provided for @targetHighestMpEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'MPが最も高い敵'**
+  String get targetHighestMpEnemy;
+
+  /// No description provided for @targetLowestAttackAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も攻撃力が低い味方'**
+  String get targetLowestAttackAlly;
+
+  /// No description provided for @targetLowestAttackEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も攻撃力が低い敵'**
+  String get targetLowestAttackEnemy;
+
+  /// No description provided for @targetHighestAttackAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も攻撃力が高い味方'**
+  String get targetHighestAttackAlly;
+
+  /// No description provided for @targetHighestAttackEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も攻撃力が高い敵'**
+  String get targetHighestAttackEnemy;
+
+  /// No description provided for @targetLowestDefenseAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も防御力が低い味方'**
+  String get targetLowestDefenseAlly;
+
+  /// No description provided for @targetLowestDefenseEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も防御力が低い敵'**
+  String get targetLowestDefenseEnemy;
+
+  /// No description provided for @targetHighestDefenseAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も防御力が高い味方'**
+  String get targetHighestDefenseAlly;
+
+  /// No description provided for @targetHighestDefenseEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も防御力が高い敵'**
+  String get targetHighestDefenseEnemy;
+
+  /// No description provided for @targetLowestSpeedAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も素早さが低い味方'**
+  String get targetLowestSpeedAlly;
+
+  /// No description provided for @targetLowestSpeedEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も素早さが低い敵'**
+  String get targetLowestSpeedEnemy;
+
+  /// No description provided for @targetHighestSpeedAlly.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も素早さが高い味方'**
+  String get targetHighestSpeedAlly;
+
+  /// No description provided for @targetHighestSpeedEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'最も素早さが高い敵'**
+  String get targetHighestSpeedEnemy;
+
+  /// No description provided for @itemWeaponShortSword.
+  ///
+  /// In ja, this message translates to:
+  /// **'ショートソード'**
+  String get itemWeaponShortSword;
+
+  /// No description provided for @itemWeaponBattleAxe.
+  ///
+  /// In ja, this message translates to:
+  /// **'バトルアックス'**
+  String get itemWeaponBattleAxe;
+
+  /// No description provided for @itemWeaponLongBow.
+  ///
+  /// In ja, this message translates to:
+  /// **'ロングボウ'**
+  String get itemWeaponLongBow;
+
+  /// No description provided for @itemArmorLeather.
+  ///
+  /// In ja, this message translates to:
+  /// **'レザーアーマー'**
+  String get itemArmorLeather;
+
+  /// No description provided for @itemArmorChain.
+  ///
+  /// In ja, this message translates to:
+  /// **'チェインメイル'**
+  String get itemArmorChain;
+
+  /// No description provided for @itemConsumablePotion.
+  ///
+  /// In ja, this message translates to:
+  /// **'回復薬'**
+  String get itemConsumablePotion;
+
+  /// No description provided for @itemConsumableEther.
+  ///
+  /// In ja, this message translates to:
+  /// **'魔力水'**
+  String get itemConsumableEther;
 
   /// No description provided for @notImplemented.
   ///

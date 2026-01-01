@@ -152,6 +152,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get saveTitle => 'セーブ';
 
   @override
+  String get saveSuccess => 'セーブしました。';
+
+  @override
   String get campTitle => 'キャンプ';
 
   @override
@@ -337,6 +340,243 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get mpShort => 'MP';
+
+  @override
+  String get unknownLabel => '不明';
+
+  @override
+  String get enemyRegular => '定型の敵';
+
+  @override
+  String get enemyIrregular => '非定型の敵';
+
+  @override
+  String get jobFighter => '戦士';
+
+  @override
+  String get jobPaladin => '神殿騎士';
+
+  @override
+  String get jobRanger => 'レンジャー';
+
+  @override
+  String get jobWizard => '魔法使い';
+
+  @override
+  String get jobShaman => 'シャーマン';
+
+  @override
+  String get jobPriest => '僧侶';
+
+  @override
+  String get actionPhysicalAttack => '物理攻撃';
+
+  @override
+  String get actionAttackMagic => '攻撃魔法';
+
+  @override
+  String get actionBigHeal => '大回復魔法';
+
+  @override
+  String get actionSmallHeal => '小回復魔法';
+
+  @override
+  String get actionBigCure => '大治癒術';
+
+  @override
+  String get actionSmallCure => '小治癒術';
+
+  @override
+  String get conditionLowestHpEnemy => '最もHPが低い敵';
+
+  @override
+  String get conditionHighestHpEnemy => '最もHPが高い敵';
+
+  @override
+  String get conditionRandomEnemy => 'ランダムな敵';
+
+  @override
+  String get conditionRandomAlly => 'ランダムな味方';
+
+  @override
+  String get conditionAllEnemies => '敵全体';
+
+  @override
+  String get conditionAllAllies => '味方全体';
+
+  @override
+  String get conditionEnemyTelegraph => '敵が攻撃予兆';
+
+  @override
+  String get conditionEnemyIrregularExists => '非定型の敵がいる';
+
+  @override
+  String get conditionEnemyRegularExists => '定型の敵がいる';
+
+  @override
+  String get conditionAllyHpBelow75 => 'HPが75%以下の味方';
+
+  @override
+  String get conditionAllyHpBelow50 => 'HPが50%以下の味方';
+
+  @override
+  String get conditionAllyHpBelow25 => 'HPが25%以下の味方';
+
+  @override
+  String get conditionLowestMpEnemy => '最もMPが低い敵';
+
+  @override
+  String get conditionHighestMpEnemy => '最もMPが高い敵';
+
+  @override
+  String get conditionLowestAttackEnemy => '最も攻撃力が低い敵';
+
+  @override
+  String get conditionHighestAttackEnemy => '最も攻撃力が高い敵';
+
+  @override
+  String get conditionLowestDefenseEnemy => '最も防御力が低い敵';
+
+  @override
+  String get conditionHighestDefenseEnemy => '最も防御力が高い敵';
+
+  @override
+  String get conditionLowestSpeedEnemy => '最も素早さが低い敵';
+
+  @override
+  String get conditionHighestSpeedEnemy => '最も素早さが高い敵';
+
+  @override
+  String get conditionLowestHpAlly => '最もHPが低い味方';
+
+  @override
+  String get conditionHighestHpAlly => '最もHPが高い味方';
+
+  @override
+  String get conditionLowestMpAlly => '最もMPが低い味方';
+
+  @override
+  String get conditionHighestMpAlly => '最もMPが高い味方';
+
+  @override
+  String get conditionLowestAttackAlly => '最も攻撃力が低い味方';
+
+  @override
+  String get conditionHighestAttackAlly => '最も攻撃力が高い味方';
+
+  @override
+  String get conditionLowestDefenseAlly => '最も防御力が低い味方';
+
+  @override
+  String get conditionHighestDefenseAlly => '最も防御力が高い味方';
+
+  @override
+  String get conditionLowestSpeedAlly => '最も素早さが低い味方';
+
+  @override
+  String get conditionHighestSpeedAlly => '最も素早さが高い味方';
+
+  @override
+  String get targetMatchingAlly => '条件に合う味方';
+
+  @override
+  String get targetMatchingEnemy => '条件に合う敵';
+
+  @override
+  String get targetSelf => '自分自身';
+
+  @override
+  String get targetRandomAlly => 'ランダムな味方';
+
+  @override
+  String get targetRandomEnemy => 'ランダムな敵';
+
+  @override
+  String get targetAllAllies => '味方全体';
+
+  @override
+  String get targetAllEnemies => '敵全体';
+
+  @override
+  String get targetLowestHpAlly => 'HPが最も低い味方';
+
+  @override
+  String get targetLowestHpEnemy => 'HPが最も低い敵';
+
+  @override
+  String get targetHighestHpAlly => 'HPが最も高い味方';
+
+  @override
+  String get targetHighestHpEnemy => 'HPが最も高い敵';
+
+  @override
+  String get targetLowestMpAlly => 'MPが最も低い味方';
+
+  @override
+  String get targetLowestMpEnemy => 'MPが最も低い敵';
+
+  @override
+  String get targetHighestMpAlly => 'MPが最も高い味方';
+
+  @override
+  String get targetHighestMpEnemy => 'MPが最も高い敵';
+
+  @override
+  String get targetLowestAttackAlly => '最も攻撃力が低い味方';
+
+  @override
+  String get targetLowestAttackEnemy => '最も攻撃力が低い敵';
+
+  @override
+  String get targetHighestAttackAlly => '最も攻撃力が高い味方';
+
+  @override
+  String get targetHighestAttackEnemy => '最も攻撃力が高い敵';
+
+  @override
+  String get targetLowestDefenseAlly => '最も防御力が低い味方';
+
+  @override
+  String get targetLowestDefenseEnemy => '最も防御力が低い敵';
+
+  @override
+  String get targetHighestDefenseAlly => '最も防御力が高い味方';
+
+  @override
+  String get targetHighestDefenseEnemy => '最も防御力が高い敵';
+
+  @override
+  String get targetLowestSpeedAlly => '最も素早さが低い味方';
+
+  @override
+  String get targetLowestSpeedEnemy => '最も素早さが低い敵';
+
+  @override
+  String get targetHighestSpeedAlly => '最も素早さが高い味方';
+
+  @override
+  String get targetHighestSpeedEnemy => '最も素早さが高い敵';
+
+  @override
+  String get itemWeaponShortSword => 'ショートソード';
+
+  @override
+  String get itemWeaponBattleAxe => 'バトルアックス';
+
+  @override
+  String get itemWeaponLongBow => 'ロングボウ';
+
+  @override
+  String get itemArmorLeather => 'レザーアーマー';
+
+  @override
+  String get itemArmorChain => 'チェインメイル';
+
+  @override
+  String get itemConsumablePotion => '回復薬';
+
+  @override
+  String get itemConsumableEther => '魔力水';
 
   @override
   String get notImplemented => '未実装です。';

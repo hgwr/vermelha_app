@@ -13,6 +13,53 @@ enum TargetCategory {
   enemy,
 }
 
+const String conditionLowestHpEnemyId = '43ed09b5-7682-4c43-94d7-077c2b6dcaaa';
+const String conditionHighestHpEnemyId = 'c1e476b6-2aaf-4989-a6f3-ef8c441a3027';
+const String conditionRandomEnemyId = '8faf13ec-3499-4a2e-bbbe-cddf6649c542';
+const String conditionRandomAllyId = '8fddad5a-6ba3-42ad-8edc-4190e524554f';
+const String conditionAllEnemiesId = 'a6c3360c-75f3-4ef9-bdf1-5c2b6859cc66';
+const String conditionAllAlliesId = '664d9dfe-5f86-4ab7-9bcf-c884f16c814b';
+const String conditionEnemyTelegraphId = '7f6250c8-637c-4e4b-8f2f-1b40d8aa7e8e';
+const String conditionEnemyIrregularExistsId =
+    'ea6d45b9-b0a4-4e2d-8c68-2c1d8400d5e3';
+const String conditionEnemyRegularExistsId =
+    '6cfc4c5a-8bdf-4d77-861d-017bf66e63a6';
+const String conditionAllyHpBelow75Id = 'efe1084b-206c-48cc-bf94-b298560c9f7f';
+const String conditionAllyHpBelow50Id = 'ad34f112-1941-4a41-bb3e-446e3e6a4b30';
+const String conditionAllyHpBelow25Id = '7d659ee0-02f3-4a51-84a4-54d34b9d2927';
+const String conditionLowestMpEnemyId = 'e547b45d-0971-499d-bd1a-fabe49f173b4';
+const String conditionHighestMpEnemyId =
+    '8f49bcbb-98cb-4558-aeab-e53415a77ae6';
+const String conditionLowestAttackEnemyId =
+    '6aebef67-12a5-4908-83d8-d66e0354c167';
+const String conditionHighestAttackEnemyId =
+    '643d55bb-a4cf-440e-bf4c-438a7be858b9';
+const String conditionLowestDefenseEnemyId =
+    'fa8f705a-9fd4-4eb3-a7e3-017aed6d263f';
+const String conditionHighestDefenseEnemyId =
+    '5a861b68-8ba8-4d12-9507-4fb0fdf233dc';
+const String conditionLowestSpeedEnemyId =
+    'd4fd1d86-5328-4a73-8e4e-94b287bfb702';
+const String conditionHighestSpeedEnemyId =
+    'c4005bd2-6b67-4365-9885-1d5b02244b3f';
+const String conditionLowestHpAllyId = 'bae85139-a5be-4454-834f-33cc53237f31';
+const String conditionHighestHpAllyId = '2c69306b-a99f-458e-b167-6b1d3a20ec8e';
+const String conditionLowestMpAllyId = 'd272d4fa-73b9-41cd-844e-6215ac07870e';
+const String conditionHighestMpAllyId =
+    '1660ab10-5856-4332-b416-cf783469fed0';
+const String conditionLowestAttackAllyId =
+    'cfebee94-2912-4308-94e3-40363d3e3520';
+const String conditionHighestAttackAllyId =
+    'e2633be7-e06f-4037-aec1-7267fac94ead';
+const String conditionLowestDefenseAllyId =
+    'd576cea0-c1d2-4c6d-b619-ba7688e3f0df';
+const String conditionHighestDefenseAllyId =
+    '4997e40d-d421-4c38-a932-7e614cea7a7f';
+const String conditionLowestSpeedAllyId =
+    'cd7fa7f8-6810-43b3-9500-912176da75a9';
+const String conditionHighestSpeedAllyId =
+    '5c12a2a6-cd78-4169-b84f-9773851e3058';
+
 class Condition {
   final String uuid;
   final String name;

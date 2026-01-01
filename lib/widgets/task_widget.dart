@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
 
 import '../models/task.dart';
 
@@ -80,6 +81,7 @@ class TaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final contextL10n = AppLocalizations.of(context)!;
     final subtitle = taskStatus(context);
     final leading = leadingWidget(context);
     if (task.subject is PlayerCharacter) {
@@ -87,9 +89,9 @@ class TaskWidget extends StatelessWidget {
       return ListTile(
         leading: leading,
         title: Text(
-          "${character.name}: "
-          "${task.action.name} → "
-          "${task.targets.map((t) => t.name).join(', ')}",
+          "${characterLabel(contextL10n, character)}: "
+          "${actionLabel(contextL10n, task.action)} → "
+          "${task.targets.map((t) => characterLabel(contextL10n, t)).join(', ')}",
         ),
         subtitle: Text(subtitle),
       );
@@ -98,9 +100,9 @@ class TaskWidget extends StatelessWidget {
       return ListTile(
         leading: leading,
         title: Text(
-          "${character.name}: "
-          "${task.action.name} → "
-          "${task.targets.map((t) => t.name).join(', ')}",
+          "${characterLabel(contextL10n, character)}: "
+          "${actionLabel(contextL10n, task.action)} → "
+          "${task.targets.map((t) => characterLabel(contextL10n, t)).join(', ')}",
         ),
         subtitle: Text(subtitle),
       );

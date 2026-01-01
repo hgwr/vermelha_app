@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
+import 'package:vermelha_app/models/enemy.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/providers/dungeon_provider.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
@@ -20,6 +24,76 @@ class DungeonScreen extends StatefulWidget {
 
 class _DungeonScreenState extends State<DungeonScreen> {
   final ScrollController _scrollController = ScrollController();
+
+  _LogActor? _decodeActor(String? raw) {
+    if (raw == null || raw.isEmpty) {
+      return null;
+    }
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) {
+        return null;
+      }
+      return _decodeActorMap(Map<String, dynamic>.from(decoded));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  List<_LogActor> _decodeActors(String? raw) {
+    if (raw == null || raw.isEmpty) {
+      return [];
+    }
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! List) {
+        return [];
+      }
+      return decoded
+          .whereType<Map>()
+          .map((entry) => _decodeActorMap(Map<String, dynamic>.from(entry)))
+          .whereType<_LogActor>()
+          .toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  _LogActor? _decodeActorMap(Map<String, dynamic> map) {
+    final kind = map['kind'] as String?;
+    if (kind == 'enemy') {
+      return _LogActor(
+        kind: kind,
+        enemyType: _enemyTypeFromString(map['enemy_type'] as String?),
+      );
+    }
+    return _LogActor(
+      kind: kind ?? 'player',
+      name: map['name'] as String?,
+    );
+  }
+
+  EnemyType? _enemyTypeFromString(String? value) {
+    if (value == null) {
+      return null;
+    }
+    for (final type in EnemyType.values) {
+      if (type.name == value) {
+        return type;
+      }
+    }
+    return null;
+  }
+
+  String _actorLabel(AppLocalizations l10n, _LogActor? actor) {
+    if (actor == null) {
+      return l10n.unknownLabel;
+    }
+    if (actor.kind == 'enemy' && actor.enemyType != null) {
+      return enemyLabel(l10n, actor.enemyType!);
+    }
+    return actor.name ?? l10n.unknownLabel;
+  }
 
   void scrollDown() {
     _scrollController.animateTo(
@@ -55,10 +129,22 @@ class _DungeonScreenState extends State<DungeonScreen> {
       case LogMessageId.battleEncounter:
         return l10n.logBattleEncounter;
       case LogMessageId.battleAction:
-        final subject = entry.data?['subject'] ?? '';
-        final action = entry.data?['action'] ?? '';
-        final targets = entry.data?['targets'] ?? '';
-        return l10n.logBattleAction(subject, action, targets);
+        final data = entry.data ?? {};
+        final actionUuid = data['action_uuid'];
+        if (actionUuid == null) {
+          final subject = data['subject'] ?? '';
+          final action = data['action'] ?? '';
+          final targets = data['targets'] ?? '';
+          return l10n.logBattleAction(subject, action, targets);
+        }
+        final subject = _decodeActor(data['subject']);
+        final targets = _decodeActors(data['targets']);
+        final subjectLabel = _actorLabel(l10n, subject);
+        final actionLabel = actionLabelByUuid(l10n, actionUuid);
+        final targetsLabel = targets.map((target) {
+          return _actorLabel(l10n, target);
+        }).join(', ');
+        return l10n.logBattleAction(subjectLabel, actionLabel, targetsLabel);
       case LogMessageId.battleVictory:
         return l10n.logBattleVictory;
       case LogMessageId.lootNone:
@@ -202,4 +288,16 @@ class _DungeonScreenState extends State<DungeonScreen> {
       ),
     );
   }
+}
+
+class _LogActor {
+  final String kind;
+  final String? name;
+  final EnemyType? enemyType;
+
+  const _LogActor({
+    required this.kind,
+    this.name,
+    this.enemyType,
+  });
 }

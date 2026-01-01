@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/providers/game_state_provider.dart';
 import 'package:vermelha_app/screens/dungeon_select_screen.dart';
 import 'package:vermelha_app/screens/party_screen.dart';
-import 'package:vermelha_app/screens/placeholder_screen.dart';
 import 'package:vermelha_app/screens/shop_screen.dart';
 import 'package:vermelha_app/screens/tavern_screen.dart';
 
@@ -10,14 +11,6 @@ class CityMenuScreen extends StatelessWidget {
   const CityMenuScreen({Key? key}) : super(key: key);
 
   static const routeName = '/city';
-
-  void _openPlaceholder(BuildContext context, String title) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PlaceholderScreen(title: title),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +35,16 @@ class CityMenuScreen extends StatelessWidget {
       ),
       _CityMenuItem(
         label: l10n.saveTitle,
-        onTap: () => _openPlaceholder(context, l10n.saveTitle),
+        onTap: () async {
+          await Provider.of<GameStateProvider>(context, listen: false)
+              .saveGame();
+          if (!context.mounted) {
+            return;
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.saveSuccess)),
+          );
+        },
       ),
     ];
 

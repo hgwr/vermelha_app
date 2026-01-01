@@ -6,6 +6,7 @@ import 'package:vermelha_app/screens/select_action_screen.dart';
 import 'package:vermelha_app/screens/select_condition_screen.dart';
 import 'package:vermelha_app/screens/select_target_screen.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
 
 import '../providers/characters_provider.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
@@ -153,7 +154,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
                 },
                 child: Row(
                   children: [
-                    Text(battleRule.condition.name),
+                    Text(conditionLabel(l10n, battleRule.condition)),
                     const Icon(
                       Icons.arrow_forward_ios,
                       size: 18,
@@ -178,7 +179,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
                     },
                     child: Row(
                       children: [
-                        Text(battleRule.target.name),
+                        Text(targetLabel(l10n, battleRule.target)),
                         const Icon(
                           Icons.arrow_forward_ios,
                           size: 14,
@@ -201,7 +202,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
                     },
                     child: Row(
                       children: [
-                        Text(battleRule.action.name),
+                        Text(actionLabel(l10n, battleRule.action)),
                         const Icon(
                           Icons.arrow_forward_ios,
                           size: 14,
@@ -243,6 +244,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
   }
 
   ReorderableListView createReorderableListView() {
+    final l10n = AppLocalizations.of(context)!;
     return ReorderableListView(
       onReorder: (int start, int current) {
         if (start < current) {
@@ -275,9 +277,10 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
             key: ValueKey(battleRule.priority),
             child: ListTile(
                 leading: Text(battleRule.priority.toString()),
-                title: Text(battleRule.condition.name),
+                title: Text(conditionLabel(l10n, battleRule.condition)),
                 subtitle: Text(
-                  "${battleRule.target.name} / ${battleRule.action.name}",
+                  "${targetLabel(l10n, battleRule.target)} / "
+                  "${actionLabel(l10n, battleRule.action)}",
                 ),
                 trailing: const Icon(Icons.drag_handle)),
           );

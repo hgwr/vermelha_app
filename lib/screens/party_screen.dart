@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
 import 'package:vermelha_app/models/party_position.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
@@ -21,8 +22,9 @@ class PartyScreen extends StatelessWidget {
     }
   }
 
-  String _memberLabel(PlayerCharacter member) {
-    final jobName = member.job?.name ?? '';
+  String _memberLabel(AppLocalizations l10n, PlayerCharacter member) {
+    final job = member.job;
+    final jobName = job == null ? '' : jobLabel(l10n, job);
     return '$jobName ${member.name}';
   }
 
@@ -58,7 +60,7 @@ class PartyScreen extends StatelessWidget {
                   : _positionLabel(l10n, member.partyPosition!);
               return ListTile(
                 leading: isSelected ? const Icon(Icons.check) : null,
-                title: Text(_memberLabel(member)),
+                title: Text(_memberLabel(l10n, member)),
                 subtitle: Text(currentPositionLabel),
                 onTap: () async {
                   await charactersProvider.assignPartyMember(position, member);
@@ -93,7 +95,9 @@ class PartyScreen extends StatelessWidget {
               return ListTile(
                 title: Text(_positionLabel(l10n, position)),
                 subtitle: Text(
-                  member == null ? l10n.partySlotEmpty : _memberLabel(member),
+                  member == null
+                      ? l10n.partySlotEmpty
+                      : _memberLabel(l10n, member),
                 ),
                 trailing: member == null
                     ? null

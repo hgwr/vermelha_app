@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
 
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/action.dart';
@@ -40,7 +41,7 @@ class _SelectActionScreenState extends State<SelectActionScreen> {
                       leading: _battleRule!.action.uuid == action.uuid
                           ? const Icon(Icons.check)
                           : null,
-                      title: Text(action.name),
+                      title: Text(actionLabel(l10n, action)),
                       onTap: () {
                         _battleRule!.action = action;
                         Navigator.of(context).pop();

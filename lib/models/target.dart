@@ -8,6 +8,34 @@ typedef SelectTargets = List<Character> Function(
   List<Character> candidates,
 );
 
+const String targetMatchingAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b001';
+const String targetMatchingEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b002';
+const String targetSelfId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b003';
+const String targetRandomAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b004';
+const String targetRandomEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b005';
+const String targetAllAlliesId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b006';
+const String targetAllEnemiesId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b007';
+const String targetLowestHpAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b008';
+const String targetLowestHpEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b009';
+const String targetHighestHpAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b010';
+const String targetHighestHpEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b011';
+const String targetLowestMpAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b012';
+const String targetLowestMpEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b013';
+const String targetHighestMpAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b014';
+const String targetHighestMpEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b015';
+const String targetLowestAttackAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b016';
+const String targetLowestAttackEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b017';
+const String targetHighestAttackAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b018';
+const String targetHighestAttackEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b019';
+const String targetLowestDefenseAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b020';
+const String targetLowestDefenseEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b021';
+const String targetHighestDefenseAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b022';
+const String targetHighestDefenseEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b023';
+const String targetLowestSpeedAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b024';
+const String targetLowestSpeedEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b025';
+const String targetHighestSpeedAllyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b026';
+const String targetHighestSpeedEnemyId = '2f9b7ad3-1a0f-4d75-9a9b-8d87d1f7b027';
+
 class Target {
   final String uuid;
   final String name;

@@ -6,6 +6,7 @@ import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/screens/character_screen.dart';
+import 'package:vermelha_app/l10n/model_localizations.dart';
 
 class CampScreen extends StatelessWidget {
   const CampScreen({Key? key}) : super(key: key);
@@ -40,7 +41,11 @@ class CampScreen extends StatelessWidget {
                       return ListTile(
                         leading: getImageByJob(member.job!),
                         title: Text(member.name),
-                        subtitle: Text(member.job?.name ?? ''),
+                        subtitle: Text(
+                          member.job == null
+                              ? ''
+                              : jobLabel(l10n, member.job!),
+                        ),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
                           Navigator.of(context).pushNamed(
