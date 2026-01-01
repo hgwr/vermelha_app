@@ -27,6 +27,8 @@ class DungeonScreen extends StatefulWidget {
 }
 
 class _DungeonScreenState extends State<DungeonScreen> {
+  static const int _logPanelFlex = 3;
+  static const int _taskPanelFlex = 1;
   final ScrollController _scrollController = ScrollController();
   final ScrollController _logScrollController = ScrollController();
   int _lastLogCount = 0;
@@ -472,7 +474,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: _logPanelFlex,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Consumer<TasksProvider>(
@@ -506,7 +508,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
             ),
           ),
           Expanded(
-            flex: 1,
+            flex: _taskPanelFlex,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Consumer<TasksProvider>(
