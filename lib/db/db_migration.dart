@@ -63,6 +63,16 @@ alter table character add column party_position INTEGER
   23050500130: '''
 alter table battle_rule add column target_uuid TEXT
 ''',
+  23050500140: '''
+CREATE TABLE IF NOT EXISTS game_state (
+    id INTEGER PRIMARY KEY,
+    gold INTEGER NOT NULL,
+    max_reached_floor INTEGER NOT NULL,
+    active_floor INTEGER,
+    battle_count_on_floor INTEGER NOT NULL,
+    battles_to_unlock_next_floor INTEGER NOT NULL
+)
+''',
 };
 
 Future<void> migrateDatabase() async {

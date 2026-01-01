@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/providers/tasks_provider.dart';
 import 'package:vermelha_app/providers/dungeon_provider.dart';
+import 'package:vermelha_app/providers/game_state_provider.dart';
 import 'package:vermelha_app/screens/character_screen.dart';
 import 'package:vermelha_app/screens/camp_screen.dart';
 import 'package:vermelha_app/screens/city_menu_screen.dart';
@@ -54,6 +55,15 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider.value(
           value: DungeonProvider(),
+        ),
+        ChangeNotifierProxyProvider2<CharactersProvider, DungeonProvider,
+            GameStateProvider>(
+          create: (_) => GameStateProvider(),
+          update: (_, charactersProvider, dungeonProvider, gameStateProvider) {
+            gameStateProvider!
+                .updateDependencies(charactersProvider, dungeonProvider);
+            return gameStateProvider;
+          },
         ),
         ChangeNotifierProxyProvider2<CharactersProvider, DungeonProvider,
             TasksProvider>(
