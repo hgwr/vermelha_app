@@ -370,42 +370,45 @@ class TasksProvider extends ChangeNotifier {
   }
 
   void fillEnemies() {
-    final enemyType = vermelhaContext.random.nextBool()
-        ? EnemyType.regular
-        : EnemyType.irregular;
-    final enemy = Enemy(
-      type: enemyType,
-      isTelegraphing: false,
-      uuid: const Uuid().toString(),
-      id: vermelhaContext.random.nextInt(999999),
-      name: "Enemy",
-      level: 1,
-      maxHp: 100,
-      hp: 100,
-      maxMp: 100,
-      mp: 100,
-      attack: 10,
-      defense: 10,
-      magicPower: 10,
-      speed: 10,
-      priorityParameters: <StatusParameter>[],
-      battleRules: <BattleRule>[],
-    );
-    final List<BattleRule> enemyBattleRules = [
-      BattleRule(
-        owner: enemy,
-        priority: 1,
-        name: "Enemy Rule",
-        condition: getConditionByUuid(conditionRandomAllyId),
-        target: getTargetListByCategory(TargetCategory.ally).first,
-        action: getActionByUuid(actionPhysicalAttackId),
-      )
-    ];
-    enemy.battleRules = enemyBattleRules;
+    final count = 2 + vermelhaContext.random.nextInt(2);
+    final List<Character> enemies = [];
+    for (var i = 0; i < count; i += 1) {
+      final enemyType = vermelhaContext.random.nextBool()
+          ? EnemyType.regular
+          : EnemyType.irregular;
+      final enemy = Enemy(
+        type: enemyType,
+        isTelegraphing: false,
+        uuid: const Uuid().v4(),
+        name: 'Enemy ${i + 1}',
+        level: 1,
+        maxHp: 100,
+        hp: 100,
+        maxMp: 100,
+        mp: 100,
+        attack: 10,
+        defense: 10,
+        magicPower: 10,
+        speed: 10,
+        priorityParameters: <StatusParameter>[],
+        battleRules: <BattleRule>[],
+      );
+      enemy.battleRules = [
+        BattleRule(
+          owner: enemy,
+          priority: 1,
+          name: "Enemy Rule",
+          condition: getConditionByUuid(conditionRandomAllyId),
+          target: getTargetListByCategory(TargetCategory.ally).first,
+          action: getActionByUuid(actionPhysicalAttackId),
+        )
+      ];
+      enemies.add(enemy);
+    }
 
     _vermelhaContext = _vermelhaContext.copyWith(
       allies: _vermelhaContext.allies,
-      enemies: [enemy],
+      enemies: enemies,
     );
   }
 
