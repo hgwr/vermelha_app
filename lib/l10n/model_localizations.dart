@@ -5,6 +5,7 @@ import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/enemy.dart';
 import 'package:vermelha_app/models/item.dart';
 import 'package:vermelha_app/models/job.dart';
+import 'package:vermelha_app/models/status_parameter.dart';
 import 'package:vermelha_app/models/target.dart';
 
 String jobLabel(AppLocalizations l10n, Job job) {
@@ -214,4 +215,24 @@ String itemLabel(AppLocalizations l10n, Item item) {
       return l10n.itemConsumableEther;
   }
   return item.name;
+}
+
+String statusParameterLabel(
+  AppLocalizations l10n,
+  StatusParameter parameter,
+) {
+  switch (parameter) {
+    case StatusParameter.hp:
+      return l10n.statusParameterHp;
+    case StatusParameter.mp:
+      return l10n.statusParameterMp;
+    case StatusParameter.attack:
+      return l10n.statusParameterAttack;
+    case StatusParameter.defense:
+      return l10n.statusParameterDefense;
+    case StatusParameter.magicPower:
+      return l10n.statusParameterMagicPower;
+    case StatusParameter.speed:
+      return l10n.statusParameterSpeed;
+  }
 }

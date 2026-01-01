@@ -233,6 +233,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get speedLabel => '素早さ';
 
   @override
+  String get statusParameterHp => 'HP';
+
+  @override
+  String get statusParameterMp => 'MP';
+
+  @override
+  String get statusParameterAttack => '攻撃力';
+
+  @override
+  String get statusParameterDefense => '防御力';
+
+  @override
+  String get statusParameterMagicPower => '魔法力';
+
+  @override
+  String get statusParameterSpeed => '素早さ';
+
+  @override
   String get priorityParametersLabel => '優先パラメータ';
 
   @override

@@ -514,6 +514,42 @@ abstract class AppLocalizations {
   /// **'素早さ'**
   String get speedLabel;
 
+  /// No description provided for @statusParameterHp.
+  ///
+  /// In ja, this message translates to:
+  /// **'HP'**
+  String get statusParameterHp;
+
+  /// No description provided for @statusParameterMp.
+  ///
+  /// In ja, this message translates to:
+  /// **'MP'**
+  String get statusParameterMp;
+
+  /// No description provided for @statusParameterAttack.
+  ///
+  /// In ja, this message translates to:
+  /// **'攻撃力'**
+  String get statusParameterAttack;
+
+  /// No description provided for @statusParameterDefense.
+  ///
+  /// In ja, this message translates to:
+  /// **'防御力'**
+  String get statusParameterDefense;
+
+  /// No description provided for @statusParameterMagicPower.
+  ///
+  /// In ja, this message translates to:
+  /// **'魔法力'**
+  String get statusParameterMagicPower;
+
+  /// No description provided for @statusParameterSpeed.
+  ///
+  /// In ja, this message translates to:
+  /// **'素早さ'**
+  String get statusParameterSpeed;
+
   /// No description provided for @priorityParametersLabel.
   ///
   /// In ja, this message translates to:
