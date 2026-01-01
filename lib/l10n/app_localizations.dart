@@ -622,6 +622,12 @@ abstract class AppLocalizations {
   /// **'敵と遭遇した。'**
   String get logBattleEncounter;
 
+  /// No description provided for @logBattleAction.
+  ///
+  /// In ja, this message translates to:
+  /// **'{subject}は{action} → {targets}'**
+  String logBattleAction(Object subject, Object action, Object targets);
+
   /// No description provided for @logBattleVictory.
   ///
   /// In ja, this message translates to:

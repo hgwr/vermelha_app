@@ -42,12 +42,17 @@ class _DungeonScreenState extends State<DungeonScreen> {
     }
   }
 
-  String _logMessage(AppLocalizations l10n, LogMessageId messageId) {
-    switch (messageId) {
+  String _logMessage(AppLocalizations l10n, LogEntry entry) {
+    switch (entry.messageId) {
       case LogMessageId.explorationStart:
         return l10n.logExplorationStart;
       case LogMessageId.battleEncounter:
         return l10n.logBattleEncounter;
+      case LogMessageId.battleAction:
+        final subject = entry.data?['subject'] ?? '';
+        final action = entry.data?['action'] ?? '';
+        final targets = entry.data?['targets'] ?? '';
+        return l10n.logBattleAction(subject, action, targets);
       case LogMessageId.battleVictory:
         return l10n.logBattleVictory;
       case LogMessageId.lootNone:
@@ -96,7 +101,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
                         final log = logs[index];
                         return Text(
                           "[${_logTypeLabel(l10n, log.type)}] "
-                          "${_logMessage(l10n, log.messageId)}",
+                          "${_logMessage(l10n, log)}",
                         );
                       },
                     ),

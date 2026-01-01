@@ -288,6 +288,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get logBattleEncounter => '敵と遭遇した。';
 
   @override
+  String logBattleAction(Object subject, Object action, Object targets) {
+    return '$subjectは$action → $targets';
+  }
+
+  @override
   String get logBattleVictory => '戦闘に勝利した。';
 
   @override

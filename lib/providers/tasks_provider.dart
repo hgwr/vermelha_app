@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/condition.dart';
+import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
 import 'package:vermelha_app/models/target.dart';
 
@@ -33,6 +33,8 @@ class TasksProvider extends ChangeNotifier {
   Timer? _timer;
   ScrollDownFunc? scrollDownFunc;
   bool _hasSpawnedEnemies = false;
+  List<Character> _turnOrder = [];
+  int _turnIndex = 0;
 
   TasksProvider(this.charactersProvider, [this.dungeonProvider]);
 
@@ -73,26 +75,47 @@ class TasksProvider extends ChangeNotifier {
     _tasks.clear();
     _vermelhaContext = VermelhaContext(allies: [], enemies: []);
     _hasSpawnedEnemies = false;
+    _turnOrder = [];
+    _turnIndex = 0;
     if (clearLog) {
       _logEntries.clear();
     }
     notifyListeners();
   }
 
-  void addLog(LogType type, LogMessageId messageId) {
+  void addLog(
+    LogType type,
+    LogMessageId messageId, {
+    Map<String, String>? data,
+  }) {
     _logEntries.add(
       LogEntry(
         timestamp: DateTime.now(),
         type: type,
         messageId: messageId,
+        data: data,
       ),
     );
     notifyListeners();
   }
 
-  void calculation() {
-    debugPrint("calculating");
+  void addActionLog(
+    Character subject,
+    Action action,
+    List<Character> targets,
+  ) {
+    addLog(
+      LogType.battle,
+      LogMessageId.battleAction,
+      data: {
+        'subject': subject.name,
+        'action': action.name,
+        'targets': targets.map((t) => t.name).join(', '),
+      },
+    );
+  }
 
+  void calculation() {
     if (vermelhaContext.allies.isEmpty) {
       fillAllies();
     }
@@ -106,82 +129,46 @@ class TasksProvider extends ChangeNotifier {
       fillEnemies();
       _hasSpawnedEnemies = true;
       addLog(LogType.battle, LogMessageId.battleEncounter);
+      _buildTurnOrder();
     }
 
-    final List<Character> characters = [
-      ...vermelhaContext.allies,
-      ...vermelhaContext.enemies
-    ];
-    characters.sort((a, b) => b.speed.compareTo(a.speed));
-    for (var character in characters) {
-      if (character.hp <= 0) {
-        continue;
-      }
-      Task? maybeRunningTask = _tasks.firstWhereOrNull((t) {
-        return t.subject.id == character.id && t.status == TaskStatus.running;
-      });
-      if (maybeRunningTask != null) {
-        Task runningTask = maybeRunningTask;
-        double progressPercentage =
-            runningTask.progressPercentage(vermelhaContext);
-        debugPrint("progressPercentage: $progressPercentage");
-        runningTask.progress = progressPercentage;
-        if (progressPercentage >= 100) {
-          runningTask.status = TaskStatus.finished;
-          runningTask.finishedAt = DateTime.now();
-          runningTask.action.applyEffect(
-            vermelhaContext,
-            runningTask.subject,
-            runningTask.targets,
-          );
-          continue;
-        }
-        if (progressPercentage > 50) {
-          continue;
-        }
-      }
-
-      final List<BattleRule> rules = character.battleRules;
-      rules.sort((a, b) => a.priority.compareTo(b.priority));
-      for (var rule in rules) {
-        List<Character> candidates = rule.condition.getTargets(vermelhaContext);
-        if (candidates.isEmpty) {
-          continue;
-        }
-        final targets = rule.target.selectTargets(
-          vermelhaContext,
-          character,
-          candidates,
-        );
-        if (targets.isEmpty) {
-          continue;
-        }
-        if (maybeRunningTask != null &&
-            maybeRunningTask.action.uuid == rule.action.uuid) {
-          continue;
-        }
-        if (maybeRunningTask != null &&
-            maybeRunningTask.action.uuid != rule.action.uuid) {
-          maybeRunningTask.status = TaskStatus.canceled;
-        }
-        Task newTask = Task(
-          uuid: const Uuid().toString(),
-          startedAt: DateTime.now(),
-          subject: character,
-          action: rule.action,
-          targets: targets,
-          status: TaskStatus.running,
-          progress: 0,
-        );
-        debugPrint("newTask: $newTask");
-        _tasks.add(newTask);
-        if (scrollDownFunc != null) {
-          scrollDownFunc!();
-        }
-        break;
-      }
+    if (_turnOrder.isEmpty) {
+      _buildTurnOrder();
     }
-
+    final actor = _nextActor();
+    if (actor == null) {
+      return;
+    }
+    if (actor.hp <= 0) {
+      return;
+    }
+    final decision = _decideAction(actor);
+    final action = decision.action;
+    final targets = decision.targets;
+    if (targets.isEmpty) {
+      return;
+    }
+    action.applyEffect(
+      vermelhaContext,
+      actor,
+      targets,
+    );
+    addActionLog(actor, action, targets);
+    _tasks.add(
+      Task(
+        uuid: const Uuid().toString(),
+        startedAt: DateTime.now(),
+        finishedAt: DateTime.now(),
+        subject: actor,
+        action: action,
+        targets: targets,
+        status: TaskStatus.finished,
+        progress: 100,
+      ),
+    );
+    if (scrollDownFunc != null) {
+      scrollDownFunc!();
+    }
     notifyListeners();
   }
 
@@ -226,4 +213,73 @@ class TasksProvider extends ChangeNotifier {
       enemies: [tmpEnemy],
     );
   }
+
+  void _buildTurnOrder() {
+    final List<Character> characters = [
+      ...vermelhaContext.allies,
+      ...vermelhaContext.enemies,
+    ];
+    characters.sort((a, b) => b.speed.compareTo(a.speed));
+    _turnOrder = characters;
+    _turnIndex = 0;
+  }
+
+  Character? _nextActor() {
+    if (_turnOrder.isEmpty) {
+      return null;
+    }
+    int attempts = 0;
+    while (attempts < _turnOrder.length) {
+      final actor = _turnOrder[_turnIndex];
+      _turnIndex = (_turnIndex + 1) % _turnOrder.length;
+      if (actor.hp > 0) {
+        return actor;
+      }
+      attempts += 1;
+    }
+    return null;
+  }
+
+  _ActionDecision _decideAction(Character actor) {
+    final List<BattleRule> rules = actor.battleRules;
+    rules.sort((a, b) => a.priority.compareTo(b.priority));
+    for (var rule in rules) {
+      List<Character> candidates = rule.condition.getTargets(vermelhaContext);
+      if (candidates.isEmpty) {
+        continue;
+      }
+      final targets = rule.target.selectTargets(
+        vermelhaContext,
+        actor,
+        candidates,
+      );
+      if (targets.isEmpty) {
+        continue;
+      }
+      return _ActionDecision(rule.action, targets);
+    }
+    final defaultAction =
+        getActionList().firstWhere((a) => a.name == "物理攻撃");
+    final defaultTargets = _fallbackTargets(actor);
+    return _ActionDecision(defaultAction, defaultTargets);
+  }
+
+  List<Character> _fallbackTargets(Character actor) {
+    final candidates = actor is PlayerCharacter
+        ? vermelhaContext.enemies
+        : vermelhaContext.allies;
+    for (final target in candidates) {
+      if (target.hp > 0) {
+        return [target];
+      }
+    }
+    return [];
+  }
+}
+
+class _ActionDecision {
+  final Action action;
+  final List<Character> targets;
+
+  _ActionDecision(this.action, this.targets);
 }

@@ -124,6 +124,14 @@
   "logTypeSystem": "システム",
   "logExplorationStart": "探索を開始した。",
   "logBattleEncounter": "敵と遭遇した。",
+  "logBattleAction": "{subject}は{action} → {targets}",
+  "@logBattleAction": {
+    "placeholders": {
+      "subject": {},
+      "action": {},
+      "targets": {}
+    }
+  },
   "logBattleVictory": "戦闘に勝利した。",
   "logLootNone": "戦利品はなかった。",
   "logCampHeal": "キャンプで全回復した。",
