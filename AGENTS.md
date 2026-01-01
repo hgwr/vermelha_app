@@ -7,6 +7,11 @@ This file guides AI coding agents working on Vermelha. Keep work aligned with th
 - Canonical spec: docs/spec.md
 - If code and spec diverge, prefer the spec unless a deliberate change is agreed, then update the spec.
 
+## Spec Alignment Guidance (AI)
+- Prioritize the goals stated in the spec overview and a smooth Wizardry-like UX.
+- If the current implementation better reflects those goals or reality, update docs/spec.md to match the implementation and note the reason in the issue/PR.
+- If the right direction is unclear, open or reference an issue before changing spec or code.
+
 ## Game Summary (v1)
 - Text-first, Wizardry-like dungeon crawler with FF12 gambit-style auto battle.
 - Mobile-first for short sessions.
