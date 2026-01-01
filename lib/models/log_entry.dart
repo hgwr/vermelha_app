@@ -14,6 +14,8 @@ enum LogMessageId {
   battleAction,
   battleVictory,
   lootNone,
+  lootGold,
+  lootItem,
   campHeal,
   returnToCity,
 }

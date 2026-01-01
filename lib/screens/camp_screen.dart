@@ -67,10 +67,11 @@ class CampScreen extends StatelessWidget {
                   onPressed: () async {
                     await Provider.of<CharactersProvider>(context, listen: false)
                         .healPartyMembers();
-                    Provider.of<TasksProvider>(context, listen: false)
-                        .addLog(LogType.system, LogMessageId.campHeal);
-                    Provider.of<TasksProvider>(context, listen: false)
-                        .resetBattle();
+                    final tasksProvider =
+                        Provider.of<TasksProvider>(context, listen: false);
+                    tasksProvider.addLog(LogType.system, LogMessageId.campHeal);
+                    tasksProvider.resetBattle();
+                    tasksProvider.startEngine();
                     if (context.mounted) {
                       Navigator.of(context).pop();
                     }

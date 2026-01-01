@@ -63,8 +63,12 @@ class DungeonSelectScreen extends StatelessWidget {
                       onTap: canStart
                           ? () {
                               dungeonProvider.startExploration(floor);
-                              Provider.of<TasksProvider>(context, listen: false)
-                                  .resetBattle(clearLog: true);
+                              final tasksProvider = Provider.of<TasksProvider>(
+                                context,
+                                listen: false,
+                              );
+                              tasksProvider.resetBattle(clearLog: true);
+                              tasksProvider.startEngine();
                               Navigator.of(context)
                                   .pushNamed(DungeonScreen.routeName);
                             }

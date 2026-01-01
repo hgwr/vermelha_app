@@ -9,6 +9,8 @@ import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/dungeon_state.dart';
 import 'package:vermelha_app/models/enemy.dart';
+import 'package:vermelha_app/models/item.dart';
+import 'package:vermelha_app/models/item_catalog.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
 import 'package:vermelha_app/models/target.dart';
@@ -39,6 +41,8 @@ class TasksProvider extends ChangeNotifier {
   DateTime? _nextExploreAt;
   List<Character> _turnOrder = [];
   int _turnIndex = 0;
+  PendingLoot? _pendingLoot;
+  bool _resumeAfterLoot = false;
 
   static const int _exploreMinDelayMs = 1200;
   static const int _exploreMaxDelayMs = 2800;
@@ -49,8 +53,12 @@ class TasksProvider extends ChangeNotifier {
   List<LogEntry> get logEntries => _logEntries;
   EngineStatus get engineStatus => _engineStatus;
   VermelhaContext get vermelhaContext => _vermelhaContext;
+  PendingLoot? get pendingLoot => _pendingLoot;
 
   void startEngine() {
+    if (_pendingLoot != null) {
+      return;
+    }
     if (_timer != null) {
       _timer!.cancel();
     }
@@ -89,6 +97,8 @@ class TasksProvider extends ChangeNotifier {
     _nextExploreAt = null;
     _turnOrder = [];
     _turnIndex = 0;
+    _pendingLoot = null;
+    _resumeAfterLoot = false;
     if (clearLog) {
       _logEntries.clear();
       dungeonProvider?.syncEventLog(_logEntries);
@@ -168,7 +178,7 @@ class TasksProvider extends ChangeNotifier {
       return;
     }
     _runExploreEvent();
-    if (!_isInBattle) {
+    if (!_isInBattle && _pendingLoot == null) {
       _scheduleNextExplore();
     }
   }
@@ -177,6 +187,7 @@ class TasksProvider extends ChangeNotifier {
     final roll = vermelhaContext.random.nextDouble();
     if (roll < 0.15) {
       addLog(LogType.loot, LogMessageId.explorationTreasure);
+      _queueLoot(LootSource.treasure);
       return;
     }
     if (roll < 0.25) {
@@ -216,6 +227,11 @@ class TasksProvider extends ChangeNotifier {
   }
 
   void _handleBattleTick() {
+    if (vermelhaContext.allies.isEmpty ||
+        vermelhaContext.allies.every((ally) => ally.hp <= 0)) {
+      _handlePartyDefeat();
+      return;
+    }
     if (vermelhaContext.enemies.isEmpty ||
         vermelhaContext.enemies.every((enemy) => enemy.hp <= 0)) {
       _finishBattle();
@@ -281,13 +297,69 @@ class TasksProvider extends ChangeNotifier {
 
   void _finishBattle() {
     addLog(LogType.battle, LogMessageId.battleVictory);
-    addLog(LogType.loot, LogMessageId.lootNone);
     dungeonProvider?.registerBattle();
     _vermelhaContext = _vermelhaContext.copyWith(enemies: []);
     _isInBattle = false;
     _turnOrder = [];
     _turnIndex = 0;
-    _scheduleNextExplore();
+    _queueLoot(LootSource.battle);
+  }
+
+  void _handlePartyDefeat() {
+    addLog(LogType.system, LogMessageId.returnToCity);
+    resetBattle();
+    dungeonProvider?.returnToCity();
+  }
+
+  void resolvePendingLoot() {
+    if (_pendingLoot == null) {
+      return;
+    }
+    _pendingLoot = null;
+    final resume = _resumeAfterLoot;
+    _resumeAfterLoot = false;
+    if (resume && (dungeonProvider?.isExploring ?? false)) {
+      startEngine();
+    } else {
+      notifyListeners();
+    }
+  }
+
+  void _queueLoot(LootSource source) {
+    if (_pendingLoot != null) {
+      return;
+    }
+    final loot = _generateLoot(source);
+    if (loot == null) {
+      return;
+    }
+    _resumeAfterLoot = _engineStatus == EngineStatus.running;
+    _pendingLoot = loot;
+    _nextExploreAt = null;
+    pauseEngine();
+  }
+
+  PendingLoot? _generateLoot(LootSource source) {
+    if (charactersProvider.partyMembers.isEmpty) {
+      return null;
+    }
+    final roll = vermelhaContext.random.nextDouble();
+    final goldChance = source == LootSource.treasure ? 0.4 : 0.6;
+    if (roll < goldChance) {
+      final amount = 20 + vermelhaContext.random.nextInt(41);
+      return PendingLoot.gold(
+        id: const Uuid().toString(),
+        amount: amount,
+        source: source,
+      );
+    }
+    final item = itemCatalog[vermelhaContext.random.nextInt(itemCatalog.length)];
+    return PendingLoot.item(
+      id: const Uuid().toString(),
+      item: item,
+      source: source,
+      ownerId: charactersProvider.partyMembers.first.id,
+    );
   }
 
   void fillAllies() {
@@ -367,15 +439,16 @@ class TasksProvider extends ChangeNotifier {
     final List<BattleRule> rules = actor.battleRules;
     rules.sort((a, b) => a.priority.compareTo(b.priority));
     for (var rule in rules) {
-      List<Character> candidates = rule.condition.getTargets(vermelhaContext);
+      List<Character> candidates =
+          _aliveTargets(rule.condition.getTargets(vermelhaContext));
       if (candidates.isEmpty) {
         continue;
       }
-      final targets = rule.target.selectTargets(
+      final targets = _aliveTargets(rule.target.selectTargets(
         vermelhaContext,
         actor,
         candidates,
-      );
+      ));
       if (targets.isEmpty) {
         continue;
       }
@@ -398,6 +471,10 @@ class TasksProvider extends ChangeNotifier {
     return [];
   }
 
+  List<Character> _aliveTargets(List<Character> candidates) {
+    return candidates.where((candidate) => candidate.hp > 0).toList();
+  }
+
   Map<String, String> _serializeActor(Character actor) {
     if (actor is Enemy) {
       return {
@@ -417,4 +494,63 @@ class _ActionDecision {
   final List<Character> targets;
 
   _ActionDecision(this.action, this.targets);
+}
+
+enum LootType {
+  gold,
+  item,
+}
+
+enum LootSource {
+  treasure,
+  battle,
+}
+
+class PendingLoot {
+  final String id;
+  final LootType type;
+  final LootSource source;
+  final int gold;
+  final Item? item;
+  final int? ownerId;
+
+  const PendingLoot._({
+    required this.id,
+    required this.type,
+    required this.source,
+    required this.gold,
+    required this.item,
+    required this.ownerId,
+  });
+
+  factory PendingLoot.gold({
+    required String id,
+    required int amount,
+    required LootSource source,
+  }) {
+    return PendingLoot._(
+      id: id,
+      type: LootType.gold,
+      source: source,
+      gold: amount,
+      item: null,
+      ownerId: null,
+    );
+  }
+
+  factory PendingLoot.item({
+    required String id,
+    required Item item,
+    required LootSource source,
+    required int? ownerId,
+  }) {
+    return PendingLoot._(
+      id: id,
+      type: LootType.item,
+      source: source,
+      gold: 0,
+      item: item,
+      ownerId: ownerId,
+    );
+  }
 }
