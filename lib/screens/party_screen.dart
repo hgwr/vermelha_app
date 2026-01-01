@@ -5,6 +5,7 @@ import 'package:vermelha_app/l10n/model_localizations.dart';
 import 'package:vermelha_app/models/party_position.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
+import 'package:vermelha_app/screens/character_screen.dart';
 
 class PartyScreen extends StatelessWidget {
   const PartyScreen({Key? key}) : super(key: key);
@@ -101,15 +102,29 @@ class PartyScreen extends StatelessWidget {
                 ),
                 trailing: member == null
                     ? null
-                    : IconButton(
-                        icon: const Icon(Icons.clear),
-                        tooltip: l10n.partyClearSlot,
-                        onPressed: () async {
-                          await charactersProvider.assignPartyMember(
-                            position,
-                            null,
-                          );
-                        },
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.info_outline),
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                CharacterScreen.routeName,
+                                arguments: member,
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.clear),
+                            tooltip: l10n.partyClearSlot,
+                            onPressed: () async {
+                              await charactersProvider.assignPartyMember(
+                                position,
+                                null,
+                              );
+                            },
+                          ),
+                        ],
                       ),
                 onTap: () => _showMemberPicker(
                   context,
