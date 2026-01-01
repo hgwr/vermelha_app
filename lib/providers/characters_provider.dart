@@ -133,6 +133,32 @@ class CharactersProvider extends ChangeNotifier {
     return c;
   }
 
+  Future<void> persistBattleChanges(
+    Map<int, BattleStatSnapshot> snapshots,
+  ) async {
+    if (snapshots.isEmpty) {
+      return;
+    }
+    bool updated = false;
+    for (final entry in snapshots.entries) {
+      final id = entry.key;
+      final index = _characters.indexWhere((c) => c.id == id);
+      if (index < 0) {
+        continue;
+      }
+      final character = _characters[index];
+      final snapshot = entry.value;
+      if (character.hp == snapshot.hp && character.mp == snapshot.mp) {
+        continue;
+      }
+      await _characterRepository.updateVitals(character);
+      updated = true;
+    }
+    if (updated) {
+      notifyListeners();
+    }
+  }
+
   Future<void> assignPartyMember(
     PartyPosition position,
     PlayerCharacter? character,
@@ -171,4 +197,14 @@ class CharactersProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+}
+
+class BattleStatSnapshot {
+  final int hp;
+  final int mp;
+
+  const BattleStatSnapshot({
+    required this.hp,
+    required this.mp,
+  });
 }

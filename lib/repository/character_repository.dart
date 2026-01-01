@@ -211,6 +211,19 @@ class CharacterRepository {
     return updatedCharacter;
   }
 
+  Future<void> updateVitals(PlayerCharacter character) async {
+    final db = await DbConnection().database;
+    await db.update(
+      'character',
+      {
+        'hp': character.hp,
+        'mp': character.mp,
+      },
+      where: 'id = ?',
+      whereArgs: [character.id],
+    );
+  }
+
   Future<int> delete(PlayerCharacter character) async {
     final db = await DbConnection().database;
     debugPrint("deleting character with id ${character.id}");
