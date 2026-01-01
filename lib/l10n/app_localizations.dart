@@ -130,6 +130,48 @@ abstract class AppLocalizations {
   /// **'ショップ'**
   String get shopTitle;
 
+  /// No description provided for @shopBuyTab.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入'**
+  String get shopBuyTab;
+
+  /// No description provided for @shopSellTab.
+  ///
+  /// In ja, this message translates to:
+  /// **'売却'**
+  String get shopSellTab;
+
+  /// No description provided for @goldLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'所持金'**
+  String get goldLabel;
+
+  /// No description provided for @priceLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'{value}G'**
+  String priceLabel(Object value);
+
+  /// No description provided for @sellPriceLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'売値 {value}G'**
+  String sellPriceLabel(Object value);
+
+  /// No description provided for @shopSelectCharacter.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャラクター'**
+  String get shopSelectCharacter;
+
+  /// No description provided for @notEnoughGold.
+  ///
+  /// In ja, this message translates to:
+  /// **'ゴールドが足りません。'**
+  String get notEnoughGold;
+
   /// No description provided for @dungeonTitle.
   ///
   /// In ja, this message translates to:
@@ -202,6 +244,96 @@ abstract class AppLocalizations {
   /// **'前衛・中衛・後衛の3人を設定してください'**
   String get partyIncomplete;
 
+  /// No description provided for @inventoryCapacityLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'所持品 {current}/{max}'**
+  String inventoryCapacityLabel(Object current, Object max);
+
+  /// No description provided for @inventoryEmpty.
+  ///
+  /// In ja, this message translates to:
+  /// **'所持品がありません。'**
+  String get inventoryEmpty;
+
+  /// No description provided for @inventoryFullTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'所持品がいっぱいです'**
+  String get inventoryFullTitle;
+
+  /// No description provided for @inventoryFullBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'捨てるアイテムを選んでください。'**
+  String get inventoryFullBody;
+
+  /// No description provided for @inventoryDiscardNewItem.
+  ///
+  /// In ja, this message translates to:
+  /// **'新規: {name}'**
+  String inventoryDiscardNewItem(Object name);
+
+  /// No description provided for @equipmentTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'装備'**
+  String get equipmentTitle;
+
+  /// No description provided for @equipmentEmpty.
+  ///
+  /// In ja, this message translates to:
+  /// **'未装備'**
+  String get equipmentEmpty;
+
+  /// No description provided for @equipmentSlotWeapon.
+  ///
+  /// In ja, this message translates to:
+  /// **'武器'**
+  String get equipmentSlotWeapon;
+
+  /// No description provided for @equipmentSlotArmor.
+  ///
+  /// In ja, this message translates to:
+  /// **'防具'**
+  String get equipmentSlotArmor;
+
+  /// No description provided for @equipmentSlotAccessory.
+  ///
+  /// In ja, this message translates to:
+  /// **'アクセサリ'**
+  String get equipmentSlotAccessory;
+
+  /// No description provided for @equipAction.
+  ///
+  /// In ja, this message translates to:
+  /// **'装備'**
+  String get equipAction;
+
+  /// No description provided for @unequipAction.
+  ///
+  /// In ja, this message translates to:
+  /// **'外す'**
+  String get unequipAction;
+
+  /// No description provided for @itemTypeWeapon.
+  ///
+  /// In ja, this message translates to:
+  /// **'武器'**
+  String get itemTypeWeapon;
+
+  /// No description provided for @itemTypeArmor.
+  ///
+  /// In ja, this message translates to:
+  /// **'防具'**
+  String get itemTypeArmor;
+
+  /// No description provided for @itemTypeConsumable.
+  ///
+  /// In ja, this message translates to:
+  /// **'消耗品'**
+  String get itemTypeConsumable;
+
   /// No description provided for @saveTitle.
   ///
   /// In ja, this message translates to:
@@ -273,6 +405,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'キャンセル'**
   String get cancel;
+
+  /// No description provided for @confirm.
+  ///
+  /// In ja, this message translates to:
+  /// **'決定'**
+  String get confirm;
 
   /// No description provided for @delete.
   ///

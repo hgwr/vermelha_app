@@ -3,6 +3,9 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:vermelha_app/db/db_connection.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
+import 'package:vermelha_app/models/equipment_slot.dart';
+import 'package:vermelha_app/models/item.dart';
+import 'package:vermelha_app/models/item_catalog.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import '../models/status_parameter.dart';
 
@@ -59,7 +62,43 @@ class CharacterRepository {
     for (var json in battleRuleJsonList) {
       battleRules.add(BattleRule.fromJson(json, character));
     }
-    character = character.copyWith(battleRules: battleRules);
+    final inventoryRows = await db.query(
+      'character_inventory',
+      where: 'character_id = ?',
+      whereArgs: [id],
+    );
+    final List<Item> inventory = [];
+    for (var row in inventoryRows) {
+      final itemId = row['item_id'] as String?;
+      if (itemId == null) {
+        continue;
+      }
+      final item = findItemById(itemId);
+      if (item != null) {
+        inventory.add(item);
+      }
+    }
+
+    final equipmentRows = await db.query(
+      'character_equipment',
+      where: 'character_id = ?',
+      whereArgs: [id],
+    );
+    final Map<EquipmentSlot, Item?> equipment = {};
+    for (var row in equipmentRows) {
+      final slot = equipmentSlotFromDb(row['slot']);
+      final itemId = row['item_id'] as String?;
+      if (slot == null || itemId == null) {
+        continue;
+      }
+      equipment[slot] = findItemById(itemId);
+    }
+
+    character = character.copyWith(
+      battleRules: battleRules,
+      inventory: inventory,
+      equipment: equipment,
+    );
     return character;
   }
 
@@ -81,6 +120,23 @@ class CharacterRepository {
           'condition_uuid': battleRule.condition.uuid,
           'target_uuid': battleRule.target.uuid,
           'action_uuid': battleRule.action.uuid,
+        });
+      }
+      for (var item in character.inventory) {
+        await txn.insert('character_inventory', {
+          'character_id': id,
+          'item_id': item.id,
+        });
+      }
+      for (var entry in character.equipment.entries) {
+        final item = entry.value;
+        if (item == null) {
+          continue;
+        }
+        await txn.insert('character_equipment', {
+          'character_id': id,
+          'slot': equipmentSlotToDb(entry.key),
+          'item_id': item.id,
         });
       }
       return character.copyWith(id: id);
@@ -123,6 +179,33 @@ class CharacterRepository {
           'action_uuid': battleRule.action.uuid,
         });
       }
+      await txn.delete(
+        'character_inventory',
+        where: 'character_id = ?',
+        whereArgs: [character.id],
+      );
+      for (var item in character.inventory) {
+        await txn.insert('character_inventory', {
+          'character_id': character.id,
+          'item_id': item.id,
+        });
+      }
+      await txn.delete(
+        'character_equipment',
+        where: 'character_id = ?',
+        whereArgs: [character.id],
+      );
+      for (var entry in character.equipment.entries) {
+        final item = entry.value;
+        if (item == null) {
+          continue;
+        }
+        await txn.insert('character_equipment', {
+          'character_id': character.id,
+          'slot': equipmentSlotToDb(entry.key),
+          'item_id': item.id,
+        });
+      }
       return character;
     });
     return updatedCharacter;
@@ -140,6 +223,16 @@ class CharacterRepository {
       await txn.delete(
         'battle_rule',
         where: 'owner_id = ?',
+        whereArgs: [character.id],
+      );
+      await txn.delete(
+        'character_inventory',
+        where: 'character_id = ?',
+        whereArgs: [character.id],
+      );
+      await txn.delete(
+        'character_equipment',
+        where: 'character_id = ?',
         whereArgs: [character.id],
       );
       final count = await txn.delete(

@@ -9,6 +9,7 @@ import 'package:vermelha_app/screens/character_screen.dart';
 import 'package:vermelha_app/screens/camp_screen.dart';
 import 'package:vermelha_app/screens/city_menu_screen.dart';
 import 'package:vermelha_app/screens/dungeon_select_screen.dart';
+import 'package:vermelha_app/screens/shop_screen.dart';
 import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 import 'package:vermelha_app/screens/select_action_screen.dart';
@@ -102,6 +103,7 @@ class _MyAppState extends State<MyApp> {
           DungeonSelectScreen.routeName: (ctx) => const DungeonSelectScreen(),
           DungeonScreen.routeName: (ctx) => const DungeonScreen(),
           CampScreen.routeName: (ctx) => const CampScreen(),
+          ShopScreen.routeName: (ctx) => const ShopScreen(),
           PartyScreen.routeName: (ctx) => const PartyScreen(),
           SettingsScreen.routeName: (ctx) => const SettingsScreen(),
           CharacterScreen.routeName: (ctx) => const CharacterScreen(),

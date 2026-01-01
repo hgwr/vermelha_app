@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vermelha_app/models/equipment_slot.dart';
+import 'package:vermelha_app/models/item.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/party_position.dart';
 import 'package:vermelha_app/repository/character_repository.dart';
@@ -22,6 +24,76 @@ class CharactersProvider extends ChangeNotifier {
   bool get isPartyComplete {
     return PartyPosition.values
         .every((position) => memberAt(position) != null);
+  }
+
+  bool isInventoryFull(PlayerCharacter character) {
+    return character.inventory.length >= character.inventoryCapacity;
+  }
+
+  Future<void> addItemToInventory(PlayerCharacter character, Item item) async {
+    final inventory = List<Item>.from(character.inventory)..add(item);
+    await updateCharacter(character.copyWith(inventory: inventory));
+  }
+
+  Future<void> removeItemFromInventory(
+    PlayerCharacter character,
+    Item item,
+  ) async {
+    final inventory = List<Item>.from(character.inventory);
+    final index = inventory.indexWhere((element) => element.id == item.id);
+    if (index >= 0) {
+      inventory.removeAt(index);
+      await updateCharacter(character.copyWith(inventory: inventory));
+    }
+  }
+
+  Future<bool> equipItem(
+    PlayerCharacter character,
+    Item item,
+  ) async {
+    final slot = item.equipmentSlot;
+    if (slot == null) {
+      return false;
+    }
+    final inventory = List<Item>.from(character.inventory);
+    final inventoryIndex =
+        inventory.indexWhere((element) => element.id == item.id);
+    if (inventoryIndex >= 0) {
+      inventory.removeAt(inventoryIndex);
+    }
+    final equipment = Map<EquipmentSlot, Item?>.from(character.equipment);
+    final previous = equipment[slot];
+    if (previous != null) {
+      if (inventory.length >= character.inventoryCapacity) {
+        return false;
+      }
+      inventory.add(previous);
+    }
+    equipment[slot] = item;
+    await updateCharacter(
+      character.copyWith(inventory: inventory, equipment: equipment),
+    );
+    return true;
+  }
+
+  Future<bool> unequipItem(
+    PlayerCharacter character,
+    EquipmentSlot slot,
+  ) async {
+    final equipment = Map<EquipmentSlot, Item?>.from(character.equipment);
+    final item = equipment[slot];
+    if (item == null) {
+      return false;
+    }
+    if (character.inventory.length >= character.inventoryCapacity) {
+      return false;
+    }
+    equipment[slot] = null;
+    final inventory = List<Item>.from(character.inventory)..add(item);
+    await updateCharacter(
+      character.copyWith(inventory: inventory, equipment: equipment),
+    );
+    return true;
   }
 
   PlayerCharacter? memberAt(PartyPosition position) {

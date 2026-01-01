@@ -68,6 +68,22 @@ class GameStateProvider extends ChangeNotifier {
     await _repository.save(state);
   }
 
+  Future<bool> spendGold(int amount) async {
+    if (gold < amount) {
+      return false;
+    }
+    gold -= amount;
+    await saveGame();
+    notifyListeners();
+    return true;
+  }
+
+  Future<void> addGold(int amount) async {
+    gold += amount;
+    await saveGame();
+    notifyListeners();
+  }
+
   void _autoSave() {
     if (!_loaded) {
       return;

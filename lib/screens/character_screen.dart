@@ -5,6 +5,8 @@ import 'package:vermelha_app/l10n/app_localizations.dart';
 
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
 import '../providers/characters_provider.dart';
+import '../models/equipment_slot.dart';
+import '../models/item.dart';
 import '../models/player_character.dart';
 import '../models/job.dart';
 
@@ -43,6 +45,15 @@ class _CharacterScreenState extends State<CharacterScreen> {
                 .addCharacter(character);
       }
     }
+  }
+
+  Future<void> _refreshCharacter() async {
+    final provider = Provider.of<CharactersProvider>(context, listen: false);
+    final updated = provider.characters
+        .firstWhere((c) => c.id == character.id, orElse: () => character);
+    setState(() {
+      character = updated;
+    });
   }
 
   @override
@@ -177,6 +188,92 @@ class _CharacterScreenState extends State<CharacterScreen> {
           '${l10n.speedLabel}: ',
           character.speed.toString(),
         ),
+        const SizedBox(height: 8),
+        Text(l10n.equipmentTitle),
+        const SizedBox(height: 4),
+        ...EquipmentSlot.values.map((slot) {
+          final equipped = character.equipment[slot];
+          return ListTile(
+            dense: true,
+            title: Text(_equipmentSlotLabel(l10n, slot)),
+            subtitle: Text(equipped?.name ?? l10n.equipmentEmpty),
+            trailing: equipped == null
+                ? null
+                : TextButton(
+                    onPressed: () async {
+                      final provider = Provider.of<CharactersProvider>(
+                        context,
+                        listen: false,
+                      );
+                      final ok = await provider.unequipItem(character, slot);
+                      if (!ok && context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(l10n.inventoryFullTitle),
+                          ),
+                        );
+                      }
+                      await _refreshCharacter();
+                    },
+                    child: Text(l10n.unequipAction),
+                  ),
+            onTap: equipped == null
+                ? null
+                : () async {
+                    final provider = Provider.of<CharactersProvider>(
+                      context,
+                      listen: false,
+                    );
+                    final ok = await provider.unequipItem(character, slot);
+                    if (!ok && context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(l10n.inventoryFullTitle),
+                        ),
+                      );
+                    }
+                    await _refreshCharacter();
+                  },
+          );
+        }),
+        const SizedBox(height: 8),
+        Text(
+          l10n.inventoryCapacityLabel(
+            character.inventory.length,
+            character.inventoryCapacity,
+          ),
+        ),
+        const SizedBox(height: 4),
+        if (character.inventory.isEmpty)
+          Text(l10n.inventoryEmpty)
+        else
+          ...character.inventory.map((item) {
+            return ListTile(
+              dense: true,
+              title: Text(item.name),
+              subtitle: Text(_itemTypeLabel(l10n, item.type)),
+              trailing: item.isEquipable
+                  ? TextButton(
+                      onPressed: () async {
+                        final provider = Provider.of<CharactersProvider>(
+                          context,
+                          listen: false,
+                        );
+                        final ok = await provider.equipItem(character, item);
+                        if (!ok && context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(l10n.inventoryFullTitle),
+                            ),
+                          );
+                        }
+                        await _refreshCharacter();
+                      },
+                      child: Text(l10n.equipAction),
+                    )
+                  : null,
+            );
+          }),
         GestureDetector(
           onTap: () async {
             final editedCharacter = await Navigator.of(context).pushNamed(
@@ -248,5 +345,27 @@ class _CharacterScreenState extends State<CharacterScreen> {
         ],
       ),
     );
+  }
+
+  String _equipmentSlotLabel(AppLocalizations l10n, EquipmentSlot slot) {
+    switch (slot) {
+      case EquipmentSlot.rightHand:
+        return l10n.equipmentSlotWeapon;
+      case EquipmentSlot.armor:
+        return l10n.equipmentSlotArmor;
+      case EquipmentSlot.accessory:
+        return l10n.equipmentSlotAccessory;
+    }
+  }
+
+  String _itemTypeLabel(AppLocalizations l10n, ItemType type) {
+    switch (type) {
+      case ItemType.weapon:
+        return l10n.itemTypeWeapon;
+      case ItemType.armor:
+        return l10n.itemTypeArmor;
+      case ItemType.consumable:
+        return l10n.itemTypeConsumable;
+    }
   }
 }

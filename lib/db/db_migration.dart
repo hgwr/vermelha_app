@@ -73,6 +73,23 @@ CREATE TABLE IF NOT EXISTS game_state (
     battles_to_unlock_next_floor INTEGER NOT NULL
 )
 ''',
+  23050500150: '''
+CREATE TABLE IF NOT EXISTS character_inventory (
+    id INTEGER PRIMARY KEY,
+    character_id INTEGER NOT NULL,
+    item_id TEXT NOT NULL,
+    FOREIGN KEY(character_id) REFERENCES character(id)
+)
+''',
+  23050500160: '''
+CREATE TABLE IF NOT EXISTS character_equipment (
+    id INTEGER PRIMARY KEY,
+    character_id INTEGER NOT NULL,
+    slot TEXT NOT NULL,
+    item_id TEXT NOT NULL,
+    FOREIGN KEY(character_id) REFERENCES character(id)
+)
+''',
 };
 
 Future<void> migrateDatabase() async {

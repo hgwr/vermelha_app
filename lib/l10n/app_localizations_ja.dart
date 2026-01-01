@@ -27,6 +27,31 @@ class AppLocalizationsJa extends AppLocalizations {
   String get shopTitle => 'ショップ';
 
   @override
+  String get shopBuyTab => '購入';
+
+  @override
+  String get shopSellTab => '売却';
+
+  @override
+  String get goldLabel => '所持金';
+
+  @override
+  String priceLabel(Object value) {
+    return '${value}G';
+  }
+
+  @override
+  String sellPriceLabel(Object value) {
+    return '売値 ${value}G';
+  }
+
+  @override
+  String get shopSelectCharacter => 'キャラクター';
+
+  @override
+  String get notEnoughGold => 'ゴールドが足りません。';
+
+  @override
   String get dungeonTitle => 'ダンジョン';
 
   @override
@@ -67,6 +92,55 @@ class AppLocalizationsJa extends AppLocalizations {
   String get partyIncomplete => '前衛・中衛・後衛の3人を設定してください';
 
   @override
+  String inventoryCapacityLabel(Object current, Object max) {
+    return '所持品 $current/$max';
+  }
+
+  @override
+  String get inventoryEmpty => '所持品がありません。';
+
+  @override
+  String get inventoryFullTitle => '所持品がいっぱいです';
+
+  @override
+  String get inventoryFullBody => '捨てるアイテムを選んでください。';
+
+  @override
+  String inventoryDiscardNewItem(Object name) {
+    return '新規: $name';
+  }
+
+  @override
+  String get equipmentTitle => '装備';
+
+  @override
+  String get equipmentEmpty => '未装備';
+
+  @override
+  String get equipmentSlotWeapon => '武器';
+
+  @override
+  String get equipmentSlotArmor => '防具';
+
+  @override
+  String get equipmentSlotAccessory => 'アクセサリ';
+
+  @override
+  String get equipAction => '装備';
+
+  @override
+  String get unequipAction => '外す';
+
+  @override
+  String get itemTypeWeapon => '武器';
+
+  @override
+  String get itemTypeArmor => '防具';
+
+  @override
+  String get itemTypeConsumable => '消耗品';
+
+  @override
   String get saveTitle => 'セーブ';
 
   @override
@@ -101,6 +175,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get cancel => 'キャンセル';
+
+  @override
+  String get confirm => '決定';
 
   @override
   String get delete => '削除';

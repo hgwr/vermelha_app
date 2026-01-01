@@ -5,6 +5,23 @@
   "cityTitle": "街",
   "tavernTitle": "酒場",
   "shopTitle": "ショップ",
+  "shopBuyTab": "購入",
+  "shopSellTab": "売却",
+  "goldLabel": "所持金",
+  "priceLabel": "{value}G",
+  "@priceLabel": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "sellPriceLabel": "売値 {value}G",
+  "@sellPriceLabel": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "shopSelectCharacter": "キャラクター",
+  "notEnoughGold": "ゴールドが足りません。",
   "dungeonTitle": "ダンジョン",
   "dungeonSelectTitle": "ダンジョン選択",
   "floorLabel": "フロア{floor}",
@@ -28,6 +45,32 @@
   "partySlotEmpty": "未設定",
   "partyClearSlot": "外す",
   "partyIncomplete": "前衛・中衛・後衛の3人を設定してください",
+  "inventoryCapacityLabel": "所持品 {current}/{max}",
+  "@inventoryCapacityLabel": {
+    "placeholders": {
+      "current": {},
+      "max": {}
+    }
+  },
+  "inventoryEmpty": "所持品がありません。",
+  "inventoryFullTitle": "所持品がいっぱいです",
+  "inventoryFullBody": "捨てるアイテムを選んでください。",
+  "inventoryDiscardNewItem": "新規: {name}",
+  "@inventoryDiscardNewItem": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "equipmentTitle": "装備",
+  "equipmentEmpty": "未装備",
+  "equipmentSlotWeapon": "武器",
+  "equipmentSlotArmor": "防具",
+  "equipmentSlotAccessory": "アクセサリ",
+  "equipAction": "装備",
+  "unequipAction": "外す",
+  "itemTypeWeapon": "武器",
+  "itemTypeArmor": "防具",
+  "itemTypeConsumable": "消耗品",
   "saveTitle": "セーブ",
   "campTitle": "キャンプ",
   "campButton": "キャンプ",
@@ -40,6 +83,7 @@
   "deleteCharacterTitle": "キャラクターを削除しますか？",
   "deleteCharacterBody": "削除すると元に戻せません。",
   "cancel": "キャンセル",
+  "confirm": "決定",
   "delete": "削除",
   "newCharacterTitle": "新規",
   "nameLabel": "名前",

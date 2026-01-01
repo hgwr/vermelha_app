@@ -1,5 +1,7 @@
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/character.dart';
+import 'package:vermelha_app/models/equipment_slot.dart';
+import 'package:vermelha_app/models/item.dart';
 import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/models/party_position.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
@@ -9,6 +11,9 @@ class PlayerCharacter extends Character {
   int exp = 0;
   bool isActive = true;
   PartyPosition? partyPosition;
+  List<Item> inventory;
+  Map<EquipmentSlot, Item?> equipment;
+  int inventoryCapacity;
 
   PlayerCharacter({
     uuid,
@@ -25,6 +30,9 @@ class PlayerCharacter extends Character {
     required speed,
     required priorityParameters,
     required battleRules,
+    this.inventory = const [],
+    this.equipment = const {},
+    this.inventoryCapacity = 10,
     this.job,
     this.exp = 0,
     this.isActive = true,
@@ -105,6 +113,9 @@ class PlayerCharacter extends Character {
     Job? job,
     List<StatusParameter>? priorityParameters,
     List<BattleRule>? battleRules,
+    List<Item>? inventory,
+    Map<EquipmentSlot, Item?>? equipment,
+    int? inventoryCapacity,
     int? exp,
     bool? isActive,
     PartyPosition? partyPosition,
@@ -125,6 +136,9 @@ class PlayerCharacter extends Character {
       job: job ?? this.job,
       priorityParameters: priorityParameters ?? this.priorityParameters,
       battleRules: battleRules ?? this.battleRules,
+      inventory: inventory ?? this.inventory,
+      equipment: equipment ?? this.equipment,
+      inventoryCapacity: inventoryCapacity ?? this.inventoryCapacity,
       exp: exp ?? this.exp,
       isActive: isActive ?? this.isActive,
       partyPosition: partyPosition ?? this.partyPosition,
