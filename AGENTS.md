@@ -58,8 +58,8 @@ merge the pull request, link it to the issue, then close the issue.
 
 ## CI (GitHub Actions)
 Keep a workflow that runs on `pull_request` and `push` to build/test so errors
-surface early. For Flutter, use `flutter test` and (if desired) a lightweight
-`flutter build` for the target platforms.
+surface early. For Flutter, use `flutter test` and include build commands for target
+platforms (e.g., `flutter build apk --debug` and `flutter build ios --no-codesign`).
 
 ## Expectations for Changes
 - Follow UI/UX, localization, and gameplay constraints in docs/spec.md.
