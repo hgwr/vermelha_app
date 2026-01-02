@@ -36,45 +36,65 @@ class TaskWidget extends StatelessWidget {
     }
     final character = task.subject;
     final l10n = AppLocalizations.of(context)!;
+    final hpValue = character.maxHp <= 0 ? 0.0 : character.hp / character.maxHp;
+    final mpValue = character.maxMp <= 0 ? 0.0 : character.mp / character.maxMp;
     return SizedBox(
-      width: 48,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 32,
-            child: icon,
-          ),
-          Row(
-            children: [
-              Text(
-                l10n.hpShort,
-                style: const TextStyle(fontSize: 8),
+      width: 46,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: constraints.maxWidth,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: 28,
+                    child: icon,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        l10n.hpShort,
+                        style: const TextStyle(fontSize: 8),
+                      ),
+                      const SizedBox(width: 2),
+                      Expanded(
+                        child: LinearProgressIndicator(
+                          value: hpValue.clamp(0, 1),
+                          backgroundColor: Colors.red.shade100,
+                          valueColor:
+                              const AlwaysStoppedAnimation<Color>(Colors.red),
+                          minHeight: 4,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        l10n.mpShort,
+                        style: const TextStyle(fontSize: 8),
+                      ),
+                      const SizedBox(width: 2),
+                      Expanded(
+                        child: LinearProgressIndicator(
+                          value: mpValue.clamp(0, 1),
+                          backgroundColor: Colors.blue.shade100,
+                          valueColor:
+                              const AlwaysStoppedAnimation<Color>(Colors.blue),
+                          minHeight: 4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: character.hp / character.maxHp,
-                  backgroundColor: Colors.red.shade100,
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Text(
-                l10n.mpShort,
-                style: const TextStyle(fontSize: 8),
-              ),
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: character.mp / character.maxMp,
-                  backgroundColor: Colors.blue.shade100,
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                ),
-              ),
-            ],
-          ),
-        ],
+            ),
+          );
+        },
       ),
     );
   }
