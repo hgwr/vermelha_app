@@ -13,6 +13,10 @@ Wizardryライクなキャラクター育成・ダンジョン探索と、ガン
 ## 仕様書
 v1仕様のカノニカルな参照先は `docs/spec.md` です。
 
+## Web版
+GitHub Pagesで公開しています。CIが `main` へのpush時に更新します。
+- https://hgwr.github.io/vermelha_app/
+
 ## 開発環境
 - Flutter SDK（stable）
 
