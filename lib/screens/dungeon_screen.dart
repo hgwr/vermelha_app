@@ -191,6 +191,10 @@ class _DungeonScreenState extends State<DungeonScreen> {
       child: Consumer2<TasksProvider, CharactersProvider>(
         builder: (context, taskProvider, charactersProvider, _) {
           taskProvider.scrollDownFunc = scrollDown;
+          final partyMembersByName = {
+            for (final member in charactersProvider.partyMembers)
+              member.name: member,
+          };
           final logs = taskProvider.logEntries;
           final runningTasks = taskProvider.tasks
               .where((task) => task.status == TaskStatus.running)
@@ -226,7 +230,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
                   return _buildTimelineLogTile(
                     l10n,
                     log,
-                    charactersProvider,
+                    partyMembersByName,
                   );
                 }
                 final task = item.task!;
@@ -245,12 +249,12 @@ class _DungeonScreenState extends State<DungeonScreen> {
   Widget _buildTimelineLogTile(
     AppLocalizations l10n,
     LogEntry log,
-    CharactersProvider charactersProvider,
+    Map<String, PlayerCharacter> partyMembersByName,
   ) {
     return ListTile(
       dense: true,
       visualDensity: VisualDensity.compact,
-      leading: _buildLogLeading(l10n, log, charactersProvider),
+      leading: _buildLogLeading(l10n, log, partyMembersByName),
       title: Text(_logMessage(l10n, log)),
     );
   }
@@ -258,11 +262,11 @@ class _DungeonScreenState extends State<DungeonScreen> {
   Widget _buildLogLeading(
     AppLocalizations l10n,
     LogEntry log,
-    CharactersProvider charactersProvider,
+    Map<String, PlayerCharacter> partyMembersByName,
   ) {
     if (log.messageId == LogMessageId.battleAction) {
       final subject = _decodeActor(log.data?['subject']);
-      final member = _findPartyMemberByName(charactersProvider, subject?.name);
+      final member = partyMembersByName[subject?.name];
       if (member != null) {
         return _buildStatusGauge(l10n, member);
       }
@@ -755,21 +759,6 @@ class _DungeonScreenState extends State<DungeonScreen> {
     for (final character in provider.characters) {
       if (character.id == id) {
         return character;
-      }
-    }
-    return null;
-  }
-
-  PlayerCharacter? _findPartyMemberByName(
-    CharactersProvider provider,
-    String? name,
-  ) {
-    if (name == null || name.isEmpty) {
-      return null;
-    }
-    for (final member in provider.partyMembers) {
-      if (member.name == name) {
-        return member;
       }
     }
     return null;
