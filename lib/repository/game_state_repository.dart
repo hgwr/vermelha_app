@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:sqflite/sqflite.dart';
-import 'package:vermelha_app/db/db_connection.dart';
+import 'package:drift/drift.dart';
+import 'package:vermelha_app/db/app_database.dart' as db;
 import 'package:uuid/uuid.dart';
 import 'package:vermelha_app/models/dungeon_state.dart';
 import 'package:vermelha_app/models/game_state.dart';
@@ -12,18 +12,19 @@ import 'package:vermelha_app/models/player_character.dart';
 class GameStateRepository {
   static const int _singletonId = 1;
   static const Uuid _uuid = Uuid();
+  final db.AppDatabase _database;
+
+  GameStateRepository({db.AppDatabase? database})
+      : _database = database ?? db.AppDatabase();
 
   Future<GameState> load({
     List<PlayerCharacter> roster = const [],
   }) async {
-    final db = await DbConnection().database;
-    final result = await db.query(
-      'game_state',
-      where: 'id = ?',
-      whereArgs: [_singletonId],
-      limit: 1,
-    );
-    if (result.isEmpty) {
+    final result = await (_database.select(_database.gameStates)
+          ..where((tbl) => tbl.id.equals(_singletonId))
+          ..limit(1))
+        .getSingleOrNull();
+    if (result == null) {
       final state = GameState(
         roster: roster,
         party: Party.fromRoster(roster),
@@ -38,15 +39,12 @@ class GameStateRepository {
       return state;
     }
 
-    final row = result.first;
-    final activeFloor = row['active_floor'] as int?;
-    final battleCount = row['battle_count_on_floor'] as int? ?? 0;
-    final battlesToUnlock =
-        row['battles_to_unlock_next_floor'] as int? ??
-            DungeonState.defaultBattlesToUnlockNextFloor;
-    final isPaused = (row['is_paused'] as int? ?? 1) == 1;
-    final eventLog = _decodeEventLog(row['event_log'] as String?);
-    final seedValue = row['seed'] as String?;
+    final activeFloor = result.activeFloor;
+    final battleCount = result.battleCountOnFloor;
+    final battlesToUnlock = result.battlesToUnlockNextFloor;
+    final isPaused = (result.isPaused) == 1;
+    final eventLog = _decodeEventLog(result.eventLog);
+    final seedValue = result.seed;
     final activeDungeon = activeFloor == null
         ? null
         : DungeonState(
@@ -63,8 +61,8 @@ class GameStateRepository {
     return GameState(
       roster: roster,
       party: Party.fromRoster(roster),
-      gold: row['gold'] as int? ?? 0,
-      maxReachedFloor: row['max_reached_floor'] as int? ?? 1,
+      gold: result.gold,
+      maxReachedFloor: result.maxReachedFloor,
       battleCountOnFloor: battleCount,
       battlesToUnlockNextFloor: battlesToUnlock,
       activeDungeon: activeDungeon,
@@ -72,29 +70,28 @@ class GameStateRepository {
   }
 
   Future<void> save(GameState state) async {
-    final db = await DbConnection().database;
     final activeDungeon = state.activeDungeon;
     final eventLog = activeDungeon?.eventLog ?? const <LogEntry>[];
     final battleCount = activeDungeon?.battleCountOnFloor ??
         state.battleCountOnFloor;
     final battlesToUnlock = activeDungeon?.battlesToUnlockNextFloor ??
         state.battlesToUnlockNextFloor;
-    final data = {
-      'id': _singletonId,
-      'gold': state.gold,
-      'max_reached_floor': state.maxReachedFloor,
-      'active_floor': activeDungeon?.floor,
-      'seed': activeDungeon?.seed,
-      'battle_count_on_floor': battleCount,
-      'battles_to_unlock_next_floor': battlesToUnlock,
-      'event_log': jsonEncode(eventLog.map((entry) => entry.toJson()).toList()),
-      'is_paused': (activeDungeon?.isPaused ?? true) ? 1 : 0,
-    };
-    await db.insert(
-      'game_state',
-      data,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await _database.into(_database.gameStates).insert(
+          db.GameStatesCompanion(
+            id: const Value(_singletonId),
+            gold: Value(state.gold),
+            maxReachedFloor: Value(state.maxReachedFloor),
+            activeFloor: Value(activeDungeon?.floor),
+            seed: Value(activeDungeon?.seed),
+            battleCountOnFloor: Value(battleCount),
+            battlesToUnlockNextFloor: Value(battlesToUnlock),
+            eventLog: Value(
+              jsonEncode(eventLog.map((entry) => entry.toJson()).toList()),
+            ),
+            isPaused: Value((activeDungeon?.isPaused ?? true) ? 1 : 0),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
   }
 
   List<LogEntry> _decodeEventLog(String? value) {

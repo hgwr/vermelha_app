@@ -16,7 +16,7 @@ import 'package:vermelha_app/screens/select_player_characters_screen.dart';
 import 'package:vermelha_app/screens/tavern_screen.dart';
 import 'package:vermelha_app/screens/title_screen.dart';
 
-import './db/db_migration.dart';
+import 'package:vermelha_app/db/app_database.dart';
 import './providers/characters_provider.dart';
 import './screens/dungeon_screen.dart';
 import './screens/party_screen.dart';
@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    migrateDatabase();
+    AppDatabase();
     charactersProvider.loadCharacters();
   }
 
