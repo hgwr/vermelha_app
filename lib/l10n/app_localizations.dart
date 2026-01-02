@@ -820,6 +820,42 @@ abstract class AppLocalizations {
   /// **'非定型の敵'**
   String get enemyIrregular;
 
+  /// No description provided for @enemyNameGoblin.
+  ///
+  /// In ja, this message translates to:
+  /// **'ゴブリン'**
+  String get enemyNameGoblin;
+
+  /// No description provided for @enemyNameSkeleton.
+  ///
+  /// In ja, this message translates to:
+  /// **'スケルトン'**
+  String get enemyNameSkeleton;
+
+  /// No description provided for @enemyNameOrc.
+  ///
+  /// In ja, this message translates to:
+  /// **'オーク'**
+  String get enemyNameOrc;
+
+  /// No description provided for @enemyNameSlime.
+  ///
+  /// In ja, this message translates to:
+  /// **'スライム'**
+  String get enemyNameSlime;
+
+  /// No description provided for @enemyNameWisp.
+  ///
+  /// In ja, this message translates to:
+  /// **'ウィスプ'**
+  String get enemyNameWisp;
+
+  /// No description provided for @enemyNameGhost.
+  ///
+  /// In ja, this message translates to:
+  /// **'ゴースト'**
+  String get enemyNameGhost;
+
   /// No description provided for @jobFighter.
   ///
   /// In ja, this message translates to:
