@@ -302,15 +302,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get battleRuleLimitReached => '戦闘ルールは最大16件です';
 
   @override
-  String get selectConditionTitle => '条件を選択';
-
-  @override
-  String get selectActionTitle => 'アクションを選択';
-
-  @override
-  String get selectTargetTitle => 'ターゲットを選択';
-
-  @override
   String get selectPlayerCharactersTitle => 'パーティメンバーを選択';
 
   @override

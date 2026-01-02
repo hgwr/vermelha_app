@@ -646,24 +646,6 @@ abstract class AppLocalizations {
   /// **'戦闘ルールは最大16件です'**
   String get battleRuleLimitReached;
 
-  /// No description provided for @selectConditionTitle.
-  ///
-  /// In ja, this message translates to:
-  /// **'条件を選択'**
-  String get selectConditionTitle;
-
-  /// No description provided for @selectActionTitle.
-  ///
-  /// In ja, this message translates to:
-  /// **'アクションを選択'**
-  String get selectActionTitle;
-
-  /// No description provided for @selectTargetTitle.
-  ///
-  /// In ja, this message translates to:
-  /// **'ターゲットを選択'**
-  String get selectTargetTitle;
-
   /// No description provided for @selectPlayerCharactersTitle.
   ///
   /// In ja, this message translates to:

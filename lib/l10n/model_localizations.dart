@@ -1,7 +1,6 @@
 import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/character.dart';
-import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/enemy.dart';
 import 'package:vermelha_app/models/item.dart';
 import 'package:vermelha_app/models/job.dart';
@@ -80,78 +79,6 @@ String actionLabelByUuid(AppLocalizations l10n, String uuid) {
       return l10n.actionUsePotion;
     case actionUseEtherId:
       return l10n.actionUseEther;
-  }
-  return l10n.unknownLabel;
-}
-
-String conditionLabel(AppLocalizations l10n, Condition condition) {
-  return conditionLabelByUuid(l10n, condition.uuid);
-}
-
-String conditionLabelByUuid(AppLocalizations l10n, String uuid) {
-  switch (uuid) {
-    case conditionLowestHpEnemyId:
-      return l10n.conditionLowestHpEnemy;
-    case conditionHighestHpEnemyId:
-      return l10n.conditionHighestHpEnemy;
-    case conditionRandomEnemyId:
-      return l10n.conditionRandomEnemy;
-    case conditionRandomAllyId:
-      return l10n.conditionRandomAlly;
-    case conditionAllEnemiesId:
-      return l10n.conditionAllEnemies;
-    case conditionAllAlliesId:
-      return l10n.conditionAllAllies;
-    case conditionEnemyTelegraphId:
-      return l10n.conditionEnemyTelegraph;
-    case conditionEnemyIrregularExistsId:
-      return l10n.conditionEnemyIrregularExists;
-    case conditionEnemyRegularExistsId:
-      return l10n.conditionEnemyRegularExists;
-    case conditionAllyHpBelow75Id:
-      return l10n.conditionAllyHpBelow75;
-    case conditionAllyHpBelow50Id:
-      return l10n.conditionAllyHpBelow50;
-    case conditionAllyHpBelow25Id:
-      return l10n.conditionAllyHpBelow25;
-    case conditionLowestMpEnemyId:
-      return l10n.conditionLowestMpEnemy;
-    case conditionHighestMpEnemyId:
-      return l10n.conditionHighestMpEnemy;
-    case conditionLowestAttackEnemyId:
-      return l10n.conditionLowestAttackEnemy;
-    case conditionHighestAttackEnemyId:
-      return l10n.conditionHighestAttackEnemy;
-    case conditionLowestDefenseEnemyId:
-      return l10n.conditionLowestDefenseEnemy;
-    case conditionHighestDefenseEnemyId:
-      return l10n.conditionHighestDefenseEnemy;
-    case conditionLowestSpeedEnemyId:
-      return l10n.conditionLowestSpeedEnemy;
-    case conditionHighestSpeedEnemyId:
-      return l10n.conditionHighestSpeedEnemy;
-    case conditionLowestHpAllyId:
-      return l10n.conditionLowestHpAlly;
-    case conditionHighestHpAllyId:
-      return l10n.conditionHighestHpAlly;
-    case conditionLowestMpAllyId:
-      return l10n.conditionLowestMpAlly;
-    case conditionHighestMpAllyId:
-      return l10n.conditionHighestMpAlly;
-    case conditionLowestAttackAllyId:
-      return l10n.conditionLowestAttackAlly;
-    case conditionHighestAttackAllyId:
-      return l10n.conditionHighestAttackAlly;
-    case conditionLowestDefenseAllyId:
-      return l10n.conditionLowestDefenseAlly;
-    case conditionHighestDefenseAllyId:
-      return l10n.conditionHighestDefenseAlly;
-    case conditionLowestSpeedAllyId:
-      return l10n.conditionLowestSpeedAlly;
-    case conditionHighestSpeedAllyId:
-      return l10n.conditionHighestSpeedAlly;
-    case conditionAlwaysId:
-      return l10n.conditionAlways;
   }
   return l10n.unknownLabel;
 }
