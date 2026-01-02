@@ -29,7 +29,7 @@ class DungeonScreen extends StatefulWidget {
 class _DungeonScreenState extends State<DungeonScreen> {
   static const int _logPanelFlex = 3;
   static const int _taskPanelFlex = 1;
-  static const double _logAutoScrollThreshold = 24;
+  static const double _logAutoScrollThreshold = 60;
   final ScrollController _scrollController = ScrollController();
   final ScrollController _logScrollController = ScrollController();
   int _lastLogCount = 0;
@@ -620,6 +620,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _logScrollController.removeListener(_handleLogScroll);
     _logScrollController.dispose();
     _isLogScrollControllerDisposed = true;
     super.dispose();
