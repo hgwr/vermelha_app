@@ -11,7 +11,13 @@ class BattleRuleRepository {
   final db.AppDatabase _database;
 
   Future<List<BattleRule>> findAll(PlayerCharacter ch) async {
-    final result = await _database.select(_database.battleRules).get();
+    final ownerId = ch.id;
+    if (ownerId == null) {
+      return [];
+    }
+    final result = await (_database.select(_database.battleRules)
+          ..where((tbl) => tbl.ownerId.equals(ownerId)))
+        .get();
     return result
         .map((row) => BattleRule.fromJson(_toJson(row), ch))
         .toList();
@@ -26,9 +32,13 @@ class BattleRuleRepository {
   }
 
   Future<BattleRule> save(BattleRule battleRule) async {
+    final ownerId = battleRule.owner.id;
+    if (ownerId == null) {
+      throw StateError('BattleRule owner must be saved before insert.');
+    }
     final id = await _database.into(_database.battleRules).insert(
           db.BattleRulesCompanion(
-            ownerId: Value(battleRule.owner.id),
+            ownerId: Value(ownerId),
             priority: Value(battleRule.priority),
             name: Value(battleRule.name),
             conditionUuid: Value(conditionAlwaysId),
@@ -40,11 +50,15 @@ class BattleRuleRepository {
   }
 
   Future<BattleRule> update(BattleRule battleRule) async {
+    final ownerId = battleRule.owner.id;
+    if (ownerId == null) {
+      throw StateError('BattleRule owner must be saved before update.');
+    }
     await (_database.update(_database.battleRules)
           ..where((tbl) => tbl.id.equals(battleRule.id!)))
         .write(
       db.BattleRulesCompanion(
-        ownerId: Value(battleRule.owner.id),
+        ownerId: Value(ownerId),
         priority: Value(battleRule.priority),
         name: Value(battleRule.name),
         conditionUuid: Value(conditionAlwaysId),

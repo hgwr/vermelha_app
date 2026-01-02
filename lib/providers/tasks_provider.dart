@@ -496,6 +496,7 @@ class TasksProvider extends ChangeNotifier {
             'Failed to update character ${actor.id} after item use: $e',
           );
           debugPrintStack(stackTrace: s);
+          return actor;
         }),
       );
     }
