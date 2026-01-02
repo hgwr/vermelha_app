@@ -26,6 +26,25 @@ class TaskWidget extends StatelessWidget {
     }
   }
 
+  Widget taskSubtitle(BuildContext context) {
+    final subtitle = taskStatus(context);
+    if (task.status != TaskStatus.running) {
+      return Text(subtitle);
+    }
+    final progressValue = (task.progress / 100).clamp(0.0, 1.0);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(subtitle),
+        const SizedBox(height: 4),
+        LinearProgressIndicator(
+          value: progressValue,
+          minHeight: 6,
+        ),
+      ],
+    );
+  }
+
   Widget leadingWidget(BuildContext context) {
     Widget icon;
     if (task.subject is PlayerCharacter) {
@@ -102,7 +121,7 @@ class TaskWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final contextL10n = AppLocalizations.of(context)!;
-    final subtitle = taskStatus(context);
+    final subtitle = taskSubtitle(context);
     final leading = leadingWidget(context);
     if (task.subject is PlayerCharacter) {
       final character = task.subject as PlayerCharacter;
@@ -115,7 +134,7 @@ class TaskWidget extends StatelessWidget {
           "${actionLabel(contextL10n, task.action)} → "
           "${task.targets.map((t) => characterLabel(contextL10n, t)).join(', ')}",
         ),
-        subtitle: Text(subtitle),
+        subtitle: subtitle,
       );
     } else {
       final character = task.subject;
@@ -128,7 +147,7 @@ class TaskWidget extends StatelessWidget {
           "${actionLabel(contextL10n, task.action)} → "
           "${task.targets.map((t) => characterLabel(contextL10n, t)).join(', ')}",
         ),
-        subtitle: Text(subtitle),
+        subtitle: subtitle,
       );
     }
   }
