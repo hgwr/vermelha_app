@@ -397,6 +397,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
     TasksProvider tasksProvider,
   ) {
     final enemies = tasksProvider.vermelhaContext.enemies
+        .whereType<Enemy>()
         .where((enemy) => enemy.hp > 0)
         .toList();
     if (enemies.isEmpty) {
@@ -423,8 +424,8 @@ class _DungeonScreenState extends State<DungeonScreen> {
     );
   }
 
-  Widget _buildEnemySlot(AppLocalizations l10n, Character enemy) {
-    final enemyIcon = _enemyIcon(enemy is Enemy ? enemy : null);
+  Widget _buildEnemySlot(AppLocalizations l10n, Enemy enemy) {
+    final enemyIcon = _enemyIcon(enemy);
     final name = characterLabel(l10n, enemy);
     return SizedBox(
       width: 72,
@@ -449,10 +450,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
     );
   }
 
-  Widget _enemyIcon(Enemy? enemy) {
-    if (enemy == null) {
-      return const Icon(Icons.warning_amber_rounded, size: 24);
-    }
+  Widget _enemyIcon(Enemy enemy) {
     switch (enemy.type) {
       case EnemyType.regular:
         return Icon(
