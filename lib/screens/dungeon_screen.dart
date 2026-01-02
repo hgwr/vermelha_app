@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/model_localizations.dart';
+import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/enemy.dart';
 import 'package:vermelha_app/models/item.dart';
 import 'package:vermelha_app/models/job.dart';
@@ -289,11 +290,13 @@ class _DungeonScreenState extends State<DungeonScreen> {
 
   Widget _buildStatusGauge(
     AppLocalizations l10n,
-    PlayerCharacter? member,
-  ) {
-    final icon = member?.job == null
-        ? const Icon(Icons.person_outline, size: 24)
-        : getImageByJob(member!.job!);
+    Character? member, {
+    Widget? iconOverride,
+  }) {
+    final icon = iconOverride ??
+        (member is PlayerCharacter && member.job != null
+            ? getImageByJob(member.job!)
+            : const Icon(Icons.person_outline, size: 24));
     final hpValue =
         member == null || member.maxHp <= 0 ? 0.0 : member.hp / member.maxHp;
     final mpValue =
@@ -387,6 +390,81 @@ class _DungeonScreenState extends State<DungeonScreen> {
         },
       ),
     );
+  }
+
+  Widget _buildEnemyOverview(
+    AppLocalizations l10n,
+    TasksProvider tasksProvider,
+  ) {
+    final enemies = tasksProvider.vermelhaContext.enemies
+        .whereType<Enemy>()
+        .where((enemy) => enemy.hp > 0)
+        .toList();
+    if (enemies.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (var i = 0; i < enemies.length; i += 1) ...[
+                  _buildEnemySlot(l10n, enemies[i]),
+                  if (i != enemies.length - 1) const SizedBox(width: 8),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEnemySlot(AppLocalizations l10n, Enemy enemy) {
+    final enemyIcon = _enemyIcon(enemy);
+    final name = characterLabel(l10n, enemy);
+    return SizedBox(
+      width: 72,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildStatusGauge(
+            l10n,
+            enemy,
+            iconOverride: enemyIcon,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            name,
+            style: const TextStyle(fontSize: 10),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _enemyIcon(Enemy enemy) {
+    switch (enemy.type) {
+      case EnemyType.regular:
+        return Icon(
+          Icons.shield_outlined,
+          size: 24,
+          color: Colors.orange.shade700,
+        );
+      case EnemyType.irregular:
+        return Icon(
+          Icons.auto_awesome_outlined,
+          size: 24,
+          color: Colors.teal.shade600,
+        );
+    }
   }
 
   Widget _buildPartySlot(
@@ -811,6 +889,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
             ),
           ),
           _buildPartyOverview(l10n),
+          _buildEnemyOverview(l10n, tasksProvider),
           Expanded(
             child: _buildTimelineView(l10n),
           ),
