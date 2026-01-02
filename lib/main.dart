@@ -12,10 +12,7 @@ import 'package:vermelha_app/screens/dungeon_select_screen.dart';
 import 'package:vermelha_app/screens/shop_screen.dart';
 import 'package:vermelha_app/screens/edit_battle_rules_screen.dart';
 import 'package:vermelha_app/screens/edit_priority_parameters_screen.dart';
-import 'package:vermelha_app/screens/select_action_screen.dart';
-import 'package:vermelha_app/screens/select_condition_screen.dart';
 import 'package:vermelha_app/screens/select_player_characters_screen.dart';
-import 'package:vermelha_app/screens/select_target_screen.dart';
 import 'package:vermelha_app/screens/tavern_screen.dart';
 import 'package:vermelha_app/screens/title_screen.dart';
 
@@ -111,10 +108,6 @@ class _MyAppState extends State<MyApp> {
               const EditPriorityParametersScreen(),
           EditBattleRulesScreen.routeName: (ctx) =>
               const EditBattleRulesScreen(),
-          SelectConditionScreen.routeName: (ctx) =>
-              const SelectConditionScreen(),
-          SelectActionScreen.routeName: (ctx) => const SelectActionScreen(),
-          SelectTargetScreen.routeName: (ctx) => const SelectTargetScreen(),
           SelectPlayerCharactersScreen.routeName: (ctx) =>
               const SelectPlayerCharactersScreen(),
         },
