@@ -56,7 +56,7 @@ class TitleScreen extends StatelessWidget {
                           );
                         },
                       );
-                      if (confirmed != true) {
+                      if (confirmed != true || !context.mounted) {
                         return;
                       }
                       await Provider.of<GameStateProvider>(context,
