@@ -17,7 +17,7 @@ class Party {
   }
 
   factory Party.fromRoster(List<PlayerCharacter> roster) {
-    final positions = {
+    final positions = <PartyPosition, int?>{
       for (final position in PartyPosition.values) position: null,
     };
     for (final member in roster) {
