@@ -138,6 +138,68 @@ class _DungeonScreenState extends State<DungeonScreen> {
     _isLogAutoScrollEnabled = isNearBottom;
   }
 
+  Widget _buildLogView(AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Consumer<TasksProvider>(
+        builder: (context, taskProvider, _) {
+          final logs = taskProvider.logEntries;
+          if (logs.length != _lastLogCount) {
+            final shouldAutoScroll = _isLogAutoScrollEnabled;
+            _lastLogCount = logs.length;
+            if (shouldAutoScroll) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (!mounted || _isLogScrollControllerDisposed) {
+                  return;
+                }
+                _scrollLogDown();
+              });
+            }
+          }
+          return Card(
+            child: ListView.builder(
+              controller: _logScrollController,
+              padding: const EdgeInsets.all(8),
+              itemCount: logs.length,
+              itemBuilder: (context, index) {
+                final log = logs[index];
+                return Text(
+                  "[${_logTypeLabel(l10n, log.type)}] "
+                  "${_logMessage(l10n, log)}",
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildTaskView() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Consumer<TasksProvider>(
+        builder: (ctx, taskProvider, child) {
+          taskProvider.scrollDownFunc = scrollDown;
+
+          return Card(
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: taskProvider.tasks.length,
+              itemBuilder: (ctx, index) {
+                final task = taskProvider.tasks[index];
+                return TaskWidget(
+                  key: ValueKey(task.uuid.toString()),
+                  task: task,
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   String _logTypeLabel(AppLocalizations l10n, LogType type) {
     switch (type) {
       case LogType.explore:
@@ -500,65 +562,8 @@ class _DungeonScreenState extends State<DungeonScreen> {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Consumer<TasksProvider>(
-                            builder: (context, taskProvider, _) {
-                              final logs = taskProvider.logEntries;
-                              if (logs.length != _lastLogCount) {
-                                final shouldAutoScroll =
-                                    _isLogAutoScrollEnabled;
-                                _lastLogCount = logs.length;
-                                if (shouldAutoScroll) {
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((_) {
-                                    if (!mounted ||
-                                        _isLogScrollControllerDisposed) {
-                                      return;
-                                    }
-                                    _scrollLogDown();
-                                  });
-                                }
-                              }
-                              return Card(
-                                child: ListView.builder(
-                                  controller: _logScrollController,
-                                  padding: const EdgeInsets.all(8),
-                                  itemCount: logs.length,
-                                  itemBuilder: (context, index) {
-                                    final log = logs[index];
-                                    return Text(
-                                      "[${_logTypeLabel(l10n, log.type)}] "
-                                      "${_logMessage(l10n, log)}",
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Consumer<TasksProvider>(
-                            builder: (ctx, taskProvider, child) {
-                              taskProvider.scrollDownFunc = scrollDown;
-
-                              return Card(
-                                child: ListView.builder(
-                                  controller: _scrollController,
-                                  itemCount: taskProvider.tasks.length,
-                                  itemBuilder: (ctx, index) {
-                                    final task = taskProvider.tasks[index];
-                                    return TaskWidget(
-                                      key: ValueKey(task.uuid.toString()),
-                                      task: task,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                        _buildLogView(l10n),
+                        _buildTaskView(),
                       ],
                     ),
                   ),
