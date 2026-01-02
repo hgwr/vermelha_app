@@ -23,6 +23,12 @@ enum Job {
   });
 }
 
+const String _shortSwordId = 'weapon_short_sword';
+const String _battleAxeId = 'weapon_battle_axe';
+const String _longBowId = 'weapon_long_bow';
+const String _leatherArmorId = 'armor_leather';
+const String _chainArmorId = 'armor_chain';
+
 Job getJobById(int id) {
   switch (id) {
     case 1:
@@ -79,8 +85,8 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.defense,
       ],
       equipment: _initialEquipment(
-        weaponId: 'weapon_short_sword',
-        armorId: 'armor_leather',
+        weaponId: _shortSwordId,
+        armorId: _leatherArmorId,
       ),
       battleRules: <BattleRule>[],
     ),
@@ -102,8 +108,8 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.mp,
       ],
       equipment: _initialEquipment(
-        weaponId: 'weapon_battle_axe',
-        armorId: 'armor_chain',
+        weaponId: _battleAxeId,
+        armorId: _chainArmorId,
       ),
       battleRules: <BattleRule>[],
     ),
@@ -125,8 +131,8 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.speed,
       ],
       equipment: _initialEquipment(
-        weaponId: 'weapon_long_bow',
-        armorId: 'armor_leather',
+        weaponId: _longBowId,
+        armorId: _leatherArmorId,
       ),
       battleRules: <BattleRule>[],
     ),
@@ -148,8 +154,8 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.mp,
       ],
       equipment: _initialEquipment(
-        weaponId: 'weapon_short_sword',
-        armorId: 'armor_leather',
+        weaponId: _shortSwordId,
+        armorId: _leatherArmorId,
       ),
       battleRules: <BattleRule>[],
     ),
@@ -171,8 +177,8 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.mp,
       ],
       equipment: _initialEquipment(
-        weaponId: 'weapon_short_sword',
-        armorId: 'armor_leather',
+        weaponId: _shortSwordId,
+        armorId: _leatherArmorId,
       ),
       battleRules: <BattleRule>[],
     ),
@@ -194,8 +200,8 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.mp,
       ],
       equipment: _initialEquipment(
-        weaponId: 'weapon_short_sword',
-        armorId: 'armor_leather',
+        weaponId: _shortSwordId,
+        armorId: _leatherArmorId,
       ),
       battleRules: <BattleRule>[],
     ),
@@ -209,13 +215,25 @@ Map<EquipmentSlot, Item?> _initialEquipment({
   final Map<EquipmentSlot, Item?> equipment = {};
   if (weaponId != null) {
     final weapon = findItemById(weaponId);
+    assert(weapon != null, 'Weapon with id "$weaponId" not found.');
     if (weapon != null) {
+      assert(weapon.type == ItemType.weapon, 'Item "$weaponId" is not a weapon.');
+      assert(
+        weapon.equipmentSlot == EquipmentSlot.rightHand,
+        'Item "$weaponId" cannot be equipped in the right hand.',
+      );
       equipment[EquipmentSlot.rightHand] = weapon;
     }
   }
   if (armorId != null) {
     final armor = findItemById(armorId);
+    assert(armor != null, 'Armor with id "$armorId" not found.');
     if (armor != null) {
+      assert(armor.type == ItemType.armor, 'Item "$armorId" is not an armor.');
+      assert(
+        armor.equipmentSlot == EquipmentSlot.armor,
+        'Item "$armorId" cannot be equipped as armor.',
+      );
       equipment[EquipmentSlot.armor] = armor;
     }
   }
