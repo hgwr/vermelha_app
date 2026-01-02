@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:vermelha_app/db/db_connection.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
+import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/equipment_slot.dart';
 import 'package:vermelha_app/models/item.dart';
 import 'package:vermelha_app/models/item_catalog.dart';
@@ -128,7 +129,7 @@ class CharacterRepository {
           'owner_id': id,
           'priority': battleRule.priority,
           'name': battleRule.name,
-          'condition_uuid': battleRule.condition.uuid,
+          'condition_uuid': conditionAlwaysId,
           'target_uuid': battleRule.target.uuid,
           'action_uuid': battleRule.action.uuid,
         });
@@ -185,7 +186,7 @@ class CharacterRepository {
           'owner_id': character.id,
           'priority': battleRule.priority,
           'name': battleRule.name,
-          'condition_uuid': battleRule.condition.uuid,
+          'condition_uuid': conditionAlwaysId,
           'target_uuid': battleRule.target.uuid,
           'action_uuid': battleRule.action.uuid,
         });

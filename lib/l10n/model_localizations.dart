@@ -168,6 +168,12 @@ String targetLabelByUuid(AppLocalizations l10n, String uuid) {
       return l10n.targetMatchingEnemy;
     case targetSelfId:
       return l10n.targetSelf;
+    case targetAllyHpBelow75Id:
+      return l10n.conditionAllyHpBelow75;
+    case targetAllyHpBelow50Id:
+      return l10n.conditionAllyHpBelow50;
+    case targetAllyHpBelow25Id:
+      return l10n.conditionAllyHpBelow25;
     case targetRandomAllyId:
       return l10n.targetRandomAlly;
     case targetRandomEnemyId:
@@ -220,6 +226,12 @@ String targetLabelByUuid(AppLocalizations l10n, String uuid) {
       return l10n.targetFirstEnemy;
     case targetAttackingEnemyId:
       return l10n.targetAttackingEnemy;
+    case targetEnemyTelegraphId:
+      return l10n.conditionEnemyTelegraph;
+    case targetEnemyIrregularId:
+      return l10n.conditionEnemyIrregularExists;
+    case targetEnemyRegularId:
+      return l10n.conditionEnemyRegularExists;
   }
   return l10n.unknownLabel;
 }

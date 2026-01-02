@@ -1,15 +1,14 @@
 import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/player_character.dart';
-import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/target.dart';
+import 'package:vermelha_app/models/condition.dart';
 
 class BattleRule {
   final int? id;
   final Character owner;
   final int priority;
   final String name;
-  Condition condition;
   Target target;
   Action action;
 
@@ -18,27 +17,23 @@ class BattleRule {
     required this.owner,
     required this.priority,
     required this.name,
-    required this.condition,
     required this.target,
     required this.action,
   });
 
   static BattleRule fromJson(Map<String, dynamic> json, PlayerCharacter owner) {
-    Condition condition = getConditionByUuid(json['condition_uuid']);
     final targetUuid = json['target_uuid'] as String?;
-    Target target = targetUuid == null || targetUuid.isEmpty
-        ? getTargetListByCategory(condition.targetCategory).first
-        : getTargetByUuid(
-            targetUuid,
-            fallbackCategory: condition.targetCategory,
-          );
+    final conditionUuid = json['condition_uuid'] as String?;
+    final target = targetFromLegacyRule(
+      targetUuid: targetUuid,
+      conditionUuid: conditionUuid,
+    );
     Action action = getActionByUuid(json['action_uuid']);
     return BattleRule(
       id: json['id'],
       owner: owner,
       priority: json['priority'],
       name: json['name'],
-      condition: condition,
       target: target,
       action: action,
     );
@@ -50,7 +45,7 @@ class BattleRule {
       'owner_id': owner.id,
       'priority': priority,
       'name': name,
-      'condition_uuid': condition.uuid,
+      'condition_uuid': conditionAlwaysId,
       'target_uuid': target.uuid,
       'action_uuid': action.uuid,
     };
@@ -61,7 +56,6 @@ class BattleRule {
     PlayerCharacter? owner,
     int? priority,
     String? name,
-    Condition? condition,
     Target? target,
     Action? action,
   }) {
@@ -70,7 +64,6 @@ class BattleRule {
       owner: owner ?? this.owner,
       priority: priority ?? this.priority,
       name: name ?? this.name,
-      condition: condition ?? this.condition,
       target: target ?? this.target,
       action: action ?? this.action,
     );

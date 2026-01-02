@@ -8,7 +8,6 @@ import 'package:vermelha_app/l10n/model_localizations.dart';
 import '../providers/characters_provider.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/player_character.dart';
-import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/models/target.dart';
@@ -69,7 +68,6 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
   }
 
   BattleRule createNewBattleRule() {
-    final defaultCondition = getConditionList().first;
     return BattleRule(
       owner: character,
       priority: character.battleRules.map((e) => e.priority).fold<int>(0,
@@ -78,8 +76,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
           }) +
           1,
       name: "",
-      condition: defaultCondition,
-      target: getTargetListByCategory(defaultCondition.targetCategory).first,
+      target: getTargetByUuid(targetFirstEnemyId),
       action: getActionList().first,
     );
   }
@@ -113,36 +110,10 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
     );
   }
 
-  Future<void> _selectCondition(BattleRule battleRule) async {
-    final l10n = AppLocalizations.of(context)!;
-    final selected = await _showPicker<Condition>(
-      options: getConditionList(),
-      selected: battleRule.condition,
-      label: (condition) => conditionLabel(l10n, condition),
-      key: (condition) => condition.uuid,
-    );
-    if (!mounted || selected == null) {
-      return;
-    }
-    setState(() {
-      battleRule.condition = selected;
-      if (selected.targetCategory != TargetCategory.any &&
-          battleRule.target.targetCategory != selected.targetCategory) {
-        battleRule.target =
-            getTargetListByCategory(selected.targetCategory).first;
-      }
-    });
-    saveCharacter();
-  }
-
   Future<void> _selectTarget(BattleRule battleRule) async {
     final l10n = AppLocalizations.of(context)!;
-    final targets =
-        battleRule.condition.targetCategory == TargetCategory.any
-            ? getTargetList()
-            : getTargetListByCategory(battleRule.condition.targetCategory);
     final selected = await _showPicker<Target>(
-      options: targets,
+      options: getSelectableTargetList(),
       selected: battleRule.target,
       label: (target) => targetLabel(l10n, target),
       key: (target) => target.uuid,
@@ -228,11 +199,11 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
               leading: Text(battleRule.priority.toString()),
               title: GestureDetector(
                 onTap: () {
-                  _selectCondition(battleRule);
+                  _selectTarget(battleRule);
                 },
                 child: Row(
                   children: [
-                    Text(conditionLabel(l10n, battleRule.condition)),
+                    Text(targetLabel(l10n, battleRule.target)),
                     const Icon(
                       Icons.arrow_forward_ios,
                       size: 18,
@@ -243,21 +214,6 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      _selectTarget(battleRule);
-                    },
-                    child: Row(
-                      children: [
-                        Text(targetLabel(l10n, battleRule.target)),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 14,
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
                   GestureDetector(
                     onTap: () {
                       _selectAction(battleRule);
@@ -339,11 +295,8 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
             key: ValueKey(battleRule.priority),
             child: ListTile(
                 leading: Text(battleRule.priority.toString()),
-                title: Text(conditionLabel(l10n, battleRule.condition)),
-                subtitle: Text(
-                  "${targetLabel(l10n, battleRule.target)} / "
-                  "${actionLabel(l10n, battleRule.action)}",
-                ),
+                title: Text(targetLabel(l10n, battleRule.target)),
+                subtitle: Text(actionLabel(l10n, battleRule.action)),
                 trailing: const Icon(Icons.drag_handle)),
           );
         }).toList(),

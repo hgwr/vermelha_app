@@ -3,7 +3,6 @@ import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/l10n/model_localizations.dart';
 
 import 'package:vermelha_app/models/battle_rule.dart';
-import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/target.dart';
 
 class SelectConditionScreen extends StatefulWidget {
@@ -39,22 +38,15 @@ class _SelectConditionScreenState extends State<SelectConditionScreen> {
                 key: _formKey,
                 child: ListView(
                   children: [
-                    for (var condition in getConditionList())
+                    for (var target in getSelectableTargetList())
                       ListTile(
-                        key: ValueKey(condition.uuid),
-                        leading: _battleRule!.condition.uuid == condition.uuid
+                        key: ValueKey(target.uuid),
+                        leading: _battleRule!.target.uuid == target.uuid
                             ? const Icon(Icons.check)
                             : null,
-                        title: Text(conditionLabel(l10n, condition)),
+                        title: Text(targetLabel(l10n, target)),
                         onTap: () {
-                          _battleRule!.condition = condition;
-                          if (condition.targetCategory != TargetCategory.any &&
-                              _battleRule!.target.targetCategory !=
-                                  condition.targetCategory) {
-                            _battleRule!.target =
-                                getTargetListByCategory(condition.targetCategory)
-                                    .first;
-                          }
+                          _battleRule!.target = target;
                           Navigator.of(context).pop();
                         },
                       ),

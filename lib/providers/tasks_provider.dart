@@ -594,8 +594,7 @@ class TasksProvider extends ChangeNotifier {
           owner: enemy,
           priority: 1,
           name: "Enemy Rule",
-          condition: getConditionByUuid(conditionRandomAllyId),
-          target: getTargetListByCategory(TargetCategory.ally).first,
+          target: getTargetByUuid(targetRandomAllyId),
           action: getActionByUuid(actionPhysicalAttackId),
         )
       ];
@@ -661,12 +660,9 @@ class TasksProvider extends ChangeNotifier {
   }
 
   List<Character> _candidatesForRule(BattleRule rule) {
-    if (rule.condition.targetCategory == TargetCategory.any) {
-      return rule.target.targetCategory == TargetCategory.ally
-          ? vermelhaContext.allies
-          : vermelhaContext.enemies;
-    }
-    return rule.condition.getTargets(vermelhaContext);
+    return rule.target.targetCategory == TargetCategory.ally
+        ? vermelhaContext.allies
+        : vermelhaContext.enemies;
   }
 
   bool _canExecuteAction(Character actor, Action action) {
