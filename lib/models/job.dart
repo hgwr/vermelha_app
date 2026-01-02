@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
+import 'package:vermelha_app/models/equipment_slot.dart';
+import 'package:vermelha_app/models/item.dart';
+import 'package:vermelha_app/models/item_catalog.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
 
@@ -19,6 +22,12 @@ enum Job {
     required this.name,
   });
 }
+
+const String _shortSwordId = 'weapon_short_sword';
+const String _battleAxeId = 'weapon_battle_axe';
+const String _longBowId = 'weapon_long_bow';
+const String _leatherArmorId = 'armor_leather';
+const String _chainArmorId = 'armor_chain';
 
 Job getJobById(int id) {
   switch (id) {
@@ -75,6 +84,10 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.attack,
         StatusParameter.defense,
       ],
+      equipment: _initialEquipment(
+        weaponId: _shortSwordId,
+        armorId: _leatherArmorId,
+      ),
       battleRules: <BattleRule>[],
     ),
     Job.paladin: PlayerCharacter(
@@ -94,6 +107,10 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.defense,
         StatusParameter.mp,
       ],
+      equipment: _initialEquipment(
+        weaponId: _battleAxeId,
+        armorId: _chainArmorId,
+      ),
       battleRules: <BattleRule>[],
     ),
     Job.ranger: PlayerCharacter(
@@ -113,6 +130,10 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.attack,
         StatusParameter.speed,
       ],
+      equipment: _initialEquipment(
+        weaponId: _longBowId,
+        armorId: _leatherArmorId,
+      ),
       battleRules: <BattleRule>[],
     ),
     Job.wizard: PlayerCharacter(
@@ -132,6 +153,10 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.magicPower,
         StatusParameter.mp,
       ],
+      equipment: _initialEquipment(
+        weaponId: _shortSwordId,
+        armorId: _leatherArmorId,
+      ),
       battleRules: <BattleRule>[],
     ),
     Job.shaman: PlayerCharacter(
@@ -151,6 +176,10 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.magicPower,
         StatusParameter.mp,
       ],
+      equipment: _initialEquipment(
+        weaponId: _shortSwordId,
+        armorId: _leatherArmorId,
+      ),
       battleRules: <BattleRule>[],
     ),
     Job.priest: PlayerCharacter(
@@ -170,7 +199,43 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
         StatusParameter.magicPower,
         StatusParameter.mp,
       ],
+      equipment: _initialEquipment(
+        weaponId: _shortSwordId,
+        armorId: _leatherArmorId,
+      ),
       battleRules: <BattleRule>[],
     ),
   }[job]!;
+}
+
+Map<EquipmentSlot, Item?> _initialEquipment({
+  String? weaponId,
+  String? armorId,
+}) {
+  final Map<EquipmentSlot, Item?> equipment = {};
+  if (weaponId != null) {
+    final weapon = findItemById(weaponId);
+    assert(weapon != null, 'Weapon with id "$weaponId" not found.');
+    if (weapon != null) {
+      assert(weapon.type == ItemType.weapon, 'Item "$weaponId" is not a weapon.');
+      assert(
+        weapon.equipmentSlot == EquipmentSlot.rightHand,
+        'Item "$weaponId" cannot be equipped in the right hand.',
+      );
+      equipment[EquipmentSlot.rightHand] = weapon;
+    }
+  }
+  if (armorId != null) {
+    final armor = findItemById(armorId);
+    assert(armor != null, 'Armor with id "$armorId" not found.');
+    if (armor != null) {
+      assert(armor.type == ItemType.armor, 'Item "$armorId" is not an armor.');
+      assert(
+        armor.equipmentSlot == EquipmentSlot.armor,
+        'Item "$armorId" cannot be equipped as armor.',
+      );
+      equipment[EquipmentSlot.armor] = armor;
+    }
+  }
+  return equipment;
 }
