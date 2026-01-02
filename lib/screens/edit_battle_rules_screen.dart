@@ -2,9 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vermelha_app/screens/select_action_screen.dart';
-import 'package:vermelha_app/screens/select_condition_screen.dart';
-import 'package:vermelha_app/screens/select_target_screen.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/l10n/model_localizations.dart';
 
@@ -87,6 +84,95 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
     );
   }
 
+  Future<T?> _showPicker<T>({
+    required Iterable<T> options,
+    required T selected,
+    required String Function(T) label,
+    required Object Function(T) key,
+  }) {
+    final selectedKey = key(selected);
+    return showModalBottomSheet<T>(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: ListView(
+            children: [
+              for (final option in options)
+                ListTile(
+                  key: ValueKey(key(option)),
+                  leading: key(option) == selectedKey
+                      ? const Icon(Icons.check)
+                      : null,
+                  title: Text(label(option)),
+                  onTap: () => Navigator.of(context).pop(option),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _selectCondition(BattleRule battleRule) async {
+    final l10n = AppLocalizations.of(context)!;
+    final selected = await _showPicker<Condition>(
+      options: getConditionList(),
+      selected: battleRule.condition,
+      label: (condition) => conditionLabel(l10n, condition),
+      key: (condition) => condition.uuid,
+    );
+    if (!mounted || selected == null) {
+      return;
+    }
+    setState(() {
+      battleRule.condition = selected;
+      if (selected.targetCategory != TargetCategory.any &&
+          battleRule.target.targetCategory != selected.targetCategory) {
+        battleRule.target =
+            getTargetListByCategory(selected.targetCategory).first;
+      }
+    });
+    saveCharacter();
+  }
+
+  Future<void> _selectTarget(BattleRule battleRule) async {
+    final l10n = AppLocalizations.of(context)!;
+    final targets =
+        battleRule.condition.targetCategory == TargetCategory.any
+            ? getTargetList()
+            : getTargetListByCategory(battleRule.condition.targetCategory);
+    final selected = await _showPicker<Target>(
+      options: targets,
+      selected: battleRule.target,
+      label: (target) => targetLabel(l10n, target),
+      key: (target) => target.uuid,
+    );
+    if (!mounted || selected == null) {
+      return;
+    }
+    setState(() {
+      battleRule.target = selected;
+    });
+    saveCharacter();
+  }
+
+  Future<void> _selectAction(BattleRule battleRule) async {
+    final l10n = AppLocalizations.of(context)!;
+    final selected = await _showPicker<Action>(
+      options: getActionList(),
+      selected: battleRule.action,
+      label: (action) => actionLabel(l10n, action),
+      key: (action) => action.uuid,
+    );
+    if (!mounted || selected == null) {
+      return;
+    }
+    setState(() {
+      battleRule.action = selected;
+    });
+    saveCharacter();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -142,15 +228,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
               leading: Text(battleRule.priority.toString()),
               title: GestureDetector(
                 onTap: () {
-                  Navigator.of(context)
-                      .pushNamed(
-                        SelectConditionScreen.routeName,
-                        arguments: battleRule,
-                      )
-                      .then((value) {
-                    setState(() {});
-                    saveCharacter();
-                  });
+                  _selectCondition(battleRule);
                 },
                 child: Row(
                   children: [
@@ -167,15 +245,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .pushNamed(
-                            SelectTargetScreen.routeName,
-                            arguments: battleRule,
-                          )
-                          .then((value) {
-                        setState(() {});
-                        saveCharacter();
-                      });
+                      _selectTarget(battleRule);
                     },
                     child: Row(
                       children: [
@@ -190,15 +260,7 @@ class _EditBattleRulesScreenState extends State<EditBattleRulesScreen> {
                   const SizedBox(height: 4),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .pushNamed(
-                            SelectActionScreen.routeName,
-                            arguments: battleRule,
-                          )
-                          .then((value) {
-                        setState(() {});
-                        saveCharacter();
-                      });
+                      _selectAction(battleRule);
                     },
                     child: Row(
                       children: [
