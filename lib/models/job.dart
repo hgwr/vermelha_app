@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/equipment_slot.dart';
 import 'package:vermelha_app/models/item.dart';
 import 'package:vermelha_app/models/item_catalog.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
+import 'package:vermelha_app/models/target.dart';
 
 enum Job {
   fighter(id: 1, name: '戦士'),
@@ -66,7 +68,7 @@ Image getImageByJob(Job job) {
 }
 
 PlayerCharacter getInitializedCharacterByJob(Job job) {
-  return {
+  final character = {
     Job.fighter: PlayerCharacter(
       job: Job.fighter,
       name: '戦士',
@@ -206,6 +208,8 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
       battleRules: <BattleRule>[],
     ),
   }[job]!;
+  character.battleRules = _defaultBattleRulesFor(character);
+  return character;
 }
 
 Map<EquipmentSlot, Item?> _initialEquipment({
@@ -238,4 +242,81 @@ Map<EquipmentSlot, Item?> _initialEquipment({
     }
   }
   return equipment;
+}
+
+BattleRule _buildRule({
+  required PlayerCharacter owner,
+  required int priority,
+  required String targetId,
+  required String actionId,
+}) {
+  return BattleRule(
+    owner: owner,
+    priority: priority,
+    name: '',
+    target: getTargetByUuid(targetId),
+    action: getActionByUuid(actionId),
+  );
+}
+
+class _RuleSpec {
+  final String targetId;
+  final String actionId;
+
+  const _RuleSpec(this.targetId, this.actionId);
+}
+
+final Map<Job, List<_RuleSpec>> _defaultBattleRuleSpecs = {
+  Job.fighter: const [
+    _RuleSpec(targetAllyHpBelow25Id, actionUsePotionId),
+    _RuleSpec(targetLowestHpEnemyId, actionPhysicalAttackId),
+  ],
+  Job.paladin: const [
+    _RuleSpec(targetAllyHpBelow25Id, actionUsePotionId),
+    _RuleSpec(targetAttackingEnemyId, actionPhysicalAttackId),
+    _RuleSpec(targetLowestHpEnemyId, actionPhysicalAttackId),
+  ],
+  Job.ranger: const [
+    _RuleSpec(targetAllyHpBelow25Id, actionUsePotionId),
+    _RuleSpec(targetHighestAttackEnemyId, actionPhysicalAttackId),
+    _RuleSpec(targetLowestHpEnemyId, actionPhysicalAttackId),
+  ],
+  Job.wizard: const [
+    _RuleSpec(targetEnemyTelegraphId, actionAttackMagicId),
+    _RuleSpec(targetLowestHpEnemyId, actionAttackMagicId),
+  ],
+  Job.shaman: const [
+    _RuleSpec(targetAllyHpBelow25Id, actionBigCureId),
+    _RuleSpec(targetAllyHpBelow75Id, actionSmallCureId),
+    _RuleSpec(targetLowestHpEnemyId, actionAttackMagicId),
+  ],
+  Job.priest: const [
+    _RuleSpec(targetAllyHpBelow25Id, actionBigHealId),
+    _RuleSpec(targetAllyHpBelow75Id, actionSmallHealId),
+    _RuleSpec(targetLowestHpEnemyId, actionPhysicalAttackId),
+  ],
+};
+
+List<BattleRule> _defaultBattleRulesFor(PlayerCharacter owner) {
+  final job = owner.job;
+  if (job == null) {
+    return [];
+  }
+  final specs = _defaultBattleRuleSpecs[job];
+  if (specs == null) {
+    return [];
+  }
+  final List<BattleRule> rules = [];
+  for (var i = 0; i < specs.length; i += 1) {
+    final spec = specs[i];
+    rules.add(
+      _buildRule(
+        owner: owner,
+        priority: i + 1,
+        targetId: spec.targetId,
+        actionId: spec.actionId,
+      ),
+    );
+  }
+  return rules;
 }
