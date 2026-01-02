@@ -15,6 +15,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newGame => 'ニューゲーム';
 
   @override
+  String get newGameConfirmTitle => 'ニューゲームを開始しますか？';
+
+  @override
+  String get newGameConfirmBody => '既存のデータは削除され、元に戻せません。';
+
+  @override
   String get loadGame => 'ロードゲーム';
 
   @override
