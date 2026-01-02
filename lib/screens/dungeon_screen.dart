@@ -30,7 +30,9 @@ class _DungeonScreenState extends State<DungeonScreen> {
   static const double _logAutoScrollThreshold = 60;
   final ScrollController _scrollController = ScrollController();
   final ScrollController _logScrollController = ScrollController();
+  late final TasksProvider _taskProvider;
   int _lastLogCount = 0;
+  bool _isTaskScrollControllerDisposed = false;
   bool _isLogScrollControllerDisposed = false;
   bool _isLootDialogOpen = false;
   String? _lastLootId;
@@ -158,6 +160,12 @@ class _DungeonScreenState extends State<DungeonScreen> {
   }
 
   void scrollDown() {
+    if (_isTaskScrollControllerDisposed) {
+      return;
+    }
+    if (!_scrollController.hasClients) {
+      return;
+    }
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 100),
@@ -719,12 +727,17 @@ class _DungeonScreenState extends State<DungeonScreen> {
   @override
   void initState() {
     super.initState();
+    _taskProvider = Provider.of<TasksProvider>(context, listen: false);
     _logScrollController.addListener(_handleLogScroll);
   }
 
   @override
   void dispose() {
+    if (_taskProvider.scrollDownFunc == scrollDown) {
+      _taskProvider.scrollDownFunc = null;
+    }
     _scrollController.dispose();
+    _isTaskScrollControllerDisposed = true;
     _logScrollController.removeListener(_handleLogScroll);
     _logScrollController.dispose();
     _isLogScrollControllerDisposed = true;
