@@ -17,6 +17,7 @@ enum LogMessageId {
   lootGold,
   lootItem,
   campHeal,
+  partyDefeatedReturn,
   returnToCity,
 }
 

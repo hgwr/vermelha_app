@@ -353,6 +353,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get logCampHeal => 'キャンプで全回復した。';
 
   @override
+  String get logPartyDefeatedReturn => '全滅したため街へ帰還し、全回復した。';
+
+  @override
   String get logReturnToCity => '街へ帰還した。';
 
   @override

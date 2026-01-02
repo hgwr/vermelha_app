@@ -736,6 +736,12 @@ abstract class AppLocalizations {
   /// **'キャンプで全回復した。'**
   String get logCampHeal;
 
+  /// Log message for when the party is defeated, returns to the city, and is fully healed.
+  ///
+  /// In ja, this message translates to:
+  /// **'全滅したため街へ帰還し、全回復した。'**
+  String get logPartyDefeatedReturn;
+
   /// No description provided for @logReturnToCity.
   ///
   /// In ja, this message translates to:

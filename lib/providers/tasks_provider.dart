@@ -232,7 +232,7 @@ class TasksProvider extends ChangeNotifier {
   void _handleBattleTick() {
     if (vermelhaContext.allies.isEmpty ||
         vermelhaContext.allies.every((ally) => ally.hp <= 0)) {
-      _handlePartyDefeat();
+      unawaited(_handlePartyDefeat());
       return;
     }
     if (vermelhaContext.enemies.isEmpty ||
@@ -310,8 +310,15 @@ class TasksProvider extends ChangeNotifier {
     _queueLoot(LootSource.battle);
   }
 
-  void _handlePartyDefeat() {
-    addLog(LogType.system, LogMessageId.returnToCity);
+  Future<void> _handlePartyDefeat() async {
+    try {
+      await charactersProvider.healPartyMembers();
+      addLog(LogType.system, LogMessageId.partyDefeatedReturn);
+    } catch (e, s) {
+      debugPrint('Failed to heal party on defeat: $e');
+      debugPrintStack(stackTrace: s);
+      addLog(LogType.system, LogMessageId.returnToCity);
+    }
     resetBattle();
     dungeonProvider?.returnToCity();
   }

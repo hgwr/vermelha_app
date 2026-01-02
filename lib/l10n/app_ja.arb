@@ -166,6 +166,10 @@
     }
   },
   "logCampHeal": "キャンプで全回復した。",
+  "logPartyDefeatedReturn": "全滅したため街へ帰還し、全回復した。",
+  "@logPartyDefeatedReturn": {
+    "description": "Log message for when the party is defeated, returns to the city, and is fully healed."
+  },
   "logReturnToCity": "街へ帰還した。",
   "taskStatusComplete": "完了",
   "taskStatusCanceled": "キャンセル",
