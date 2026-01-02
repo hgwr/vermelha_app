@@ -32,6 +32,7 @@ const String actionSmallCureId = '66adfc55-f97f-4ecb-abbe-aacb4b3bcaa5';
 const String actionDefendId = '7d3b8b26-0c10-4b6c-9ad3-5b6b1a9db861';
 const String actionUsePotionId = 'f3fd6a9f-7e6c-4b52-b3d6-5c2e57c0d3a4';
 const String actionUseEtherId = 'a83f6f60-99b6-4d5d-8b4e-93fa25f6f1c5';
+const int _smallHealAmount = 10;
 
 class Action {
   final String uuid;
@@ -122,20 +123,24 @@ List<Action> getActionList() {
         return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
-        final target = targets.first;
-        var damage = subject.attack - target.defense > 0
-            ? subject.attack - target.defense
-            : 0;
-        damage += context.random.nextInt(10);
-        final multiplier =
-            _damageMultiplier(AttackType.weapon, subject, target);
+        final isTelegraphing = subject is Enemy && subject.isTelegraphing;
         if (subject is Enemy && subject.isTelegraphing) {
           subject.isTelegraphing = false;
-          damage = (damage * 1.5).round();
         }
-        damage = (damage * multiplier).round();
-        damage = _applyDefending(context, target, damage);
-        target.hp -= damage;
+        for (final target in targets) {
+          var damage = subject.attack - target.defense > 0
+              ? subject.attack - target.defense
+              : 0;
+          damage += context.random.nextInt(10);
+          final multiplier =
+              _damageMultiplier(AttackType.weapon, subject, target);
+          if (isTelegraphing) {
+            damage = (damage * 1.5).round();
+          }
+          damage = (damage * multiplier).round();
+          damage = _applyDefending(context, target, damage);
+          target.hp -= damage;
+        }
         return true;
       },
     ),
@@ -150,19 +155,24 @@ List<Action> getActionList() {
         return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
-        final target = targets.first;
-        var damage = subject.magicPower - target.defense > 0
-            ? subject.magicPower - target.defense
-            : 0;
-        damage += context.random.nextInt(10);
-        final multiplier = _damageMultiplier(AttackType.magic, subject, target);
+        final isTelegraphing = subject is Enemy && subject.isTelegraphing;
         if (subject is Enemy && subject.isTelegraphing) {
           subject.isTelegraphing = false;
-          damage = (damage * 1.5).round();
         }
-        damage = (damage * multiplier).round();
-        damage = _applyDefending(context, target, damage);
-        target.hp -= damage;
+        for (final target in targets) {
+          var damage = subject.magicPower - target.defense > 0
+              ? subject.magicPower - target.defense
+              : 0;
+          damage += context.random.nextInt(10);
+          final multiplier =
+              _damageMultiplier(AttackType.magic, subject, target);
+          if (isTelegraphing) {
+            damage = (damage * 1.5).round();
+          }
+          damage = (damage * multiplier).round();
+          damage = _applyDefending(context, target, damage);
+          target.hp -= damage;
+        }
         return true;
       },
     ),
@@ -177,8 +187,9 @@ List<Action> getActionList() {
         return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
-        final target = targets.first;
-        target.hp = target.maxHp;
+        for (final target in targets) {
+          target.hp = target.maxHp;
+        }
         return true;
       },
     ),
@@ -193,8 +204,11 @@ List<Action> getActionList() {
         return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
-        final target = targets.first;
-        target.hp += 10;
+        for (final target in targets) {
+          target.hp = (target.hp + _smallHealAmount)
+              .clamp(0, target.maxHp)
+              .toInt();
+        }
         return true;
       },
     ),
@@ -209,8 +223,9 @@ List<Action> getActionList() {
         return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
-        final target = targets.first;
-        target.hp = target.maxHp;
+        for (final target in targets) {
+          target.hp = target.maxHp;
+        }
         return true;
       },
     ),
@@ -225,8 +240,11 @@ List<Action> getActionList() {
         return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
-        final target = targets.first;
-        target.hp += 10;
+        for (final target in targets) {
+          target.hp = (target.hp + _smallHealAmount)
+              .clamp(0, target.maxHp)
+              .toInt();
+        }
         return true;
       },
     ),
@@ -248,7 +266,9 @@ List<Action> getActionList() {
         return baseDurationSeconds / subject.speed.toDouble();
       },
       applyEffect: (context, subject, targets) async {
-        context.defending.add(subject);
+        for (final target in targets) {
+          context.defending.add(target);
+        }
         return true;
       },
     ),

@@ -527,7 +527,9 @@ class TasksProvider extends ChangeNotifier {
       return;
     }
     final item = actor.inventory.removeAt(index);
-    _applyItemEffects(targets.first, item);
+    for (final target in targets) {
+      _applyItemEffects(target, item);
+    }
   }
 
   void _applyItemEffects(Character target, Item item) {
