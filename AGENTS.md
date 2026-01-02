@@ -21,7 +21,7 @@ Commands:
 - View an issue:
   - gh issue view <id> -R hgwr/vermelha_app
 - Comment and close when done:
-  - gh issue comment <id> -R hgwr/vermelha_app -b "summary..."
+  - gh issue comment <id> -b "summary..."
   - gh issue close <id> -R hgwr/vermelha_app
 
 ## GitHub CLI Text Formatting
