@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/model_localizations.dart';
 import 'package:vermelha_app/models/enemy.dart';
 import 'package:vermelha_app/models/item.dart';
+import 'package:vermelha_app/models/job.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/providers/dungeon_provider.dart';
 import 'package:vermelha_app/providers/game_state_provider.dart';
@@ -16,6 +17,7 @@ import 'package:vermelha_app/screens/city_menu_screen.dart';
 import 'package:vermelha_app/models/log_entry.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/party_position.dart';
+import 'package:vermelha_app/models/task.dart';
 
 class DungeonScreen extends StatefulWidget {
   const DungeonScreen({Key? key}) : super(key: key);
@@ -27,16 +29,15 @@ class DungeonScreen extends StatefulWidget {
 }
 
 class _DungeonScreenState extends State<DungeonScreen> {
-  static const double _logAutoScrollThreshold = 60;
-  final ScrollController _scrollController = ScrollController();
-  final ScrollController _logScrollController = ScrollController();
+  static const double _timelineAutoScrollThreshold = 60;
+  final ScrollController _timelineScrollController = ScrollController();
   late final TasksProvider _taskProvider;
   int _lastLogCount = 0;
-  bool _isTaskScrollControllerDisposed = false;
-  bool _isLogScrollControllerDisposed = false;
+  int _lastRunningTaskCount = 0;
+  bool _isTimelineScrollControllerDisposed = false;
   bool _isLootDialogOpen = false;
   String? _lastLootId;
-  bool _isLogAutoScrollEnabled = true;
+  bool _isTimelineAutoScrollEnabled = true;
 
   _LogActor? _decodeActor(String? raw) {
     if (raw == null || raw.isEmpty) {
@@ -160,93 +161,79 @@ class _DungeonScreenState extends State<DungeonScreen> {
   }
 
   void scrollDown() {
-    if (_isTaskScrollControllerDisposed) {
+    if (_isTimelineScrollControllerDisposed) {
       return;
     }
-    if (!_scrollController.hasClients) {
+    if (!_timelineScrollController.hasClients) {
       return;
     }
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
+    _timelineScrollController.animateTo(
+      _timelineScrollController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 100),
       curve: Curves.easeOut,
     );
   }
 
-  void _scrollLogDown() {
-    if (_isLogScrollControllerDisposed) {
+  void _handleTimelineScroll() {
+    if (_isTimelineScrollControllerDisposed ||
+        !_timelineScrollController.hasClients) {
       return;
     }
-    if (!_logScrollController.hasClients) {
-      return;
-    }
-    _logScrollController.animateTo(
-      _logScrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 120),
-      curve: Curves.easeOut,
-    );
-  }
-
-  void _handleLogScroll() {
-    if (_isLogScrollControllerDisposed || !_logScrollController.hasClients) {
-      return;
-    }
-    final position = _logScrollController.position;
+    final position = _timelineScrollController.position;
     final isNearBottom = position.pixels >=
-        position.maxScrollExtent - _logAutoScrollThreshold;
-    _isLogAutoScrollEnabled = isNearBottom;
+        position.maxScrollExtent - _timelineAutoScrollThreshold;
+    _isTimelineAutoScrollEnabled = isNearBottom;
   }
 
-  Widget _buildLogView(AppLocalizations l10n) {
+  Widget _buildTimelineView(AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Consumer<TasksProvider>(
-        builder: (context, taskProvider, _) {
+      child: Consumer2<TasksProvider, CharactersProvider>(
+        builder: (context, taskProvider, charactersProvider, _) {
+          taskProvider.scrollDownFunc = scrollDown;
+          final partyMembersByName = {
+            for (final member in charactersProvider.partyMembers)
+              member.name: member,
+          };
           final logs = taskProvider.logEntries;
-          if (logs.length != _lastLogCount) {
-            final shouldAutoScroll = _isLogAutoScrollEnabled;
+          final runningTasks = taskProvider.tasks
+              .where((task) => task.status == TaskStatus.running)
+              .toList();
+          if (logs.length != _lastLogCount ||
+              runningTasks.length != _lastRunningTaskCount) {
+            final shouldAutoScroll = _isTimelineAutoScrollEnabled;
             _lastLogCount = logs.length;
+            _lastRunningTaskCount = runningTasks.length;
             if (shouldAutoScroll) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (!mounted || _isLogScrollControllerDisposed) {
+                if (!mounted || _isTimelineScrollControllerDisposed) {
                   return;
                 }
-                _scrollLogDown();
+                scrollDown();
               });
             }
           }
+          final items = [
+            ...logs.map(_TimelineItem.log),
+            ...runningTasks.map(_TimelineItem.task),
+          ];
+          items.sort((a, b) => a.timestamp.compareTo(b.timestamp));
           return Card(
             child: ListView.builder(
-              controller: _logScrollController,
+              controller: _timelineScrollController,
               padding: const EdgeInsets.all(8),
-              itemCount: logs.length,
+              itemCount: items.length,
               itemBuilder: (context, index) {
-                final log = logs[index];
-                return Text(
-                  "[${_logTypeLabel(l10n, log.type)}] "
-                  "${_logMessage(l10n, log)}",
-                );
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildTaskView() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Consumer<TasksProvider>(
-        builder: (ctx, taskProvider, child) {
-          taskProvider.scrollDownFunc = scrollDown;
-
-          return Card(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: taskProvider.tasks.length,
-              itemBuilder: (ctx, index) {
-                final task = taskProvider.tasks[index];
+                final item = items[index];
+                final log = item.log;
+                if (log != null) {
+                  return _buildTimelineLogTile(
+                    l10n,
+                    log,
+                    partyMembersByName,
+                  );
+                }
+                final task = item.task!;
                 return TaskWidget(
                   key: ValueKey(task.uuid.toString()),
                   task: task,
@@ -259,17 +246,168 @@ class _DungeonScreenState extends State<DungeonScreen> {
     );
   }
 
-  String _logTypeLabel(AppLocalizations l10n, LogType type) {
+  Widget _buildTimelineLogTile(
+    AppLocalizations l10n,
+    LogEntry log,
+    Map<String, PlayerCharacter> partyMembersByName,
+  ) {
+    return ListTile(
+      dense: true,
+      visualDensity: VisualDensity.compact,
+      leading: _buildLogLeading(l10n, log, partyMembersByName),
+      title: Text(_logMessage(l10n, log)),
+    );
+  }
+
+  Widget _buildLogLeading(
+    AppLocalizations l10n,
+    LogEntry log,
+    Map<String, PlayerCharacter> partyMembersByName,
+  ) {
+    if (log.messageId == LogMessageId.battleAction) {
+      final subject = _decodeActor(log.data?['subject']);
+      final member = partyMembersByName[subject?.name];
+      if (member != null) {
+        return _buildStatusGauge(l10n, member);
+      }
+    }
+    return Icon(_logTypeIcon(log.type));
+  }
+
+  IconData _logTypeIcon(LogType type) {
     switch (type) {
       case LogType.explore:
-        return l10n.logTypeExplore;
+        return Icons.map;
       case LogType.battle:
-        return l10n.logTypeBattle;
+        return Icons.flash_on;
       case LogType.loot:
-        return l10n.logTypeLoot;
+        return Icons.card_giftcard;
       case LogType.system:
-        return l10n.logTypeSystem;
+        return Icons.info_outline;
     }
+  }
+
+  Widget _buildStatusGauge(
+    AppLocalizations l10n,
+    PlayerCharacter? member,
+  ) {
+    final icon = member?.job == null
+        ? const Icon(Icons.person_outline, size: 24)
+        : getImageByJob(member!.job!);
+    final hpValue =
+        member == null || member.maxHp <= 0 ? 0.0 : member.hp / member.maxHp;
+    final mpValue =
+        member == null || member.maxMp <= 0 ? 0.0 : member.mp / member.maxMp;
+    final hpColor = member == null ? Colors.grey : Colors.red;
+    final mpColor = member == null ? Colors.grey : Colors.blue;
+    return SizedBox(
+      width: 46,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 28,
+            child: icon,
+          ),
+          Row(
+            children: [
+              Text(
+                l10n.hpShort,
+                style: const TextStyle(fontSize: 8),
+              ),
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: hpValue.clamp(0, 1),
+                  backgroundColor: hpColor.withOpacity(0.2),
+                  valueColor: AlwaysStoppedAnimation<Color>(hpColor),
+                  minHeight: 4,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Text(
+                l10n.mpShort,
+                style: const TextStyle(fontSize: 8),
+              ),
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: mpValue.clamp(0, 1),
+                  backgroundColor: mpColor.withOpacity(0.2),
+                  valueColor: AlwaysStoppedAnimation<Color>(mpColor),
+                  minHeight: 4,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPartyOverview(AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Consumer<CharactersProvider>(
+        builder: (context, charactersProvider, _) {
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  for (final position in PartyPosition.values) ...[
+                    Expanded(
+                      child: _buildPartySlot(
+                        l10n,
+                        position,
+                        charactersProvider.memberAt(position),
+                      ),
+                    ),
+                    if (position != PartyPosition.values.last)
+                      const SizedBox(width: 8),
+                  ],
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPartySlot(
+    AppLocalizations l10n,
+    PartyPosition position,
+    PlayerCharacter? member,
+  ) {
+    final name =
+        member == null ? l10n.partySlotEmpty : _memberLabel(l10n, member);
+    final nameStyle = TextStyle(
+      fontSize: 11,
+      color: member == null ? Colors.grey : null,
+    );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          _positionLabel(l10n, position),
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 4),
+        _buildStatusGauge(l10n, member),
+        const SizedBox(height: 4),
+        Text(
+          name,
+          style: nameStyle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
   }
 
   String _logMessage(AppLocalizations l10n, LogEntry entry) {
@@ -365,6 +503,84 @@ class _DungeonScreenState extends State<DungeonScreen> {
     final job = member.job;
     final jobName = job == null ? '' : jobLabel(l10n, job);
     return '$jobName ${member.name}';
+  }
+
+  Future<bool> _showConfirmDialog({
+    required String title,
+    required String body,
+  }) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            final l10n = AppLocalizations.of(context)!;
+            return AlertDialog(
+              title: Text(title),
+              content: Text(body),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(l10n.cancel),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(l10n.confirm),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
+  Future<void> _handleCampPressed() async {
+    final l10n = AppLocalizations.of(context)!;
+    final tasksProvider = Provider.of<TasksProvider>(context, listen: false);
+    final wasRunning = tasksProvider.engineStatus == EngineStatus.running;
+    if (wasRunning) {
+      tasksProvider.pauseEngine();
+    }
+    final confirmed = await _showConfirmDialog(
+      title: l10n.campConfirmTitle,
+      body: l10n.campConfirmBody,
+    );
+    if (!mounted) {
+      return;
+    }
+    if (!confirmed) {
+      if (wasRunning) {
+        tasksProvider.startEngine();
+      }
+      return;
+    }
+    Navigator.of(context).pushNamed(CampScreen.routeName);
+  }
+
+  Future<void> _handleReturnToCityPressed() async {
+    final l10n = AppLocalizations.of(context)!;
+    final tasksProvider = Provider.of<TasksProvider>(context, listen: false);
+    final wasRunning = tasksProvider.engineStatus == EngineStatus.running;
+    if (wasRunning) {
+      tasksProvider.pauseEngine();
+    }
+    final confirmed = await _showConfirmDialog(
+      title: l10n.returnToCityConfirmTitle,
+      body: l10n.returnToCityConfirmBody,
+    );
+    if (!mounted) {
+      return;
+    }
+    if (!confirmed) {
+      if (wasRunning) {
+        tasksProvider.startEngine();
+      }
+      return;
+    }
+    tasksProvider.addLog(LogType.system, LogMessageId.returnToCity);
+    tasksProvider.resetBattle();
+    Provider.of<DungeonProvider>(context, listen: false).returnToCity();
+    Navigator.of(context).popUntil(
+      (route) => route.settings.name == CityMenuScreen.routeName,
+    );
   }
 
   void _maybeHandleLoot(TasksProvider tasksProvider) {
@@ -573,92 +789,16 @@ class _DungeonScreenState extends State<DungeonScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(l10n.floorLabel(activeFloor)),
-                const SizedBox(height: 4),
-                Text(l10n.battleCountProgress(battleCount, battlesToUnlock)),
-              ],
+            child: Text(
+              '${l10n.floorLabel(activeFloor)} / '
+              '${l10n.battleCountProgress(battleCount, battlesToUnlock)}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Consumer<CharactersProvider>(
-              builder: (context, charactersProvider, _) {
-                return Card(
-                  child: Column(
-                    children: [
-                      for (final position in PartyPosition.values) ...[
-                        Builder(
-                          builder: (context) {
-                            final member =
-                                charactersProvider.memberAt(position);
-                            return ListTile(
-                              dense: true,
-                              title: Text(_positionLabel(l10n, position)),
-                              subtitle: Text(
-                                member == null
-                                    ? l10n.partySlotEmpty
-                                    : _memberLabel(l10n, member),
-                              ),
-                              trailing: member == null
-                                  ? null
-                                  : Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          '${l10n.hpShort} '
-                                          '${member.hp}'
-                                          '/'
-                                          '${member.maxHp}',
-                                        ),
-                                        Text(
-                                          '${l10n.mpShort} '
-                                          '${member.mp}'
-                                          '/'
-                                          '${member.maxMp}',
-                                        ),
-                                      ],
-                                    ),
-                            );
-                          },
-                        ),
-                        if (position != PartyPosition.values.last)
-                          const Divider(height: 1),
-                      ],
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
+          _buildPartyOverview(l10n),
           Expanded(
-            child: DefaultTabController(
-              length: 2,
-              child: Column(
-                children: [
-                  TabBar(
-                    labelColor: Theme.of(context).colorScheme.primary,
-                    tabs: [
-                      Tab(text: l10n.dungeonLogTab),
-                      Tab(text: l10n.dungeonTaskTab),
-                    ],
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      children: [
-                        _buildLogView(l10n),
-                        _buildTaskView(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: _buildTimelineView(l10n),
           ),
         ],
       ),
@@ -692,28 +832,14 @@ class _DungeonScreenState extends State<DungeonScreen> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () {
-                    Provider.of<TasksProvider>(context, listen: false)
-                        .pauseEngine();
-                    Navigator.of(context).pushNamed(CampScreen.routeName);
-                  },
+                  onPressed: _handleCampPressed,
                   child: Text(l10n.campButton),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () {
-                    Provider.of<TasksProvider>(context, listen: false)
-                        .addLog(LogType.system, LogMessageId.returnToCity);
-                    Provider.of<TasksProvider>(context, listen: false)
-                        .resetBattle();
-                    Provider.of<DungeonProvider>(context, listen: false)
-                        .returnToCity();
-                    Navigator.of(context).popUntil(
-                      (route) => route.settings.name == CityMenuScreen.routeName,
-                    );
-                  },
+                  onPressed: _handleReturnToCityPressed,
                   child: Text(l10n.returnToCity),
                 ),
               ),
@@ -728,7 +854,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
   void initState() {
     super.initState();
     _taskProvider = Provider.of<TasksProvider>(context, listen: false);
-    _logScrollController.addListener(_handleLogScroll);
+    _timelineScrollController.addListener(_handleTimelineScroll);
   }
 
   @override
@@ -736,11 +862,9 @@ class _DungeonScreenState extends State<DungeonScreen> {
     if (_taskProvider.scrollDownFunc == scrollDown) {
       _taskProvider.scrollDownFunc = null;
     }
-    _scrollController.dispose();
-    _isTaskScrollControllerDisposed = true;
-    _logScrollController.removeListener(_handleLogScroll);
-    _logScrollController.dispose();
-    _isLogScrollControllerDisposed = true;
+    _timelineScrollController.removeListener(_handleTimelineScroll);
+    _timelineScrollController.dispose();
+    _isTimelineScrollControllerDisposed = true;
     super.dispose();
   }
 }
@@ -755,6 +879,22 @@ class _LogActor {
     this.name,
     this.enemyType,
   });
+}
+
+class _TimelineItem {
+  final DateTime timestamp;
+  final LogEntry? log;
+  final Task? task;
+
+  _TimelineItem.log(LogEntry log)
+      : log = log,
+        task = null,
+        timestamp = log.timestamp;
+
+  _TimelineItem.task(Task task)
+      : task = task,
+        log = null,
+        timestamp = task.startedAt;
 }
 
 class _LogActorEffect {

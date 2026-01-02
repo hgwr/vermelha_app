@@ -406,11 +406,35 @@ abstract class AppLocalizations {
   /// **'全回復して戻る'**
   String get campHealButton;
 
+  /// No description provided for @campConfirmTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンプしますか？'**
+  String get campConfirmTitle;
+
+  /// No description provided for @campConfirmBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'探索を一時停止してキャンプへ移動します。'**
+  String get campConfirmBody;
+
   /// No description provided for @returnToCity.
   ///
   /// In ja, this message translates to:
   /// **'街へ戻る'**
   String get returnToCity;
+
+  /// No description provided for @returnToCityConfirmTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'街へ戻りますか？'**
+  String get returnToCityConfirmTitle;
+
+  /// No description provided for @returnToCityConfirmBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'探索を終了して街へ戻ります。'**
+  String get returnToCityConfirmBody;
 
   /// No description provided for @settingsTitle.
   ///
