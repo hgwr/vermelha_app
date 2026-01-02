@@ -259,123 +259,64 @@ BattleRule _buildRule({
   );
 }
 
+class _RuleSpec {
+  final String targetId;
+  final String actionId;
+
+  const _RuleSpec(this.targetId, this.actionId);
+}
+
+final Map<Job, List<_RuleSpec>> _defaultBattleRuleSpecs = {
+  Job.fighter: const [
+    _RuleSpec(targetAllyHpBelow25Id, actionUsePotionId),
+    _RuleSpec(targetLowestHpEnemyId, actionPhysicalAttackId),
+  ],
+  Job.paladin: const [
+    _RuleSpec(targetAllyHpBelow25Id, actionUsePotionId),
+    _RuleSpec(targetAttackingEnemyId, actionPhysicalAttackId),
+    _RuleSpec(targetLowestHpEnemyId, actionPhysicalAttackId),
+  ],
+  Job.ranger: const [
+    _RuleSpec(targetAllyHpBelow25Id, actionUsePotionId),
+    _RuleSpec(targetHighestAttackEnemyId, actionPhysicalAttackId),
+    _RuleSpec(targetLowestHpEnemyId, actionPhysicalAttackId),
+  ],
+  Job.wizard: const [
+    _RuleSpec(targetEnemyTelegraphId, actionAttackMagicId),
+    _RuleSpec(targetLowestHpEnemyId, actionAttackMagicId),
+  ],
+  Job.shaman: const [
+    _RuleSpec(targetAllyHpBelow25Id, actionBigCureId),
+    _RuleSpec(targetAllyHpBelow75Id, actionSmallCureId),
+    _RuleSpec(targetLowestHpEnemyId, actionAttackMagicId),
+  ],
+  Job.priest: const [
+    _RuleSpec(targetAllyHpBelow25Id, actionBigHealId),
+    _RuleSpec(targetAllyHpBelow75Id, actionSmallHealId),
+    _RuleSpec(targetLowestHpEnemyId, actionPhysicalAttackId),
+  ],
+};
+
 List<BattleRule> _defaultBattleRulesFor(PlayerCharacter owner) {
-  switch (owner.job) {
-    case Job.fighter:
-      return [
-        _buildRule(
-          owner: owner,
-          priority: 1,
-          targetId: targetAllyHpBelow25Id,
-          actionId: actionUsePotionId,
-        ),
-        _buildRule(
-          owner: owner,
-          priority: 2,
-          targetId: targetLowestHpEnemyId,
-          actionId: actionPhysicalAttackId,
-        ),
-      ];
-    case Job.paladin:
-      return [
-        _buildRule(
-          owner: owner,
-          priority: 1,
-          targetId: targetAllyHpBelow25Id,
-          actionId: actionUsePotionId,
-        ),
-        _buildRule(
-          owner: owner,
-          priority: 2,
-          targetId: targetAttackingEnemyId,
-          actionId: actionPhysicalAttackId,
-        ),
-        _buildRule(
-          owner: owner,
-          priority: 3,
-          targetId: targetLowestHpEnemyId,
-          actionId: actionPhysicalAttackId,
-        ),
-      ];
-    case Job.ranger:
-      return [
-        _buildRule(
-          owner: owner,
-          priority: 1,
-          targetId: targetAllyHpBelow25Id,
-          actionId: actionUsePotionId,
-        ),
-        _buildRule(
-          owner: owner,
-          priority: 2,
-          targetId: targetHighestAttackEnemyId,
-          actionId: actionPhysicalAttackId,
-        ),
-        _buildRule(
-          owner: owner,
-          priority: 3,
-          targetId: targetLowestHpEnemyId,
-          actionId: actionPhysicalAttackId,
-        ),
-      ];
-    case Job.wizard:
-      return [
-        _buildRule(
-          owner: owner,
-          priority: 1,
-          targetId: targetEnemyTelegraphId,
-          actionId: actionAttackMagicId,
-        ),
-        _buildRule(
-          owner: owner,
-          priority: 2,
-          targetId: targetLowestHpEnemyId,
-          actionId: actionAttackMagicId,
-        ),
-      ];
-    case Job.shaman:
-      return [
-        _buildRule(
-          owner: owner,
-          priority: 1,
-          targetId: targetAllyHpBelow25Id,
-          actionId: actionBigCureId,
-        ),
-        _buildRule(
-          owner: owner,
-          priority: 2,
-          targetId: targetAllyHpBelow75Id,
-          actionId: actionSmallCureId,
-        ),
-        _buildRule(
-          owner: owner,
-          priority: 3,
-          targetId: targetLowestHpEnemyId,
-          actionId: actionAttackMagicId,
-        ),
-      ];
-    case Job.priest:
-      return [
-        _buildRule(
-          owner: owner,
-          priority: 1,
-          targetId: targetAllyHpBelow25Id,
-          actionId: actionBigHealId,
-        ),
-        _buildRule(
-          owner: owner,
-          priority: 2,
-          targetId: targetAllyHpBelow75Id,
-          actionId: actionSmallHealId,
-        ),
-        _buildRule(
-          owner: owner,
-          priority: 3,
-          targetId: targetLowestHpEnemyId,
-          actionId: actionPhysicalAttackId,
-        ),
-      ];
-    default:
-      return [];
+  final job = owner.job;
+  if (job == null) {
+    return [];
   }
+  final specs = _defaultBattleRuleSpecs[job];
+  if (specs == null) {
+    return [];
+  }
+  final List<BattleRule> rules = [];
+  for (var i = 0; i < specs.length; i += 1) {
+    final spec = specs[i];
+    rules.add(
+      _buildRule(
+        owner: owner,
+        priority: i + 1,
+        targetId: spec.targetId,
+        actionId: spec.actionId,
+      ),
+    );
+  }
+  return rules;
 }
