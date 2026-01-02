@@ -29,6 +29,9 @@ class GameStateRepository {
         party: Party.fromRoster(roster),
         gold: 0,
         maxReachedFloor: 1,
+        battleCountOnFloor: 0,
+        battlesToUnlockNextFloor:
+            DungeonState.defaultBattlesToUnlockNextFloor,
         activeDungeon: null,
       );
       await save(state);
@@ -62,6 +65,8 @@ class GameStateRepository {
       party: Party.fromRoster(roster),
       gold: row['gold'] as int? ?? 0,
       maxReachedFloor: row['max_reached_floor'] as int? ?? 1,
+      battleCountOnFloor: battleCount,
+      battlesToUnlockNextFloor: battlesToUnlock,
       activeDungeon: activeDungeon,
     );
   }
@@ -70,16 +75,18 @@ class GameStateRepository {
     final db = await DbConnection().database;
     final activeDungeon = state.activeDungeon;
     final eventLog = activeDungeon?.eventLog ?? const <LogEntry>[];
+    final battleCount = activeDungeon?.battleCountOnFloor ??
+        state.battleCountOnFloor;
+    final battlesToUnlock = activeDungeon?.battlesToUnlockNextFloor ??
+        state.battlesToUnlockNextFloor;
     final data = {
       'id': _singletonId,
       'gold': state.gold,
       'max_reached_floor': state.maxReachedFloor,
       'active_floor': activeDungeon?.floor,
       'seed': activeDungeon?.seed,
-      'battle_count_on_floor': activeDungeon?.battleCountOnFloor ?? 0,
-      'battles_to_unlock_next_floor':
-          activeDungeon?.battlesToUnlockNextFloor ??
-              DungeonState.defaultBattlesToUnlockNextFloor,
+      'battle_count_on_floor': battleCount,
+      'battles_to_unlock_next_floor': battlesToUnlock,
       'event_log': jsonEncode(eventLog.map((entry) => entry.toJson()).toList()),
       'is_paused': (activeDungeon?.isPaused ?? true) ? 1 : 0,
     };

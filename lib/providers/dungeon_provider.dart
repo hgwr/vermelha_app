@@ -21,7 +21,6 @@ class DungeonProvider extends ChangeNotifier {
   void startExploration(int floor) {
     activeFloor = floor;
     seed = _uuid.v4();
-    battleCountOnFloor = 0;
     isPaused = true;
     eventLog = [];
     notifyListeners();
@@ -33,8 +32,8 @@ class DungeonProvider extends ChangeNotifier {
     if (activeDungeon == null) {
       activeFloor = null;
       seed = null;
-      battleCountOnFloor = 0;
-      battlesToUnlockNextFloor = defaultBattlesToUnlockNextFloor;
+      battleCountOnFloor = state.battleCountOnFloor;
+      battlesToUnlockNextFloor = state.battlesToUnlockNextFloor;
       isPaused = true;
       eventLog = [];
     } else {
@@ -82,6 +81,7 @@ class DungeonProvider extends ChangeNotifier {
         activeFloor == maxReachedFloor &&
         battleCountOnFloor >= battlesToUnlockNextFloor) {
       maxReachedFloor = activeFloor! + 1;
+      battleCountOnFloor = 0;
     }
     notifyListeners();
   }
@@ -89,7 +89,6 @@ class DungeonProvider extends ChangeNotifier {
   void returnToCity() {
     activeFloor = null;
     seed = null;
-    battleCountOnFloor = 0;
     isPaused = true;
     eventLog = [];
     notifyListeners();
