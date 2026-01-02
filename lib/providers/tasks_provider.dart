@@ -311,6 +311,7 @@ class TasksProvider extends ChangeNotifier {
   }
 
   void _handleBattleTick() {
+    final now = DateTime.now();
     if (_isPartyDefeated()) {
       unawaited(_handlePartyDefeat());
       return;
@@ -319,8 +320,8 @@ class TasksProvider extends ChangeNotifier {
       _finishBattle();
       return;
     }
-    final progressed = _advanceRunningTasks();
-    final resolved = _resolveCompletedTasks();
+    final progressed = _advanceRunningTasks(now);
+    final resolved = _resolveCompletedTasks(now);
     if (_isPartyDefeated()) {
       unawaited(_handlePartyDefeat());
       return;
@@ -329,7 +330,7 @@ class TasksProvider extends ChangeNotifier {
       _finishBattle();
       return;
     }
-    final started = _startIdleActors();
+    final started = _startIdleActors(now);
     if (progressed || resolved || started) {
       notifyListeners();
     }
@@ -345,7 +346,7 @@ class TasksProvider extends ChangeNotifier {
         vermelhaContext.enemies.every((enemy) => enemy.hp <= 0);
   }
 
-  bool _startIdleActors() {
+  bool _startIdleActors(DateTime now) {
     if (_turnOrder.isEmpty) {
       _buildTurnOrder();
     }
@@ -367,7 +368,7 @@ class TasksProvider extends ChangeNotifier {
       if (targets.isEmpty) {
         continue;
       }
-      _startActionTask(actor, action, targets);
+      _startActionTask(actor, action, targets, now);
       runningSubjects.add(actor);
       started = true;
     }
@@ -378,6 +379,7 @@ class TasksProvider extends ChangeNotifier {
     Character actor,
     Action action,
     List<Character> targets,
+    DateTime now,
   ) {
     final durationSeconds = action.computeDuration(
       action.baseDurationSeconds,
@@ -386,7 +388,6 @@ class TasksProvider extends ChangeNotifier {
       targets,
     );
     final durationMs = max(1, (durationSeconds * 1000).round());
-    final now = DateTime.now();
     final task = Task(
       uuid: _uuid.v4(),
       startedAt: now,
@@ -403,11 +404,10 @@ class TasksProvider extends ChangeNotifier {
     _tasks.add(task);
   }
 
-  bool _advanceRunningTasks() {
+  bool _advanceRunningTasks(DateTime now) {
     if (_tasks.isEmpty) {
       return false;
     }
-    final now = DateTime.now();
     bool updated = false;
     for (final task in _tasks) {
       if (task.status != TaskStatus.running) {
@@ -429,7 +429,7 @@ class TasksProvider extends ChangeNotifier {
     return updated;
   }
 
-  bool _resolveCompletedTasks() {
+  bool _resolveCompletedTasks(DateTime now) {
     final completed = _tasks
         .where(
           (task) =>
@@ -456,24 +456,24 @@ class TasksProvider extends ChangeNotifier {
         continue;
       }
       if (task.subject.hp <= 0) {
-        _cancelTask(task);
+        _cancelTask(task, now);
         resolved = true;
         continue;
       }
-      _resolveTask(task);
+      _resolveTask(task, now);
       resolved = true;
     }
     return resolved;
   }
 
-  void _cancelTask(Task task) {
+  void _cancelTask(Task task, DateTime now) {
     task.status = TaskStatus.canceled;
     task.progress = 0;
-    task.finishedAt = DateTime.now();
+    task.finishedAt = now;
     _tasks.remove(task);
   }
 
-  void _resolveTask(Task task) {
+  void _resolveTask(Task task, DateTime now) {
     final actor = task.subject;
     final action = task.action;
     final targets = task.targets;
@@ -513,7 +513,7 @@ class TasksProvider extends ChangeNotifier {
     task.status = TaskStatus.finished;
     task.progress = 100;
     task.elapsedMs = task.durationMs;
-    task.finishedAt = DateTime.now();
+    task.finishedAt = now;
     _tasks.remove(task);
     _maybeTriggerTelegraphing(actor, task.wasTelegraphing);
     if (scrollDownFunc != null) {
