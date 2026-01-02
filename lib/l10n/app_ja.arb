@@ -1,6 +1,8 @@
 {
   "appTitle": "Vermelha",
   "newGame": "ニューゲーム",
+  "newGameConfirmTitle": "ニューゲームを開始しますか？",
+  "newGameConfirmBody": "既存のデータは削除され、元に戻せません。",
   "loadGame": "ロードゲーム",
   "cityTitle": "街",
   "tavernTitle": "酒場",

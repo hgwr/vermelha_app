@@ -106,6 +106,18 @@ abstract class AppLocalizations {
   /// **'ニューゲーム'**
   String get newGame;
 
+  /// No description provided for @newGameConfirmTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'ニューゲームを開始しますか？'**
+  String get newGameConfirmTitle;
+
+  /// No description provided for @newGameConfirmBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'既存のデータは削除され、元に戻せません。'**
+  String get newGameConfirmBody;
+
   /// No description provided for @loadGame.
   ///
   /// In ja, this message translates to:

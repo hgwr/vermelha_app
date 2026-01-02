@@ -37,6 +37,9 @@ class GameStateProvider extends ChangeNotifier {
   bool get hasActiveDungeon => _dungeonProvider?.isExploring ?? false;
 
   Future<void> startNewGame() async {
+    if (_charactersProvider != null) {
+      await _charactersProvider!.clearAll();
+    }
     gold = 0;
     _dungeonProvider?.reset();
     _loaded = true;

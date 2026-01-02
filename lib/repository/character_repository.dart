@@ -10,6 +10,17 @@ import 'package:vermelha_app/models/player_character.dart';
 import '../models/status_parameter.dart';
 
 class CharacterRepository {
+  Future<void> deleteAll() async {
+    final db = await DbConnection().database;
+    await db.transaction((txn) async {
+      await txn.delete('battle_rule');
+      await txn.delete('status_parameter');
+      await txn.delete('character_inventory');
+      await txn.delete('character_equipment');
+      await txn.delete('character');
+    });
+  }
+
   Future<List<PlayerCharacter>> findAll() async {
     try {
       final db = await DbConnection().database;

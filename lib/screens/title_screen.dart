@@ -35,6 +35,30 @@ class TitleScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text(l10n.newGameConfirmTitle),
+                            content: Text(l10n.newGameConfirmBody),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: Text(l10n.cancel),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: Text(l10n.confirm),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      if (confirmed != true || !context.mounted) {
+                        return;
+                      }
                       await Provider.of<GameStateProvider>(context,
                               listen: false)
                           .startNewGame();

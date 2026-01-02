@@ -110,6 +110,12 @@ class CharactersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> clearAll() async {
+    await _characterRepository.deleteAll();
+    _characters = [];
+    notifyListeners();
+  }
+
   Future<PlayerCharacter> addCharacter(PlayerCharacter character) async {
     final c = await _characterRepository.save(character);
     _characters.add(c);
