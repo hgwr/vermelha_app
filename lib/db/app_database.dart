@@ -10,7 +10,7 @@ part 'app_database.g.dart';
 
 @DriftDatabase(tables: [])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase()
+  AppDatabase._internal()
       : super(
           driftDatabase(
             name: 'vermelha_database',
@@ -27,6 +27,10 @@ class AppDatabase extends _$AppDatabase {
             ),
           ),
         );
+
+  static final AppDatabase _instance = AppDatabase._internal();
+
+  factory AppDatabase() => _instance;
 
   @override
   int get schemaVersion => 1;
