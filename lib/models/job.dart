@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
 import 'package:vermelha_app/models/equipment_slot.dart';
 import 'package:vermelha_app/models/item.dart';
 import 'package:vermelha_app/models/item_catalog.dart';
 import 'package:vermelha_app/models/player_character.dart';
 import 'package:vermelha_app/models/status_parameter.dart';
+import 'package:vermelha_app/models/target.dart';
 
 enum Job {
   fighter(id: 1, name: '戦士'),
@@ -66,7 +68,7 @@ Image getImageByJob(Job job) {
 }
 
 PlayerCharacter getInitializedCharacterByJob(Job job) {
-  return {
+  final character = {
     Job.fighter: PlayerCharacter(
       job: Job.fighter,
       name: '戦士',
@@ -206,6 +208,8 @@ PlayerCharacter getInitializedCharacterByJob(Job job) {
       battleRules: <BattleRule>[],
     ),
   }[job]!;
+  character.battleRules = _defaultBattleRulesFor(character);
+  return character;
 }
 
 Map<EquipmentSlot, Item?> _initialEquipment({
@@ -238,4 +242,140 @@ Map<EquipmentSlot, Item?> _initialEquipment({
     }
   }
   return equipment;
+}
+
+BattleRule _buildRule({
+  required PlayerCharacter owner,
+  required int priority,
+  required String targetId,
+  required String actionId,
+}) {
+  return BattleRule(
+    owner: owner,
+    priority: priority,
+    name: '',
+    target: getTargetByUuid(targetId),
+    action: getActionByUuid(actionId),
+  );
+}
+
+List<BattleRule> _defaultBattleRulesFor(PlayerCharacter owner) {
+  switch (owner.job) {
+    case Job.fighter:
+      return [
+        _buildRule(
+          owner: owner,
+          priority: 1,
+          targetId: targetAllyHpBelow25Id,
+          actionId: actionUsePotionId,
+        ),
+        _buildRule(
+          owner: owner,
+          priority: 2,
+          targetId: targetLowestHpEnemyId,
+          actionId: actionPhysicalAttackId,
+        ),
+      ];
+    case Job.paladin:
+      return [
+        _buildRule(
+          owner: owner,
+          priority: 1,
+          targetId: targetAllyHpBelow25Id,
+          actionId: actionUsePotionId,
+        ),
+        _buildRule(
+          owner: owner,
+          priority: 2,
+          targetId: targetAttackingEnemyId,
+          actionId: actionPhysicalAttackId,
+        ),
+        _buildRule(
+          owner: owner,
+          priority: 3,
+          targetId: targetLowestHpEnemyId,
+          actionId: actionPhysicalAttackId,
+        ),
+      ];
+    case Job.ranger:
+      return [
+        _buildRule(
+          owner: owner,
+          priority: 1,
+          targetId: targetAllyHpBelow25Id,
+          actionId: actionUsePotionId,
+        ),
+        _buildRule(
+          owner: owner,
+          priority: 2,
+          targetId: targetHighestAttackEnemyId,
+          actionId: actionPhysicalAttackId,
+        ),
+        _buildRule(
+          owner: owner,
+          priority: 3,
+          targetId: targetLowestHpEnemyId,
+          actionId: actionPhysicalAttackId,
+        ),
+      ];
+    case Job.wizard:
+      return [
+        _buildRule(
+          owner: owner,
+          priority: 1,
+          targetId: targetEnemyTelegraphId,
+          actionId: actionAttackMagicId,
+        ),
+        _buildRule(
+          owner: owner,
+          priority: 2,
+          targetId: targetLowestHpEnemyId,
+          actionId: actionAttackMagicId,
+        ),
+      ];
+    case Job.shaman:
+      return [
+        _buildRule(
+          owner: owner,
+          priority: 1,
+          targetId: targetAllyHpBelow25Id,
+          actionId: actionBigCureId,
+        ),
+        _buildRule(
+          owner: owner,
+          priority: 2,
+          targetId: targetAllyHpBelow75Id,
+          actionId: actionSmallCureId,
+        ),
+        _buildRule(
+          owner: owner,
+          priority: 3,
+          targetId: targetLowestHpEnemyId,
+          actionId: actionAttackMagicId,
+        ),
+      ];
+    case Job.priest:
+      return [
+        _buildRule(
+          owner: owner,
+          priority: 1,
+          targetId: targetAllyHpBelow25Id,
+          actionId: actionBigHealId,
+        ),
+        _buildRule(
+          owner: owner,
+          priority: 2,
+          targetId: targetAllyHpBelow75Id,
+          actionId: actionSmallHealId,
+        ),
+        _buildRule(
+          owner: owner,
+          priority: 3,
+          targetId: targetLowestHpEnemyId,
+          actionId: actionPhysicalAttackId,
+        ),
+      ];
+    default:
+      return [];
+  }
 }
