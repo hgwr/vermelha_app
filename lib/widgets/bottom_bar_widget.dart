@@ -22,15 +22,15 @@ class BottomBarWidget extends StatelessWidget {
       },
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.sports_esports),
+          icon: const Icon(Icons.sports_esports),
           label: l10n.dungeonTitle,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.people),
+          icon: const Icon(Icons.people),
           label: l10n.partyTitle,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
+          icon: const Icon(Icons.settings),
           label: l10n.settingsTitle,
         ),
       ],

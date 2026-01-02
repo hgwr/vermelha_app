@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:vermelha_app/models/action.dart';
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/vermelha_context.dart';

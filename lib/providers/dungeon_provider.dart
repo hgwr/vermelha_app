@@ -6,7 +6,7 @@ import 'package:vermelha_app/models/log_entry.dart';
 
 class DungeonProvider extends ChangeNotifier {
   static const int defaultBattlesToUnlockNextFloor = 3;
-  static final Uuid _uuid = Uuid();
+  static const Uuid _uuid = Uuid();
 
   int maxReachedFloor = 1;
   int? activeFloor;

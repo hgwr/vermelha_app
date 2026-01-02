@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/enemy.dart';

@@ -325,7 +325,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
                 Expanded(
                   child: Text(l10n.battleRulesLabel),
                 ),
-                Icon(Icons.arrow_forward_ios)
+                const Icon(Icons.arrow_forward_ios)
               ],
             ),
           ),

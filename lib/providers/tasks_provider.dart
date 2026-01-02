@@ -30,9 +30,9 @@ enum EngineStatus {
 typedef ScrollDownFunc = void Function();
 
 class TasksProvider extends ChangeNotifier {
-  static final Uuid _uuid = Uuid();
+  static const Uuid _uuid = Uuid();
   static final List<_EnemyProfile> _enemyProfiles = [
-    _EnemyProfile(
+    const _EnemyProfile(
       id: 'goblin',
       type: EnemyType.regular,
       hp: _EnemyStatScale(base: 90, perFloor: 18, variance: 8),
@@ -42,7 +42,7 @@ class TasksProvider extends ChangeNotifier {
       magicPower: _EnemyStatScale(base: 5, perFloor: 1, variance: 1),
       speed: _EnemyStatScale(base: 9, perFloor: 1, variance: 1),
     ),
-    _EnemyProfile(
+    const _EnemyProfile(
       id: 'skeleton',
       type: EnemyType.regular,
       hp: _EnemyStatScale(base: 100, perFloor: 20, variance: 8),
@@ -52,7 +52,7 @@ class TasksProvider extends ChangeNotifier {
       magicPower: _EnemyStatScale(base: 5, perFloor: 1, variance: 1),
       speed: _EnemyStatScale(base: 8, perFloor: 1, variance: 1),
     ),
-    _EnemyProfile(
+    const _EnemyProfile(
       id: 'orc',
       type: EnemyType.regular,
       hp: _EnemyStatScale(base: 120, perFloor: 22, variance: 9),
@@ -62,7 +62,7 @@ class TasksProvider extends ChangeNotifier {
       magicPower: _EnemyStatScale(base: 4, perFloor: 1, variance: 1),
       speed: _EnemyStatScale(base: 7, perFloor: 1, variance: 1),
     ),
-    _EnemyProfile(
+    const _EnemyProfile(
       id: 'slime',
       type: EnemyType.irregular,
       hp: _EnemyStatScale(base: 80, perFloor: 16, variance: 7),
@@ -72,7 +72,7 @@ class TasksProvider extends ChangeNotifier {
       magicPower: _EnemyStatScale(base: 10, perFloor: 4, variance: 2),
       speed: _EnemyStatScale(base: 9, perFloor: 1, variance: 1),
     ),
-    _EnemyProfile(
+    const _EnemyProfile(
       id: 'wisp',
       type: EnemyType.irregular,
       hp: _EnemyStatScale(base: 70, perFloor: 14, variance: 6),
@@ -82,7 +82,7 @@ class TasksProvider extends ChangeNotifier {
       magicPower: _EnemyStatScale(base: 13, perFloor: 5, variance: 3),
       speed: _EnemyStatScale(base: 11, perFloor: 2, variance: 1),
     ),
-    _EnemyProfile(
+    const _EnemyProfile(
       id: 'ghost',
       type: EnemyType.irregular,
       hp: _EnemyStatScale(base: 90, perFloor: 18, variance: 7),
@@ -291,7 +291,7 @@ class TasksProvider extends ChangeNotifier {
   }
 
   void _scheduleNextExplore() {
-    final range = _exploreMaxDelayMs - _exploreMinDelayMs;
+    const range = _exploreMaxDelayMs - _exploreMinDelayMs;
     final offset = range <= 0 ? 0 : vermelhaContext.random.nextInt(range + 1);
     _nextExploreAt = DateTime.now().add(
       Duration(milliseconds: _exploreMinDelayMs + offset),

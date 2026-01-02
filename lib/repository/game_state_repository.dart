@@ -11,7 +11,7 @@ import 'package:vermelha_app/models/player_character.dart';
 
 class GameStateRepository {
   static const int _singletonId = 1;
-  static final Uuid _uuid = Uuid();
+  static const Uuid _uuid = Uuid();
 
   Future<GameState> load({
     List<PlayerCharacter> roster = const [],

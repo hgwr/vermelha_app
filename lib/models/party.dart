@@ -7,7 +7,7 @@ class Party {
   const Party({required this.positions});
 
   factory Party.empty() {
-    return Party(
+    return const Party(
       positions: {
         PartyPosition.forward: null,
         PartyPosition.middle: null,
