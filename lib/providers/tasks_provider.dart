@@ -35,62 +35,62 @@ class TasksProvider extends ChangeNotifier {
     _EnemyProfile(
       id: 'goblin',
       type: EnemyType.regular,
-      baseHp: 90,
-      baseMp: 20,
-      baseAttack: 10,
-      baseDefense: 7,
-      baseMagicPower: 5,
-      baseSpeed: 9,
+      hp: _EnemyStatScale(base: 90, perFloor: 18, variance: 8),
+      mp: _EnemyStatScale(base: 20, perFloor: 4, variance: 3),
+      attack: _EnemyStatScale(base: 10, perFloor: 3, variance: 2),
+      defense: _EnemyStatScale(base: 7, perFloor: 2, variance: 2),
+      magicPower: _EnemyStatScale(base: 5, perFloor: 1, variance: 1),
+      speed: _EnemyStatScale(base: 9, perFloor: 1, variance: 1),
     ),
     _EnemyProfile(
       id: 'skeleton',
       type: EnemyType.regular,
-      baseHp: 100,
-      baseMp: 20,
-      baseAttack: 11,
-      baseDefense: 9,
-      baseMagicPower: 5,
-      baseSpeed: 8,
+      hp: _EnemyStatScale(base: 100, perFloor: 20, variance: 8),
+      mp: _EnemyStatScale(base: 20, perFloor: 4, variance: 3),
+      attack: _EnemyStatScale(base: 11, perFloor: 3, variance: 2),
+      defense: _EnemyStatScale(base: 9, perFloor: 3, variance: 2),
+      magicPower: _EnemyStatScale(base: 5, perFloor: 1, variance: 1),
+      speed: _EnemyStatScale(base: 8, perFloor: 1, variance: 1),
     ),
     _EnemyProfile(
       id: 'orc',
       type: EnemyType.regular,
-      baseHp: 120,
-      baseMp: 20,
-      baseAttack: 13,
-      baseDefense: 10,
-      baseMagicPower: 4,
-      baseSpeed: 7,
+      hp: _EnemyStatScale(base: 120, perFloor: 22, variance: 9),
+      mp: _EnemyStatScale(base: 20, perFloor: 3, variance: 3),
+      attack: _EnemyStatScale(base: 13, perFloor: 4, variance: 2),
+      defense: _EnemyStatScale(base: 10, perFloor: 3, variance: 2),
+      magicPower: _EnemyStatScale(base: 4, perFloor: 1, variance: 1),
+      speed: _EnemyStatScale(base: 7, perFloor: 1, variance: 1),
     ),
     _EnemyProfile(
       id: 'slime',
       type: EnemyType.irregular,
-      baseHp: 80,
-      baseMp: 40,
-      baseAttack: 8,
-      baseDefense: 6,
-      baseMagicPower: 10,
-      baseSpeed: 9,
+      hp: _EnemyStatScale(base: 80, perFloor: 16, variance: 7),
+      mp: _EnemyStatScale(base: 40, perFloor: 6, variance: 4),
+      attack: _EnemyStatScale(base: 8, perFloor: 2, variance: 2),
+      defense: _EnemyStatScale(base: 6, perFloor: 2, variance: 2),
+      magicPower: _EnemyStatScale(base: 10, perFloor: 4, variance: 2),
+      speed: _EnemyStatScale(base: 9, perFloor: 1, variance: 1),
     ),
     _EnemyProfile(
       id: 'wisp',
       type: EnemyType.irregular,
-      baseHp: 70,
-      baseMp: 60,
-      baseAttack: 7,
-      baseDefense: 5,
-      baseMagicPower: 13,
-      baseSpeed: 11,
+      hp: _EnemyStatScale(base: 70, perFloor: 14, variance: 6),
+      mp: _EnemyStatScale(base: 60, perFloor: 8, variance: 4),
+      attack: _EnemyStatScale(base: 7, perFloor: 2, variance: 2),
+      defense: _EnemyStatScale(base: 5, perFloor: 1, variance: 1),
+      magicPower: _EnemyStatScale(base: 13, perFloor: 5, variance: 3),
+      speed: _EnemyStatScale(base: 11, perFloor: 2, variance: 1),
     ),
     _EnemyProfile(
       id: 'ghost',
       type: EnemyType.irregular,
-      baseHp: 90,
-      baseMp: 50,
-      baseAttack: 9,
-      baseDefense: 7,
-      baseMagicPower: 12,
-      baseSpeed: 10,
+      hp: _EnemyStatScale(base: 90, perFloor: 18, variance: 7),
+      mp: _EnemyStatScale(base: 50, perFloor: 7, variance: 4),
+      attack: _EnemyStatScale(base: 9, perFloor: 3, variance: 2),
+      defense: _EnemyStatScale(base: 7, perFloor: 2, variance: 2),
+      magicPower: _EnemyStatScale(base: 12, perFloor: 4, variance: 2),
+      speed: _EnemyStatScale(base: 10, perFloor: 1, variance: 1),
     ),
   ];
   CharactersProvider charactersProvider;
@@ -528,13 +528,13 @@ class TasksProvider extends ChangeNotifier {
     );
   }
 
-  int _scaleStat(int base, int floor, int perFloor, int variance) {
-    final scaled = base + (floor - 1) * perFloor;
-    if (variance <= 0) {
+  int _scaleStat(_EnemyStatScale scale, int floor) {
+    final scaled = scale.base + (floor - 1) * scale.perFloor;
+    if (scale.variance <= 0) {
       return max(1, scaled);
     }
-    final spread = variance * 2 + 1;
-    final offset = vermelhaContext.random.nextInt(spread) - variance;
+    final spread = scale.variance * 2 + 1;
+    final offset = vermelhaContext.random.nextInt(spread) - scale.variance;
     return max(1, scaled + offset);
   }
 
@@ -552,25 +552,25 @@ class TasksProvider extends ChangeNotifier {
     for (var i = 0; i < count; i += 1) {
       final profile =
           _enemyProfiles[vermelhaContext.random.nextInt(_enemyProfiles.length)];
+      final maxHp = _scaleStat(profile.hp, floor);
+      final maxMp = _scaleStat(profile.mp, floor);
       final enemy = Enemy(
         type: profile.type,
         isTelegraphing: false,
         uuid: _uuid.v4(),
         name: profile.id,
         level: floor,
-        maxHp: _scaleStat(profile.baseHp, floor, 20, 8),
-        hp: 0,
-        maxMp: _scaleStat(profile.baseMp, floor, 6, 4),
-        mp: 0,
-        attack: _scaleStat(profile.baseAttack, floor, 3, 2),
-        defense: _scaleStat(profile.baseDefense, floor, 2, 2),
-        magicPower: _scaleStat(profile.baseMagicPower, floor, 3, 2),
-        speed: _scaleStat(profile.baseSpeed, floor, 1, 1),
+        maxHp: maxHp,
+        hp: maxHp,
+        maxMp: maxMp,
+        mp: maxMp,
+        attack: _scaleStat(profile.attack, floor),
+        defense: _scaleStat(profile.defense, floor),
+        magicPower: _scaleStat(profile.magicPower, floor),
+        speed: _scaleStat(profile.speed, floor),
         priorityParameters: <StatusParameter>[],
         battleRules: <BattleRule>[],
       );
-      enemy.hp = enemy.maxHp;
-      enemy.mp = enemy.maxMp;
       enemy.battleRules = [
         BattleRule(
           owner: enemy,
@@ -862,21 +862,33 @@ class PendingLoot {
 class _EnemyProfile {
   final String id;
   final EnemyType type;
-  final int baseHp;
-  final int baseMp;
-  final int baseAttack;
-  final int baseDefense;
-  final int baseMagicPower;
-  final int baseSpeed;
+  final _EnemyStatScale hp;
+  final _EnemyStatScale mp;
+  final _EnemyStatScale attack;
+  final _EnemyStatScale defense;
+  final _EnemyStatScale magicPower;
+  final _EnemyStatScale speed;
 
   const _EnemyProfile({
     required this.id,
     required this.type,
-    required this.baseHp,
-    required this.baseMp,
-    required this.baseAttack,
-    required this.baseDefense,
-    required this.baseMagicPower,
-    required this.baseSpeed,
+    required this.hp,
+    required this.mp,
+    required this.attack,
+    required this.defense,
+    required this.magicPower,
+    required this.speed,
+  });
+}
+
+class _EnemyStatScale {
+  final int base;
+  final int perFloor;
+  final int variance;
+
+  const _EnemyStatScale({
+    required this.base,
+    required this.perFloor,
+    required this.variance,
   });
 }
