@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
@@ -19,6 +21,10 @@ class ShopScreen extends StatefulWidget {
 
 class _ShopScreenState extends State<ShopScreen>
     with SingleTickerProviderStateMixin {
+  static const double _sellerRowHeight = 56.0;
+  static const double _sellerListExtraHeight = 8.0;
+  static const double _sellerListMaxHeight = 200.0;
+
   PlayerCharacter? _selectedSeller;
 
   @override
@@ -121,33 +127,49 @@ class _ShopScreenState extends State<ShopScreen>
           (c) => c.id == _selectedSeller?.id,
           orElse: () => charactersProvider.characters.first,
         );
+    final members = charactersProvider.characters;
+    final listHeight = min(
+      _sellerRowHeight * members.length + _sellerListExtraHeight,
+      _sellerListMaxHeight,
+    );
 
     final inventory = currentSeller.inventory;
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-          child: Row(
-            children: [
-              Text(l10n.shopSelectCharacter),
-              const SizedBox(width: 8),
-              DropdownButton<PlayerCharacter>(
-                value: currentSeller,
-                items: charactersProvider.characters
-                    .map(
-                      (character) => DropdownMenuItem<PlayerCharacter>(
-                        value: character,
-                        child: Text(character.name),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (character) {
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(l10n.shopSelectCharacter),
+          ),
+        ),
+        SizedBox(
+          height: listHeight,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            itemCount: members.length,
+            separatorBuilder: (_, __) => const Divider(height: 1),
+            itemBuilder: (context, index) {
+              final character = members[index];
+              final isSelected = character.id == currentSeller.id;
+              return ListTile(
+                dense: true,
+                selected: isSelected,
+                title: Text(character.name),
+                subtitle: Text(
+                  l10n.inventoryCapacityLabel(
+                    character.inventory.length,
+                    character.inventoryCapacity,
+                  ),
+                ),
+                trailing: isSelected ? const Icon(Icons.check) : null,
+                onTap: () {
                   setState(() {
                     _selectedSeller = character;
                   });
                 },
-              ),
-            ],
+              );
+            },
           ),
         ),
         Expanded(
