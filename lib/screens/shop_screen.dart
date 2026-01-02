@@ -21,6 +21,10 @@ class ShopScreen extends StatefulWidget {
 
 class _ShopScreenState extends State<ShopScreen>
     with SingleTickerProviderStateMixin {
+  static const double _sellerRowHeight = 56.0;
+  static const double _sellerListExtraHeight = 8.0;
+  static const double _sellerListMaxHeight = 200.0;
+
   PlayerCharacter? _selectedSeller;
 
   @override
@@ -124,7 +128,10 @@ class _ShopScreenState extends State<ShopScreen>
           orElse: () => charactersProvider.characters.first,
         );
     final members = charactersProvider.characters;
-    final listHeight = min(56.0 * members.length + 8.0, 200.0);
+    final listHeight = min(
+      _sellerRowHeight * members.length + _sellerListExtraHeight,
+      _sellerListMaxHeight,
+    );
 
     final inventory = currentSeller.inventory;
     return Column(
