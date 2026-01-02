@@ -29,12 +29,14 @@ class DungeonScreen extends StatefulWidget {
 class _DungeonScreenState extends State<DungeonScreen> {
   static const int _logPanelFlex = 3;
   static const int _taskPanelFlex = 1;
+  static const double _logAutoScrollThreshold = 24;
   final ScrollController _scrollController = ScrollController();
   final ScrollController _logScrollController = ScrollController();
   int _lastLogCount = 0;
   bool _isLogScrollControllerDisposed = false;
   bool _isLootDialogOpen = false;
   String? _lastLootId;
+  bool _isLogAutoScrollEnabled = true;
 
   _LogActor? _decodeActor(String? raw) {
     if (raw == null || raw.isEmpty) {
@@ -126,6 +128,16 @@ class _DungeonScreenState extends State<DungeonScreen> {
       duration: const Duration(milliseconds: 120),
       curve: Curves.easeOut,
     );
+  }
+
+  void _handleLogScroll() {
+    if (_isLogScrollControllerDisposed || !_logScrollController.hasClients) {
+      return;
+    }
+    final position = _logScrollController.position;
+    final isNearBottom = position.pixels >=
+        position.maxScrollExtent - _logAutoScrollThreshold;
+    _isLogAutoScrollEnabled = isNearBottom;
   }
 
   String _logTypeLabel(AppLocalizations l10n, LogType type) {
@@ -483,13 +495,16 @@ class _DungeonScreenState extends State<DungeonScreen> {
                 builder: (context, taskProvider, _) {
                   final logs = taskProvider.logEntries;
                   if (logs.length != _lastLogCount) {
+                    final shouldAutoScroll = _isLogAutoScrollEnabled;
                     _lastLogCount = logs.length;
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (!mounted || _isLogScrollControllerDisposed) {
-                        return;
-                      }
-                      _scrollLogDown();
-                    });
+                    if (shouldAutoScroll) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (!mounted || _isLogScrollControllerDisposed) {
+                          return;
+                        }
+                        _scrollLogDown();
+                      });
+                    }
                   }
                   return Card(
                     child: ListView.builder(
@@ -594,6 +609,12 @@ class _DungeonScreenState extends State<DungeonScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _logScrollController.addListener(_handleLogScroll);
   }
 
   @override
