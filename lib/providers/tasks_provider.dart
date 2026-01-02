@@ -341,13 +341,26 @@ class TasksProvider extends ChangeNotifier {
     final actor = task.subject;
     final action = task.action;
     final targets = task.targets;
+    final battleSnapshots = _snapshotPlayerStats([actor, ...targets]);
     action.applyEffect(
       vermelhaContext,
       actor,
       targets,
     );
     _registerAttackers(actor, targets);
-    _consumeActionCost(actor, action, targets);
+    final usedItem = _consumeActionCost(actor, action, targets);
+    if (usedItem && actor is PlayerCharacter && actor.id != null) {
+      battleSnapshots.remove(actor.id);
+      unawaited(
+        charactersProvider.updateCharacter(actor).catchError((e, s) {
+          debugPrint(
+            'Failed to update character ${actor.id} after item use: $e',
+          );
+          debugPrintStack(stackTrace: s);
+        }),
+      );
+    }
+    _persistBattleChanges(battleSnapshots);
     addActionLog(actor, action, targets);
     task.status = TaskStatus.finished;
     task.progress = 100;
@@ -584,38 +597,41 @@ class TasksProvider extends ChangeNotifier {
     return actor.inventory.any((item) => item.id == itemId);
   }
 
-  void _consumeActionCost(
+  bool _consumeActionCost(
     Character actor,
     Action action,
     List<Character> targets,
   ) {
+    bool usedItem = false;
     if (action.mpCost > 0) {
       actor.mp = max(0, actor.mp - action.mpCost);
     }
     if (action.uuid == actionUsePotionId) {
-      _consumeItem(actor, 'consumable_potion', targets);
+      usedItem = _consumeItem(actor, 'consumable_potion', targets) || usedItem;
     }
     if (action.uuid == actionUseEtherId) {
-      _consumeItem(actor, 'consumable_ether', targets);
+      usedItem = _consumeItem(actor, 'consumable_ether', targets) || usedItem;
     }
+    return usedItem;
   }
 
-  void _consumeItem(
+  bool _consumeItem(
     Character actor,
     String itemId,
     List<Character> targets,
   ) {
     if (actor is! PlayerCharacter || targets.isEmpty) {
-      return;
+      return false;
     }
     final index = actor.inventory.indexWhere((item) => item.id == itemId);
     if (index < 0) {
-      return;
+      return false;
     }
     final item = actor.inventory.removeAt(index);
     for (final target in targets) {
       _applyItemEffects(target, item);
     }
+    return true;
   }
 
   void _applyItemEffects(Character target, Item item) {
@@ -652,6 +668,40 @@ class TasksProvider extends ChangeNotifier {
     for (final target in targets) {
       vermelhaContext.lastAttackers[target] = actor;
     }
+  }
+
+  Map<int, BattleStatSnapshot> _snapshotPlayerStats(
+    Iterable<Character> participants,
+  ) {
+    final Map<int, BattleStatSnapshot> snapshots = {};
+    for (final participant in participants) {
+      if (participant is! PlayerCharacter) {
+        continue;
+      }
+      final id = participant.id;
+      if (id == null) {
+        continue;
+      }
+      snapshots[id] = BattleStatSnapshot(
+        hp: participant.hp,
+        mp: participant.mp,
+      );
+    }
+    return snapshots;
+  }
+
+  void _persistBattleChanges(
+    Map<int, BattleStatSnapshot> snapshots,
+  ) {
+    if (snapshots.isEmpty) {
+      return;
+    }
+    unawaited(
+      charactersProvider.persistBattleChanges(snapshots).catchError((e, s) {
+        debugPrint('Failed to persist battle changes: $e');
+        debugPrintStack(stackTrace: s);
+      }),
+    );
   }
 
   Map<String, String> _serializeActor(Character actor) {

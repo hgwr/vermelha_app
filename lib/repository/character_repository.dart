@@ -211,6 +211,51 @@ class CharacterRepository {
     return updatedCharacter;
   }
 
+  Future<void> updateVitals(PlayerCharacter character) async {
+    try {
+      final db = await DbConnection().database;
+      await db.update(
+        'character',
+        {
+          'hp': character.hp,
+          'mp': character.mp,
+        },
+        where: 'id = ?',
+        whereArgs: [character.id],
+      );
+    } catch (e, s) {
+      debugPrint('Failed to update vitals for character ${character.id}: $e');
+      debugPrintStack(stackTrace: s);
+    }
+  }
+
+  Future<bool> updateVitalsBatch(List<PlayerCharacter> characters) async {
+    if (characters.isEmpty) {
+      return true;
+    }
+    try {
+      final db = await DbConnection().database;
+      await db.transaction((txn) async {
+        for (final character in characters) {
+          await txn.update(
+            'character',
+            {
+              'hp': character.hp,
+              'mp': character.mp,
+            },
+            where: 'id = ?',
+            whereArgs: [character.id],
+          );
+        }
+      });
+      return true;
+    } catch (e, s) {
+      debugPrint('Failed to batch update vitals: $e');
+      debugPrintStack(stackTrace: s);
+      return false;
+    }
+  }
+
   Future<int> delete(PlayerCharacter character) async {
     final db = await DbConnection().database;
     debugPrint("deleting character with id ${character.id}");
