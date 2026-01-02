@@ -748,7 +748,7 @@ class _TargetSnapshot {
   final int hp;
   final int mp;
 
-  _TargetSnapshot(this.target, this.hp, this.mp);
+  const _TargetSnapshot(this.target, this.hp, this.mp);
 }
 
 class _TargetEffect {
@@ -756,7 +756,7 @@ class _TargetEffect {
   final int hpDelta;
   final int mpDelta;
 
-  _TargetEffect(this.actor, this.hpDelta, this.mpDelta);
+  const _TargetEffect(this.actor, this.hpDelta, this.mpDelta);
 
   Map<String, Object> toJson() {
     return {

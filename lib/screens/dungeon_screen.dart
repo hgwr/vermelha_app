@@ -48,7 +48,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
         return null;
       }
       return _decodeActorMap(Map<String, dynamic>.from(decoded));
-    } catch (_) {
+    } on FormatException {
       return null;
     }
   }
@@ -67,7 +67,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
           .map((entry) => _decodeActorMap(Map<String, dynamic>.from(entry)))
           .whereType<_LogActor>()
           .toList();
-    } catch (_) {
+    } on FormatException {
       return [];
     }
   }
@@ -86,7 +86,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
           .map((entry) => _decodeActorEffectMap(Map<String, dynamic>.from(entry)))
           .whereType<_LogActorEffect>()
           .toList();
-    } catch (_) {
+    } on FormatException {
       return [];
     }
   }
@@ -266,7 +266,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
     if (parts.isEmpty) {
       return actorLabel;
     }
-    return '$actorLabel ${parts.join(' ')}';
+    return '$actorLabel (${parts.join(', ')})';
   }
 
   String _formatDelta(int value) {
