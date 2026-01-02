@@ -31,7 +31,7 @@ Wizardryライクなキャラクター育成・ダンジョン探索と、Final 
 
 ### 1.6 技術スタック (v1)
 -   **UI/状態管理:** Flutter + Provider。
--   **ローカル永続化:** sqflite (DB実装は `lib/db` を参照)。
+-   **ローカル永続化:** drift (DB実装は `lib/db` を参照。Webは `sqlite3.wasm` と `drift_worker.js` を使用)。
 
 ---
 

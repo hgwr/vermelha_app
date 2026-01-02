@@ -16,6 +16,7 @@ v1仕様のカノニカルな参照先は `docs/spec.md` です。
 ## Web版
 GitHub Pagesで公開しています。CIが `main` へのpush時に更新します。
 - https://hgwr.github.io/vermelha_app/
+- `web/` に `sqlite3.wasm` と `drift_worker.js` を配置します（`application/wasm` で配信）。
 
 ## 開発環境
 - Flutter SDK（stable）
@@ -50,4 +51,4 @@ flutter build ipa --release
 - `assets/`: 画像/フォントなどのアセット
 - `docs/`: 仕様書
 - `lib/`: アプリ本体
-  - `db/`: ローカル永続化（sqflite）
+  - `db/`: ローカル永続化（drift）
