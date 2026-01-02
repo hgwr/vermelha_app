@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:vermelha_app/models/game_state.dart';
 import 'package:vermelha_app/models/party.dart';
+import 'package:vermelha_app/models/dungeon_state.dart';
 import 'package:vermelha_app/providers/characters_provider.dart';
 import 'package:vermelha_app/providers/dungeon_provider.dart';
 import 'package:vermelha_app/repository/game_state_repository.dart';
@@ -39,6 +40,8 @@ class GameStateProvider extends ChangeNotifier {
   Future<void> startNewGame() async {
     gold = 0;
     _dungeonProvider?.reset();
+    _dungeonProvider?.battlesToUnlockNextFloor =
+        DungeonState.defaultBattlesToUnlockNextFloor;
     _loaded = true;
     await saveGame();
     notifyListeners();
@@ -65,6 +68,8 @@ class GameStateProvider extends ChangeNotifier {
       party: Party.fromRoster(_charactersProvider!.characters),
       gold: gold,
       maxReachedFloor: _dungeonProvider!.maxReachedFloor,
+      battleCountOnFloor: _dungeonProvider!.battleCountOnFloor,
+      battlesToUnlockNextFloor: _dungeonProvider!.battlesToUnlockNextFloor,
       activeDungeon: _dungeonProvider!.toDungeonState(),
     );
     await _repository.save(state);

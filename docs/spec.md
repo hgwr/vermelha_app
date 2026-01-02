@@ -301,8 +301,11 @@ Wizardryライクなキャラクター育成・ダンジョン探索と、Final 
 - `party`: Party
 - `gold`: int
 - `maxReachedFloor`: int
+- `battleCountOnFloor`: int
+- `battlesToUnlockNextFloor`: int
 - `activeDungeon`?: DungeonState (探索中のみ)
 - **v1 実装メモ:** Party は roster の `partyPosition` から導出する。
+- **v1 実装メモ:** 次フロア解放の進捗は街に戻っても保持する。
 
 ### 4.7 `DungeonState`
 - `floor`: int

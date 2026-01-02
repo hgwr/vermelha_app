@@ -7,6 +7,8 @@ class GameState {
   final Party party;
   final int gold;
   final int maxReachedFloor;
+  final int battleCountOnFloor;
+  final int battlesToUnlockNextFloor;
   final DungeonState? activeDungeon;
 
   const GameState({
@@ -14,6 +16,8 @@ class GameState {
     required this.party,
     required this.gold,
     required this.maxReachedFloor,
+    required this.battleCountOnFloor,
+    required this.battlesToUnlockNextFloor,
     required this.activeDungeon,
   });
 }
