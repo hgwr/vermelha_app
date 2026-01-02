@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vermelha_app/l10n/app_localizations.dart';
 import 'package:vermelha_app/l10n/model_localizations.dart';
 import 'package:vermelha_app/models/battle_rule.dart';
-import 'package:vermelha_app/models/condition.dart';
 import 'package:vermelha_app/models/target.dart';
 
 class SelectTargetScreen extends StatefulWidget {
@@ -24,9 +23,7 @@ class _SelectTargetScreenState extends State<SelectTargetScreen> {
       _battleRule = ModalRoute.of(context)!.settings.arguments as BattleRule;
     }
 
-    final targets = _battleRule!.condition.targetCategory == TargetCategory.any
-        ? getTargetList()
-        : getTargetListByCategory(_battleRule!.condition.targetCategory);
+    final targets = getSelectableTargetList();
 
     return Scaffold(
       appBar: AppBar(
