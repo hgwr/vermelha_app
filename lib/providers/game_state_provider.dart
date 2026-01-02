@@ -40,6 +40,7 @@ class GameStateProvider extends ChangeNotifier {
   Future<void> startNewGame() async {
     gold = 0;
     _dungeonProvider?.reset();
+    _dungeonProvider?.battleCountOnFloor = 0;
     _dungeonProvider?.battlesToUnlockNextFloor =
         DungeonState.defaultBattlesToUnlockNextFloor;
     _loaded = true;
