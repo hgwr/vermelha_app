@@ -391,6 +391,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get enemyIrregular => '非定型の敵';
 
   @override
+  String get enemyNameGoblin => 'ゴブリン';
+
+  @override
+  String get enemyNameSkeleton => 'スケルトン';
+
+  @override
+  String get enemyNameOrc => 'オーク';
+
+  @override
+  String get enemyNameSlime => 'スライム';
+
+  @override
+  String get enemyNameWisp => 'ウィスプ';
+
+  @override
+  String get enemyNameGhost => 'ゴースト';
+
+  @override
   String get jobFighter => '戦士';
 
   @override

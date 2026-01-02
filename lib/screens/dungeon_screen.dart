@@ -78,6 +78,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
       return _LogActor(
         kind: 'enemy',
         enemyType: _enemyTypeFromString(map['enemy_type'] as String?),
+        name: map['name'] as String?,
       );
     }
     return _LogActor(
@@ -102,8 +103,13 @@ class _DungeonScreenState extends State<DungeonScreen> {
     if (actor == null) {
       return l10n.unknownLabel;
     }
-    if (actor.kind == 'enemy' && actor.enemyType != null) {
-      return enemyLabel(l10n, actor.enemyType!);
+    if (actor.kind == 'enemy') {
+      if (actor.name != null && actor.name!.isNotEmpty) {
+        return enemyNameLabel(l10n, actor.name!);
+      }
+      if (actor.enemyType != null) {
+        return enemyLabel(l10n, actor.enemyType!);
+      }
     }
     return actor.name ?? l10n.unknownLabel;
   }

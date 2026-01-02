@@ -34,8 +34,29 @@ String enemyLabel(AppLocalizations l10n, EnemyType type) {
   }
 }
 
+String enemyNameLabel(AppLocalizations l10n, String name) {
+  switch (name) {
+    case 'goblin':
+      return l10n.enemyNameGoblin;
+    case 'skeleton':
+      return l10n.enemyNameSkeleton;
+    case 'orc':
+      return l10n.enemyNameOrc;
+    case 'slime':
+      return l10n.enemyNameSlime;
+    case 'wisp':
+      return l10n.enemyNameWisp;
+    case 'ghost':
+      return l10n.enemyNameGhost;
+  }
+  return name;
+}
+
 String characterLabel(AppLocalizations l10n, Character character) {
   if (character is Enemy) {
+    if (character.name.isNotEmpty) {
+      return enemyNameLabel(l10n, character.name);
+    }
     return enemyLabel(l10n, character.type);
   }
   return character.name;

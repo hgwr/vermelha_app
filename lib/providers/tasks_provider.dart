@@ -31,6 +31,68 @@ typedef ScrollDownFunc = void Function();
 
 class TasksProvider extends ChangeNotifier {
   static final Uuid _uuid = Uuid();
+  static final List<_EnemyProfile> _enemyProfiles = [
+    _EnemyProfile(
+      id: 'goblin',
+      type: EnemyType.regular,
+      baseHp: 90,
+      baseMp: 20,
+      baseAttack: 10,
+      baseDefense: 7,
+      baseMagicPower: 5,
+      baseSpeed: 9,
+    ),
+    _EnemyProfile(
+      id: 'skeleton',
+      type: EnemyType.regular,
+      baseHp: 100,
+      baseMp: 20,
+      baseAttack: 11,
+      baseDefense: 9,
+      baseMagicPower: 5,
+      baseSpeed: 8,
+    ),
+    _EnemyProfile(
+      id: 'orc',
+      type: EnemyType.regular,
+      baseHp: 120,
+      baseMp: 20,
+      baseAttack: 13,
+      baseDefense: 10,
+      baseMagicPower: 4,
+      baseSpeed: 7,
+    ),
+    _EnemyProfile(
+      id: 'slime',
+      type: EnemyType.irregular,
+      baseHp: 80,
+      baseMp: 40,
+      baseAttack: 8,
+      baseDefense: 6,
+      baseMagicPower: 10,
+      baseSpeed: 9,
+    ),
+    _EnemyProfile(
+      id: 'wisp',
+      type: EnemyType.irregular,
+      baseHp: 70,
+      baseMp: 60,
+      baseAttack: 7,
+      baseDefense: 5,
+      baseMagicPower: 13,
+      baseSpeed: 11,
+    ),
+    _EnemyProfile(
+      id: 'ghost',
+      type: EnemyType.irregular,
+      baseHp: 90,
+      baseMp: 50,
+      baseAttack: 9,
+      baseDefense: 7,
+      baseMagicPower: 12,
+      baseSpeed: 10,
+    ),
+  ];
   CharactersProvider charactersProvider;
   DungeonProvider? dungeonProvider;
   final List<Task> _tasks = [];
@@ -466,6 +528,16 @@ class TasksProvider extends ChangeNotifier {
     );
   }
 
+  int _scaleStat(int base, int floor, int perFloor, int variance) {
+    final scaled = base + (floor - 1) * perFloor;
+    if (variance <= 0) {
+      return max(1, scaled);
+    }
+    final spread = variance * 2 + 1;
+    final offset = vermelhaContext.random.nextInt(spread) - variance;
+    return max(1, scaled + offset);
+  }
+
   void fillAllies() {
     _vermelhaContext = _vermelhaContext.copyWith(
       allies: charactersProvider.partyMembers,
@@ -475,28 +547,30 @@ class TasksProvider extends ChangeNotifier {
 
   void fillEnemies() {
     final count = 2 + vermelhaContext.random.nextInt(2);
+    final floor = max(1, dungeonProvider?.activeFloor ?? 1);
     final List<Character> enemies = [];
     for (var i = 0; i < count; i += 1) {
-      final enemyType = vermelhaContext.random.nextBool()
-          ? EnemyType.regular
-          : EnemyType.irregular;
+      final profile =
+          _enemyProfiles[vermelhaContext.random.nextInt(_enemyProfiles.length)];
       final enemy = Enemy(
-        type: enemyType,
+        type: profile.type,
         isTelegraphing: false,
         uuid: _uuid.v4(),
-        name: 'Enemy ${i + 1}',
-        level: 1,
-        maxHp: 100,
-        hp: 100,
-        maxMp: 100,
-        mp: 100,
-        attack: 10,
-        defense: 10,
-        magicPower: 10,
-        speed: 10,
+        name: profile.id,
+        level: floor,
+        maxHp: _scaleStat(profile.baseHp, floor, 20, 8),
+        hp: 0,
+        maxMp: _scaleStat(profile.baseMp, floor, 6, 4),
+        mp: 0,
+        attack: _scaleStat(profile.baseAttack, floor, 3, 2),
+        defense: _scaleStat(profile.baseDefense, floor, 2, 2),
+        magicPower: _scaleStat(profile.baseMagicPower, floor, 3, 2),
+        speed: _scaleStat(profile.baseSpeed, floor, 1, 1),
         priorityParameters: <StatusParameter>[],
         battleRules: <BattleRule>[],
       );
+      enemy.hp = enemy.maxHp;
+      enemy.mp = enemy.maxMp;
       enemy.battleRules = [
         BattleRule(
           owner: enemy,
@@ -709,6 +783,7 @@ class TasksProvider extends ChangeNotifier {
       return {
         'kind': 'enemy',
         'enemy_type': actor.type.name,
+        'name': actor.name,
       };
     }
     return {
@@ -782,4 +857,26 @@ class PendingLoot {
       ownerId: ownerId,
     );
   }
+}
+
+class _EnemyProfile {
+  final String id;
+  final EnemyType type;
+  final int baseHp;
+  final int baseMp;
+  final int baseAttack;
+  final int baseDefense;
+  final int baseMagicPower;
+  final int baseSpeed;
+
+  const _EnemyProfile({
+    required this.id,
+    required this.type,
+    required this.baseHp,
+    required this.baseMp,
+    required this.baseAttack,
+    required this.baseDefense,
+    required this.baseMagicPower,
+    required this.baseSpeed,
+  });
 }
