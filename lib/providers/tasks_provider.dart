@@ -445,6 +445,7 @@ class TasksProvider extends ChangeNotifier {
     task.status = TaskStatus.finished;
     task.progress = 100;
     task.finishedAt = DateTime.now();
+    _tasks.remove(task);
     _maybeTriggerTelegraphing(actor, _currentTaskWasTelegraphing);
     _currentTask = null;
     _currentTaskElapsedMs = 0;

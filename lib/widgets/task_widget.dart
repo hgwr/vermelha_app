@@ -88,6 +88,8 @@ class TaskWidget extends StatelessWidget {
       final character = task.subject as PlayerCharacter;
       return ListTile(
         leading: leading,
+        dense: true,
+        visualDensity: VisualDensity.compact,
         title: Text(
           "${characterLabel(contextL10n, character)}: "
           "${actionLabel(contextL10n, task.action)} → "
@@ -99,6 +101,8 @@ class TaskWidget extends StatelessWidget {
       final character = task.subject;
       return ListTile(
         leading: leading,
+        dense: true,
+        visualDensity: VisualDensity.compact,
         title: Text(
           "${characterLabel(contextL10n, character)}: "
           "${actionLabel(contextL10n, task.action)} → "

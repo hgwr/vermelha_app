@@ -179,7 +179,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get campHealButton => '全回復して戻る';
 
   @override
+  String get campConfirmTitle => 'キャンプしますか？';
+
+  @override
+  String get campConfirmBody => '探索を一時停止してキャンプへ移動します。';
+
+  @override
   String get returnToCity => '街へ戻る';
+
+  @override
+  String get returnToCityConfirmTitle => '街へ戻りますか？';
+
+  @override
+  String get returnToCityConfirmBody => '探索を終了して街へ戻ります。';
 
   @override
   String get settingsTitle => '設定';
