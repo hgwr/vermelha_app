@@ -139,7 +139,7 @@ class CharactersProvider extends ChangeNotifier {
     if (snapshots.isEmpty) {
       return;
     }
-    bool updated = false;
+    final List<PlayerCharacter> changed = [];
     for (final entry in snapshots.entries) {
       final id = entry.key;
       final index = _characters.indexWhere((c) => c.id == id);
@@ -151,9 +151,12 @@ class CharactersProvider extends ChangeNotifier {
       if (character.hp == snapshot.hp && character.mp == snapshot.mp) {
         continue;
       }
-      await _characterRepository.updateVitals(character);
-      updated = true;
+      changed.add(character);
     }
+    if (changed.isEmpty) {
+      return;
+    }
+    final updated = await _characterRepository.updateVitalsBatch(changed);
     if (updated) {
       notifyListeners();
     }
