@@ -16,7 +16,11 @@ v1仕様のカノニカルな参照先は `docs/spec.md` です。
 ## Web版
 GitHub Pagesで公開しています。CIが `main` へのpush時に更新します。
 - https://hgwr.github.io/vermelha_app/
-- `web/` に `sqlite3.wasm` と `drift_worker.js` を配置します（`application/wasm` で配信）。
+- `web/` に `sqlite3.wasm` と `drift_worker.js` を配置します（`application/wasm` で配信）。これらのファイルは `flutter pub get` を実行後、以下のコマンドでコピーできます:
+
+  ```bash
+  cp .dart_tool/pub/dependencies/sqlite3/lib/src/wasm/sqlite3.wasm web/
+  cp .dart_tool/pub/dependencies/drift/lib/src/web/drift_worker.js web/
 
 ## 開発環境
 - Flutter SDK（stable）
