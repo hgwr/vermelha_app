@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:vermelha_app/models/character.dart';
 import 'package:vermelha_app/models/enemy.dart';
 import 'package:vermelha_app/models/job.dart';
@@ -205,9 +207,8 @@ List<Action> getActionList() {
       },
       applyEffect: (context, subject, targets) async {
         for (final target in targets) {
-          target.hp = (target.hp + _smallHealAmount)
-              .clamp(0, target.maxHp)
-              .toInt();
+          target.hp =
+              (target.hp + _smallHealAmount).clamp(0, target.maxHp).toInt();
         }
         return true;
       },
@@ -241,9 +242,8 @@ List<Action> getActionList() {
       },
       applyEffect: (context, subject, targets) async {
         for (final target in targets) {
-          target.hp = (target.hp + _smallHealAmount)
-              .clamp(0, target.maxHp)
-              .toInt();
+          target.hp =
+              (target.hp + _smallHealAmount).clamp(0, target.maxHp).toInt();
         }
         return true;
       },
