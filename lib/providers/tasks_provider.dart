@@ -30,6 +30,7 @@ enum EngineStatus {
 typedef ScrollDownFunc = void Function();
 
 class TasksProvider extends ChangeNotifier {
+  static final Uuid _uuid = Uuid();
   CharactersProvider charactersProvider;
   DungeonProvider? dungeonProvider;
   final List<Task> _tasks = [];
@@ -297,7 +298,7 @@ class TasksProvider extends ChangeNotifier {
     );
     final durationMs = max(1, (durationSeconds * 1000).round());
     final task = Task(
-      uuid: const Uuid().toString(),
+      uuid: _uuid.v4(),
       startedAt: DateTime.now(),
       subject: actor,
       action: action,
@@ -431,14 +432,14 @@ class TasksProvider extends ChangeNotifier {
     if (roll < goldChance) {
       final amount = 20 + vermelhaContext.random.nextInt(41);
       return PendingLoot.gold(
-        id: const Uuid().v4(),
+        id: _uuid.v4(),
         amount: amount,
         source: source,
       );
     }
     final item = itemCatalog[vermelhaContext.random.nextInt(itemCatalog.length)];
     return PendingLoot.item(
-      id: const Uuid().v4(),
+      id: _uuid.v4(),
       item: item,
       source: source,
       ownerId: charactersProvider.partyMembers.first.id,
@@ -462,7 +463,7 @@ class TasksProvider extends ChangeNotifier {
       final enemy = Enemy(
         type: enemyType,
         isTelegraphing: false,
-        uuid: const Uuid().v4(),
+        uuid: _uuid.v4(),
         name: 'Enemy ${i + 1}',
         level: 1,
         maxHp: 100,
