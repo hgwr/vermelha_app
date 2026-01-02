@@ -451,6 +451,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get actionSmallCure => '小治癒術';
 
   @override
+  String get actionDefend => '防御';
+
+  @override
+  String get actionUsePotion => '回復薬を使う';
+
+  @override
+  String get actionUseEther => '魔力水を使う';
+
+  @override
   String get conditionLowestHpEnemy => '最もHPが低い敵';
 
   @override
@@ -541,6 +550,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get conditionHighestSpeedAlly => '最も素早さが高い味方';
 
   @override
+  String get conditionAlways => '常に';
+
+  @override
   String get targetMatchingAlly => '条件に合う味方';
 
   @override
@@ -620,18 +632,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get targetHighestSpeedEnemy => '最も素早さが高い敵';
-
-  @override
-  String get actionDefend => '防御';
-
-  @override
-  String get actionUsePotion => '回復薬を使う';
-
-  @override
-  String get actionUseEther => '魔力水を使う';
-
-  @override
-  String get conditionAlways => '常に';
 
   @override
   String get targetFirstEnemy => '先頭の敵';

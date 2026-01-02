@@ -190,13 +190,13 @@ abstract class AppLocalizations {
   /// **'ダンジョン'**
   String get dungeonTitle;
 
-  /// No description provided for @dungeonLogTab.
+  /// Dungeon log tab label.
   ///
   /// In ja, this message translates to:
   /// **'ログ'**
   String get dungeonLogTab;
 
-  /// No description provided for @dungeonTaskTab.
+  /// Dungeon task tab label.
   ///
   /// In ja, this message translates to:
   /// **'行動'**
@@ -928,6 +928,24 @@ abstract class AppLocalizations {
   /// **'小治癒術'**
   String get actionSmallCure;
 
+  /// No description provided for @actionDefend.
+  ///
+  /// In ja, this message translates to:
+  /// **'防御'**
+  String get actionDefend;
+
+  /// No description provided for @actionUsePotion.
+  ///
+  /// In ja, this message translates to:
+  /// **'回復薬を使う'**
+  String get actionUsePotion;
+
+  /// No description provided for @actionUseEther.
+  ///
+  /// In ja, this message translates to:
+  /// **'魔力水を使う'**
+  String get actionUseEther;
+
   /// No description provided for @conditionLowestHpEnemy.
   ///
   /// In ja, this message translates to:
@@ -1108,6 +1126,12 @@ abstract class AppLocalizations {
   /// **'最も素早さが高い味方'**
   String get conditionHighestSpeedAlly;
 
+  /// No description provided for @conditionAlways.
+  ///
+  /// In ja, this message translates to:
+  /// **'常に'**
+  String get conditionAlways;
+
   /// No description provided for @targetMatchingAlly.
   ///
   /// In ja, this message translates to:
@@ -1270,6 +1294,18 @@ abstract class AppLocalizations {
   /// **'最も素早さが高い敵'**
   String get targetHighestSpeedEnemy;
 
+  /// No description provided for @targetFirstEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'先頭の敵'**
+  String get targetFirstEnemy;
+
+  /// No description provided for @targetAttackingEnemy.
+  ///
+  /// In ja, this message translates to:
+  /// **'自分を攻撃している敵'**
+  String get targetAttackingEnemy;
+
   /// No description provided for @itemWeaponShortSword.
   ///
   /// In ja, this message translates to:
@@ -1311,42 +1347,6 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'魔力水'**
   String get itemConsumableEther;
-
-  /// No description provided for @actionDefend.
-  ///
-  /// In ja, this message translates to:
-  /// **'防御'**
-  String get actionDefend;
-
-  /// No description provided for @actionUsePotion.
-  ///
-  /// In ja, this message translates to:
-  /// **'回復薬を使う'**
-  String get actionUsePotion;
-
-  /// No description provided for @actionUseEther.
-  ///
-  /// In ja, this message translates to:
-  /// **'魔力水を使う'**
-  String get actionUseEther;
-
-  /// No description provided for @conditionAlways.
-  ///
-  /// In ja, this message translates to:
-  /// **'常に'**
-  String get conditionAlways;
-
-  /// No description provided for @targetFirstEnemy.
-  ///
-  /// In ja, this message translates to:
-  /// **'先頭の敵'**
-  String get targetFirstEnemy;
-
-  /// No description provided for @targetAttackingEnemy.
-  ///
-  /// In ja, this message translates to:
-  /// **'自分を攻撃している敵'**
-  String get targetAttackingEnemy;
 
   /// No description provided for @notImplemented.
   ///
