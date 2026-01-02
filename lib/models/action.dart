@@ -32,6 +32,7 @@ const String actionSmallCureId = '66adfc55-f97f-4ecb-abbe-aacb4b3bcaa5';
 const String actionDefendId = '7d3b8b26-0c10-4b6c-9ad3-5b6b1a9db861';
 const String actionUsePotionId = 'f3fd6a9f-7e6c-4b52-b3d6-5c2e57c0d3a4';
 const String actionUseEtherId = 'a83f6f60-99b6-4d5d-8b4e-93fa25f6f1c5';
+const int _smallHealAmount = 10;
 
 class Action {
   final String uuid;
@@ -123,8 +124,8 @@ List<Action> getActionList() {
       },
       applyEffect: (context, subject, targets) async {
         final isTelegraphing = subject is Enemy && subject.isTelegraphing;
-        if (isTelegraphing) {
-          (subject as Enemy).isTelegraphing = false;
+        if (subject is Enemy && subject.isTelegraphing) {
+          subject.isTelegraphing = false;
         }
         for (final target in targets) {
           var damage = subject.attack - target.defense > 0
@@ -155,8 +156,8 @@ List<Action> getActionList() {
       },
       applyEffect: (context, subject, targets) async {
         final isTelegraphing = subject is Enemy && subject.isTelegraphing;
-        if (isTelegraphing) {
-          (subject as Enemy).isTelegraphing = false;
+        if (subject is Enemy && subject.isTelegraphing) {
+          subject.isTelegraphing = false;
         }
         for (final target in targets) {
           var damage = subject.magicPower - target.defense > 0
@@ -204,7 +205,9 @@ List<Action> getActionList() {
       },
       applyEffect: (context, subject, targets) async {
         for (final target in targets) {
-          target.hp += 10;
+          target.hp = (target.hp + _smallHealAmount)
+              .clamp(0, target.maxHp)
+              .toInt();
         }
         return true;
       },
@@ -238,7 +241,9 @@ List<Action> getActionList() {
       },
       applyEffect: (context, subject, targets) async {
         for (final target in targets) {
-          target.hp += 10;
+          target.hp = (target.hp + _smallHealAmount)
+              .clamp(0, target.maxHp)
+              .toInt();
         }
         return true;
       },
