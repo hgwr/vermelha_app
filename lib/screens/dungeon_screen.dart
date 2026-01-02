@@ -302,45 +302,59 @@ class _DungeonScreenState extends State<DungeonScreen> {
     final mpColor = member == null ? Colors.grey : Colors.blue;
     return SizedBox(
       width: 46,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 28,
-            child: icon,
-          ),
-          Row(
-            children: [
-              Text(
-                l10n.hpShort,
-                style: const TextStyle(fontSize: 8),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: constraints.maxWidth,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: 28,
+                    child: icon,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        l10n.hpShort,
+                        style: const TextStyle(fontSize: 8),
+                      ),
+                      const SizedBox(width: 2),
+                      Expanded(
+                        child: LinearProgressIndicator(
+                          value: hpValue.clamp(0, 1),
+                          backgroundColor: hpColor.withOpacity(0.2),
+                          valueColor: AlwaysStoppedAnimation<Color>(hpColor),
+                          minHeight: 4,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        l10n.mpShort,
+                        style: const TextStyle(fontSize: 8),
+                      ),
+                      const SizedBox(width: 2),
+                      Expanded(
+                        child: LinearProgressIndicator(
+                          value: mpValue.clamp(0, 1),
+                          backgroundColor: mpColor.withOpacity(0.2),
+                          valueColor: AlwaysStoppedAnimation<Color>(mpColor),
+                          minHeight: 4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: hpValue.clamp(0, 1),
-                  backgroundColor: hpColor.withOpacity(0.2),
-                  valueColor: AlwaysStoppedAnimation<Color>(hpColor),
-                  minHeight: 4,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Text(
-                l10n.mpShort,
-                style: const TextStyle(fontSize: 8),
-              ),
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: mpValue.clamp(0, 1),
-                  backgroundColor: mpColor.withOpacity(0.2),
-                  valueColor: AlwaysStoppedAnimation<Color>(mpColor),
-                  minHeight: 4,
-                ),
-              ),
-            ],
-          ),
-        ],
+            ),
+          );
+        },
       ),
     );
   }
