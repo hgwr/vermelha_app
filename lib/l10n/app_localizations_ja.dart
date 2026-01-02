@@ -61,6 +61,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get dungeonTitle => 'ダンジョン';
 
   @override
+  String get dungeonLogTab => 'ログ';
+
+  @override
+  String get dungeonTaskTab => '行動';
+
+  @override
   String get dungeonSelectTitle => 'ダンジョン選択';
 
   @override

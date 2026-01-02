@@ -190,6 +190,18 @@ abstract class AppLocalizations {
   /// **'ダンジョン'**
   String get dungeonTitle;
 
+  /// No description provided for @dungeonLogTab.
+  ///
+  /// In ja, this message translates to:
+  /// **'ログ'**
+  String get dungeonLogTab;
+
+  /// No description provided for @dungeonTaskTab.
+  ///
+  /// In ja, this message translates to:
+  /// **'行動'**
+  String get dungeonTaskTab;
+
   /// No description provided for @dungeonSelectTitle.
   ///
   /// In ja, this message translates to:

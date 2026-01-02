@@ -25,6 +25,14 @@
   "shopSelectCharacter": "キャラクター",
   "notEnoughGold": "ゴールドが足りません。",
   "dungeonTitle": "ダンジョン",
+  "dungeonLogTab": "ログ",
+  "@dungeonLogTab": {
+    "description": "Dungeon log tab label."
+  },
+  "dungeonTaskTab": "行動",
+  "@dungeonTaskTab": {
+    "description": "Dungeon task tab label."
+  },
   "dungeonSelectTitle": "ダンジョン選択",
   "dungeonSelectReachedOnly": "到達済みフロアのみ選択できます。",
   "unlockNextFloorProgress": "次フロア解放: {current}/{required}",
