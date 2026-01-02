@@ -32,9 +32,14 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  drift: ^2.18.0
+  drift_flutter: ^0.2.4
   provider: ^6.0.5
   sqflite: ^2.2.7
+  sqlite3: ^2.4.6
+  sqlite3_flutter_libs: ^0.5.24
   path: ^1.8.2
+  path_provider: ^2.1.4
   collection: ^1.17.0
   uuid: ^3.0.7
   intl: ^0.20.2
@@ -53,7 +58,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  sqflite_common_ffi: ^2.4.0+1
+  build_runner: ^2.4.9
+  drift_dev: ^2.18.0
+  sqflite_common_ffi: 2.3.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
