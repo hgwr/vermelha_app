@@ -48,7 +48,7 @@ class _DungeonScreenState extends State<DungeonScreen> {
         return null;
       }
       return _decodeActorMap(Map<String, dynamic>.from(decoded));
-    } catch (_) {
+    } on FormatException {
       return null;
     }
   }
@@ -67,7 +67,26 @@ class _DungeonScreenState extends State<DungeonScreen> {
           .map((entry) => _decodeActorMap(Map<String, dynamic>.from(entry)))
           .whereType<_LogActor>()
           .toList();
-    } catch (_) {
+    } on FormatException {
+      return [];
+    }
+  }
+
+  List<_LogActorEffect> _decodeActorEffects(String? raw) {
+    if (raw == null || raw.isEmpty) {
+      return [];
+    }
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! List) {
+        return [];
+      }
+      return decoded
+          .whereType<Map>()
+          .map((entry) => _decodeActorEffectMap(Map<String, dynamic>.from(entry)))
+          .whereType<_LogActorEffect>()
+          .toList();
+    } on FormatException {
       return [];
     }
   }
@@ -84,6 +103,32 @@ class _DungeonScreenState extends State<DungeonScreen> {
       kind: kind ?? 'player',
       name: map['name'] as String?,
     );
+  }
+
+  _LogActorEffect? _decodeActorEffectMap(Map<String, dynamic> map) {
+    final actorRaw = map['actor'];
+    if (actorRaw is! Map) {
+      return null;
+    }
+    final actor = _decodeActorMap(Map<String, dynamic>.from(actorRaw));
+    if (actor == null) {
+      return null;
+    }
+    return _LogActorEffect(
+      actor: actor,
+      hpDelta: _readDelta(map['hp_delta']),
+      mpDelta: _readDelta(map['mp_delta']),
+    );
+  }
+
+  int _readDelta(Object? value) {
+    if (value is num) {
+      return value.round();
+    }
+    if (value is String) {
+      return int.tryParse(value) ?? 0;
+    }
+    return 0;
   }
 
   EnemyType? _enemyTypeFromString(String? value) {
@@ -176,11 +221,16 @@ class _DungeonScreenState extends State<DungeonScreen> {
         }
         final subject = _decodeActor(data['subject']);
         final targets = _decodeActors(data['targets']);
+        final effects = _decodeActorEffects(data['effects']);
         final subjectLabel = _actorLabel(l10n, subject);
         final actionLabel = actionLabelByUuid(l10n, actionUuid);
-        final targetsLabel = targets.map((target) {
-          return _actorLabel(l10n, target);
-        }).join(', ');
+        final targetsLabel = effects.isNotEmpty
+            ? effects
+                .map((effect) => _formatEffectLabel(l10n, effect))
+                .join(', ')
+            : targets
+                .map((target) => _actorLabel(l10n, target))
+                .join(', ');
         return l10n.logBattleAction(subjectLabel, actionLabel, targetsLabel);
       case LogMessageId.battleVictory:
         return l10n.logBattleVictory;
@@ -199,6 +249,31 @@ class _DungeonScreenState extends State<DungeonScreen> {
       case LogMessageId.returnToCity:
         return l10n.logReturnToCity;
     }
+  }
+
+  String _formatEffectLabel(
+    AppLocalizations l10n,
+    _LogActorEffect effect,
+  ) {
+    final actorLabel = _actorLabel(l10n, effect.actor);
+    final parts = <String>[];
+    if (effect.hpDelta != 0) {
+      parts.add('${l10n.hpShort} ${_formatDelta(effect.hpDelta)}');
+    }
+    if (effect.mpDelta != 0) {
+      parts.add('${l10n.mpShort} ${_formatDelta(effect.mpDelta)}');
+    }
+    if (parts.isEmpty) {
+      return actorLabel;
+    }
+    return '$actorLabel (${parts.join(', ')})';
+  }
+
+  String _formatDelta(int value) {
+    if (value > 0) {
+      return '+$value';
+    }
+    return value.toString();
   }
 
   String _positionLabel(AppLocalizations l10n, PartyPosition position) {
@@ -636,6 +711,18 @@ class _LogActor {
     required this.kind,
     this.name,
     this.enemyType,
+  });
+}
+
+class _LogActorEffect {
+  final _LogActor actor;
+  final int hpDelta;
+  final int mpDelta;
+
+  const _LogActorEffect({
+    required this.actor,
+    required this.hpDelta,
+    required this.mpDelta,
   });
 }
 

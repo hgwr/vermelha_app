@@ -156,18 +156,24 @@ class TasksProvider extends ChangeNotifier {
   void addActionLog(
     Character subject,
     Action action,
-    List<Character> targets,
-  ) {
+    List<Character> targets, {
+    List<_TargetEffect>? effects,
+  }) {
     final serializedTargets =
         targets.map((target) => _serializeActor(target)).toList();
+    final data = {
+      'subject': jsonEncode(_serializeActor(subject)),
+      'action_uuid': action.uuid,
+      'targets': jsonEncode(serializedTargets),
+    };
+    if (effects != null) {
+      data['effects'] =
+          jsonEncode(effects.map((effect) => effect.toJson()).toList());
+    }
     addLog(
       LogType.battle,
       LogMessageId.battleAction,
-      data: {
-        'subject': jsonEncode(_serializeActor(subject)),
-        'action_uuid': action.uuid,
-        'targets': jsonEncode(serializedTargets),
-      },
+      data: data,
     );
   }
 
@@ -342,6 +348,9 @@ class TasksProvider extends ChangeNotifier {
     final action = task.action;
     final targets = task.targets;
     final battleSnapshots = _snapshotPlayerStats([actor, ...targets]);
+    final targetSnapshots = targets
+        .map((target) => _TargetSnapshot(target, target.hp, target.mp))
+        .toList();
     action.applyEffect(
       vermelhaContext,
       actor,
@@ -361,7 +370,16 @@ class TasksProvider extends ChangeNotifier {
       );
     }
     _persistBattleChanges(battleSnapshots);
-    addActionLog(actor, action, targets);
+    final effects = targetSnapshots.map((snapshot) {
+      final hpDelta = snapshot.target.hp - snapshot.hp;
+      final mpDelta = snapshot.target.mp - snapshot.mp;
+      return _TargetEffect(
+        _serializeActor(snapshot.target),
+        hpDelta,
+        mpDelta,
+      );
+    }).toList();
+    addActionLog(actor, action, targets, effects: effects);
     task.status = TaskStatus.finished;
     task.progress = 100;
     task.finishedAt = DateTime.now();
@@ -723,6 +741,30 @@ class _ActionDecision {
   final List<Character> targets;
 
   _ActionDecision(this.action, this.targets);
+}
+
+class _TargetSnapshot {
+  final Character target;
+  final int hp;
+  final int mp;
+
+  const _TargetSnapshot(this.target, this.hp, this.mp);
+}
+
+class _TargetEffect {
+  final Map<String, String> actor;
+  final int hpDelta;
+  final int mpDelta;
+
+  const _TargetEffect(this.actor, this.hpDelta, this.mpDelta);
+
+  Map<String, Object> toJson() {
+    return {
+      'actor': actor,
+      'hp_delta': hpDelta,
+      'mp_delta': mpDelta,
+    };
+  }
 }
 
 enum LootType {
