@@ -37,12 +37,17 @@ flutter test
 
 ## ビルド
 ```bash
+# デバッグビルド
 flutter build apk --debug
 flutter build ios --no-codesign
+
+# リリースビルド（配布用）
+flutter build appbundle --release
+flutter build ipa --release
 ```
 
 ## ディレクトリ構成
 - `assets/`: 画像/フォントなどのアセット
 - `docs/`: 仕様書
 - `lib/`: アプリ本体
-- `lib/db/`: ローカル永続化（sqflite）
+  - `db/`: ローカル永続化（sqflite）
